@@ -15,6 +15,7 @@ public class AdvtController {
 
     @GetMapping("/{id}")
     public void getAdvtData(){
+        System.out.println("Request : getAdvtData() ");
         return;
     }
 
