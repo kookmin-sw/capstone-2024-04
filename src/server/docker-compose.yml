@@ -1,0 +1,28 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: advt
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+    networks:
+      - eum-test
+  redis-docker:
+    image: redis:latest
+    command: redis-server --port 6379
+    container_name: "docker-redis"
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - 6379:6379
+    networks:
+      - eum-test
+networks:
+  eum-test:
