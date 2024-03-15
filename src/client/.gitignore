@@ -1,5 +1,31 @@
-# Created by https://www.toptal.com/developers/gitignore/api/nextjs,windows,macos,linux,yarn,react,node,visualstudio,visualstudiocode,webstorm
-# Edit at https://www.toptal.com/developers/gitignore?templates=nextjs,windows,macos,linux,yarn,react,node,visualstudio,visualstudiocode,webstorm
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# Created by https://www.toptal.com/developers/gitignore/api/react,visualstudiocode,visualstudio,webstorm,yarn,node,macos,windows,linux
+# Edit at https://www.toptal.com/developers/gitignore?templates=react,visualstudiocode,visualstudio,webstorm,yarn,node,macos,windows,linux
 
 ### Linux ###
 *~
@@ -49,46 +75,15 @@ Temporary Items
 # iCloud generated files
 *.icloud
 
-### NextJS ###
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# local env files
-.env*.local
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
 ### Node ###
 # Logs
 logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 lerna-debug.log*
+.pnpm-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -129,6 +124,7 @@ jspm_packages/
 web_modules/
 
 # TypeScript cache
+*.tsbuildinfo
 
 # Optional npm cache directory
 .npm
@@ -794,4 +790,4 @@ FodyWeavers.xsd
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
-# End of https://www.toptal.com/developers/gitignore/api/nextjs,windows,macos,linux,yarn,react,node,visualstudio,visualstudiocode,webstorm
+# End of https://www.toptal.com/developers/gitignore/api/react,visualstudiocode,visualstudio,webstorm,yarn,node,macos,windows,linux
