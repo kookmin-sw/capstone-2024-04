@@ -1,5 +1,6 @@
 package com.drm.server.service;
 
+import com.drm.server.controller.dto.response.UserResponse;
 import com.drm.server.domain.user.User;
 import com.drm.server.domain.user.UserRepository;
 import com.drm.server.exception.BusinessLogicException;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
@@ -26,6 +28,7 @@ public class UserService {
     private final EmailService emailService;
     private final RedisTemplate redisTemplate;
     private final RedisService redisService;
+    private final PasswordEncoder passwordEncoder;
 
 
 
@@ -56,7 +59,7 @@ public class UserService {
     private void checkDuplicatedEmail(String email)  {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
-            log.debug("MemberServiceImpl.checkDuplicatedEmail exception occur email: {}", email);
+            log.debug("UserService.checkDuplicatedEmail exception occur email: {}", email);
             throw new IllegalArgumentException("이미 사용중인 이메일 입니다");
         }
     }
@@ -77,4 +80,10 @@ public class UserService {
     }
 
 
+    public UserResponse.UserInfo createUser(String email, String password) {
+        this.checkDuplicatedEmail(email);
+        User setUser = User.toEntity(email, passwordEncoder.encode(password));
+        User getUser =userRepository.save(setUser);
+        return new UserResponse.UserInfo(getUser.getUserId(), getUser.getEmail());
+    }
 }

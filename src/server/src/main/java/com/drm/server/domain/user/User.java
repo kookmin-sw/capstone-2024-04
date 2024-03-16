@@ -21,5 +21,9 @@ public class User extends BaseTimeEntity {
     private String email;
     private String password;
     private String company;
+    private boolean isDeleted;
+    public static User toEntity(String email,String password){
+        return User.builder().email(email).password(password).isDeleted(false).build();
+    }
 
 }
