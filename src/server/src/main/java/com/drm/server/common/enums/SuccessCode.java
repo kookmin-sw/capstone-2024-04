@@ -1,4 +1,4 @@
-package com.advt.server.common.enums;
+package com.drm.server.common.enums;
 
 import lombok.Getter;
 

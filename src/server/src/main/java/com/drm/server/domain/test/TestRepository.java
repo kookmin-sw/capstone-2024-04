@@ -1,4 +1,4 @@
-package com.advt.server.domain.test;
+package com.drm.server.domain.test;
 
 public interface TestRepository {
 }

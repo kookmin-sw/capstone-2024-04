@@ -1,4 +1,4 @@
-package com.advt.server.common;
+package com.drm.server.common;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

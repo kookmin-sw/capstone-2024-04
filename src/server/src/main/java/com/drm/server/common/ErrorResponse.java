@@ -1,6 +1,6 @@
-package com.advt.server.common;
+package com.drm.server.common;
 
-import com.advt.server.common.enums.ErrorCode;
+import com.drm.server.common.enums.ErrorCode;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

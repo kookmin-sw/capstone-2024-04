@@ -1,7 +1,7 @@
-package com.advt.server.exception;
+package com.drm.server.exception;
 
-import com.advt.server.common.ErrorResponse;
-import com.advt.server.common.enums.ErrorCode;
+import com.drm.server.common.ErrorResponse;
+import com.drm.server.common.enums.ErrorCode;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
-package com.advt.server.common;
+package com.drm.server.common;
 
-import com.advt.server.common.enums.SuccessCode;
+import com.drm.server.common.enums.SuccessCode;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
