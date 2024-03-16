@@ -62,6 +62,9 @@ public enum ErrorCode {
      * ******************************* Custom Error CodeList ***************************************
      */
     // 이미 존재하는 값떄문에 생기는 에러
+//            이메일을 보낼수없음
+    UNABLE_TO_SEND_EMAIL(500,"GO15","Unable to send Email"),
+    MEMBER_EXISTS(500,"G016" ,"Email already exists" ), // End
 //    잘못된 인수를 인자로 받았을때
     INVALID_PARAMETER(400, "G014", "Invalid parameter"),
     VALIDATION_CONSTRAINT_NOT_FOUND(400, "G015", "No validator found for validation constraint"),
@@ -74,9 +77,8 @@ public enum ErrorCode {
     UPDATE_ERROR(200, "9999", "CommentUpdate Transaction Error Exception"),
 
     // Transaction Delete Error
-    DELETE_ERROR(200, "9999", "Delete Transaction Error Exception"),
+    DELETE_ERROR(200, "9999", "Delete Transaction Error Exception");
 
-    ; // End
 
     /**
      * ******************************* Error Code Constructor ***************************************
@@ -96,5 +98,4 @@ public enum ErrorCode {
         this.divisionCode = divisionCode;
         this.message = message;
     }
-//    출처: https://adjh54.tistory.com/79 [Contributor9:티스토리]
 }
