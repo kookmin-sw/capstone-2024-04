@@ -1,12 +1,14 @@
-package com.drm.server.domain.entity;
+package com.drm.server.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class DetectedFace {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int detectedFaceId;
+
+    @Column
     private String arriveAt;
     private String leaveAt;
     private boolean staring;
