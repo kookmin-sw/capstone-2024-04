@@ -9,6 +9,42 @@ enum ErrorText {
   notEnterPw = "비밀번호를 입력해주세요.",
 }
 
+const carouselArray = [
+  {
+    title: "빠르고 쉽게 성장하는 비즈니스",
+    text: `DRM과 함께 오프라인 광고를 분석해요
+  광고 효과를 한눈에 확인가능해요`,
+    imgSrc: carousel_1,
+  },
+  {
+    title: "빠르고 쉽게 성장하는 비즈니스",
+    text: `DRM과 함께 오프라인 광고를 분석해요
+  광고 효과를 한눈에 확인가능해요`,
+    imgSrc: carousel_1,
+  },
+];
+
+type CarouselContentType = {
+  key: number;
+  title: string;
+  text: string;
+  imgSrc: string;
+};
+
+const CarouselContent = ({ title, text, imgSrc }: CarouselContentType) => {
+  return (
+    <div className="flex flex-col items-center jusitfy-center mb-6">
+      <div>
+        <img src={imgSrc} />
+      </div>
+      <h1 className="text-center font-bold text-3xl text-white mb-7">
+        {title}
+      </h1>
+      <p className="text-center text-xl text-white mb-5">{text}</p>
+    </div>
+  );
+};
+
 const MainPage = () => {
   const [errorText, setErrorText] = useState("");
   const idRef = useRef<HTMLInputElement>(null);
@@ -33,33 +69,19 @@ const MainPage = () => {
   };
 
   return (
-    <div className="flex flex-col-reverse lg:flex-row w-screen lg:h-screen">
+    <div className="flex flex-col-reverse lg:flex-row w-screen">
       {/* 좌측 화면 - Carousel */}
       <div className="hidden lg:flex w-full lg:w-1/2 bg-main items-center">
         <div className="w-full">
           <Carousel autoplay={true}>
-            <div className="flex flex-col items-center jusitfy-center">
-              <div>
-                <img src={carousel_1} />
-              </div>
-              <h1 className="text-center">빠르고 쉽게 성장하는 비즈니스</h1>
-              <p className="text-center">
-                TOIFTALAF와 함께 오프라인 광고를 분석해요
-                <br />
-                광고 효과를 한 눈에 확인 가능해요
-              </p>
-            </div>
-            <div className="flex flex-col items-center jusitfy-center">
-              <div>
-                <img src={carousel_1} />
-              </div>
-              <h1 className="text-center">빠르고 쉽게 성장하는 비즈니스</h1>
-              <p className="text-center">
-                TOIFTALAF와 함께 오프라인 광고를 분석해요
-                <br />
-                광고 효과를 한 눈에 확인 가능해요
-              </p>
-            </div>
+            {carouselArray.map((content, index) => (
+              <CarouselContent
+                key={index}
+                title={content.title}
+                text={content.text}
+                imgSrc={content.imgSrc}
+              />
+            ))}
           </Carousel>
         </div>
       </div>
