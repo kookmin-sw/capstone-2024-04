@@ -41,7 +41,7 @@ public class UserService {
         String authCode = this.createCode();
         emailService.sendEmail(email, title, authCode);
         // 이메일 인증 요청 시 인증 번호 Redis에 저장 ( key = "AuthCode " + Email / value = AuthCode )
-        redisService.setValues(AUTH_CODE_PREFIX + email,
+        redisService.setValuesWithDuration(AUTH_CODE_PREFIX + email,
                 authCode, Duration.ofMillis(this.authCodeExpirationMillis));
 
     }

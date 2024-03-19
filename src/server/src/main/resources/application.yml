@@ -14,7 +14,7 @@ spring:
     hibernate:
       format-sql: true
       highlight-sql: true
-      ddl-auto: create
+      ddl-auto: update
 
       dialect: org.hibernate.dialect.MySQLDialect # ??? ??
     properties:

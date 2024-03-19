@@ -5,6 +5,7 @@ import com.drm.server.common.ErrorResponse;
 import com.drm.server.common.enums.SuccessCode;
 import com.drm.server.controller.dto.request.UserRequest;
 import com.drm.server.controller.dto.response.UserResponse;
+import com.drm.server.service.TokenService;
 import com.drm.server.service.UserService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final UserService userService;
+    private final TokenService tokenService;
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "성공"),
             @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -60,11 +62,17 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     @PostMapping("/signup")
-    public ResponseEntity<APIResponse> signUp( @Valid @RequestBody UserRequest.SignUp signUp){
+    public ResponseEntity<APIResponse<UserResponse.UserInfo>> signUp(@Valid @RequestBody UserRequest.SignUp signUp){
         userService.verifiedCode(signUp.getEmail(), signUp.getAuthCode());
         UserResponse.UserInfo userInfo = userService.createUser(signUp.getEmail(), signUp.getPassword());
-        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, userInfo);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        APIResponse response = APIResponse.of(SuccessCode.INSERT_SUCCESS, userInfo);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+    @PostMapping("/signin")
+    public ResponseEntity<APIResponse<UserResponse.TokenInfo>> sigIn(@Valid @RequestBody UserRequest.SignIn signIn){
+        UserResponse.TokenInfo tokenInfo = tokenService.createToken(signIn);
+        APIResponse response = APIResponse.of(SuccessCode.INSERT_SUCCESS, tokenInfo);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 }

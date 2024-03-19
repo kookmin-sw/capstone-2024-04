@@ -47,4 +47,15 @@ public class UserRequest {
         private String password;
 
     }
+
+    @Getter
+    @Setter
+    public static class SignIn {
+        @NotEmpty(message = "이메일을 입력해주세요.")
+        @Schema(description = "이메일", example = "abc@gmail.com")
+        private String email;
+        @NotEmpty(message = "비밀번호를 입력해주세요.")
+        @Schema(description = "비밀번호",example = "drmdrm1234")
+        private String password;
+    }
 }
