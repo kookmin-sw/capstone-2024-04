@@ -12,14 +12,12 @@ enum ErrorText {
 const carouselArray = [
   {
     title: "빠르고 쉽게 성장하는 비즈니스",
-    text: `DRM과 함께 오프라인 광고를 분석해요
-  광고 효과를 한눈에 확인가능해요`,
+    text: "DRM과 함께 오프라인 광고를 분석해요\n광고 효과를 한눈에 확인가능해요",
     imgSrc: carousel_1,
   },
   {
     title: "빠르고 쉽게 성장하는 비즈니스",
-    text: `DRM과 함께 오프라인 광고를 분석해요
-  광고 효과를 한눈에 확인가능해요`,
+    text: "DRM과 함께 오프라인 광고를 분석해요\n광고 효과를 한눈에 확인가능해요",
     imgSrc: carousel_1,
   },
 ];
@@ -40,7 +38,14 @@ const CarouselContent = ({ title, text, imgSrc }: CarouselContentType) => {
       <h1 className="text-center font-bold text-3xl text-white mb-7">
         {title}
       </h1>
-      <p className="text-center text-xl text-white mb-5">{text}</p>
+      <p className="text-center text-xl text-white mb-5">
+        {text.split("\n").map((line) => (
+          <>
+            {line}
+            <br />
+          </>
+        ))}
+      </p>
     </div>
   );
 };
