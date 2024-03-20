@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class MediaService {
-    public void updateMediaData(int mediaId, boolean interest){
+    public void updateMediaData(Long mediaId, boolean interest){
 
     }
 }

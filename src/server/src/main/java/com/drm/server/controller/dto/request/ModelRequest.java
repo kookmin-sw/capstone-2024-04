@@ -7,12 +7,13 @@ import java.util.List;
 
 @Getter
 public class ModelRequest {
-    private int mediaId;
-    private int cameraId;
-    private int peopleId;
+    private Long peopleId;
+    private Long locationId;
+    private String mediaTitle;
+
     private LocalDateTime arriveTime;
     private LocalDateTime leaveTime;
     private int presentFrameCnt;
     private int interestFrameCnt;
-    private List<Integer> frameData;
+    private List<Boolean> frameData;
 }
