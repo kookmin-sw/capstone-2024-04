@@ -1,6 +1,8 @@
-package com.drm.server.domain;
+package com.drm.server.domain.DetectedFace;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class DetectedFace {
@@ -9,9 +11,9 @@ public class DetectedFace {
     private int detectedFaceId;
 
     @Column
-    private String arriveAt;
-    private String leaveAt;
+    private LocalDateTime arriveAt;
+    private LocalDateTime leaveAt;
     private boolean staring;
 //    private int videoLocation; (FK)
-    private int face_capture_cnt;
+    private int faceCaptureCnt;
 }
