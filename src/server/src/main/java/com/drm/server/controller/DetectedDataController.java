@@ -3,7 +3,6 @@ package com.drm.server.controller;
 import com.drm.server.common.APIResponse;
 import com.drm.server.common.enums.SuccessCode;
 import com.drm.server.controller.dto.request.ModelRequest;
-import com.drm.server.controller.dto.request.ModelRequestDto;
 
 import com.drm.server.service.DetectedDataService;
 import lombok.RequiredArgsConstructor;
