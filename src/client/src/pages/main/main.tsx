@@ -2,6 +2,7 @@ import { Carousel } from "antd";
 import carousel_1 from "../../assets/images/carousel_1.svg";
 import SignInPage from "./sign_in";
 import SignUpPage from "./sign_up";
+import { useState } from "react";
 
 const carouselArray = [
   {
@@ -45,6 +46,9 @@ const CarouselContent = ({ title, text, imgSrc }: CarouselContentType) => {
 };
 
 const MainPage = () => {
+  // true - 로그인 화면 / false - 회원가입 화면
+  const [signInScreen, setSignInScreen] = useState(true);
+
   return (
     <div className="flex flex-col-reverse lg:flex-row w-screen">
       {/* 좌측 화면 - Carousel */}
@@ -64,7 +68,11 @@ const MainPage = () => {
       </div>
       {/* 우측 화면 */}
       <div className="flex items-center justify-center w-full h-screen lg:w-1/2 bg-white">
-        <SignInPage />
+        {signInScreen ? (
+          <SignInPage goToSignUp={() => setSignInScreen(false)} />
+        ) : (
+          <SignUpPage goToSignIn={() => setSignInScreen(true)} />
+        )}
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ enum ErrorText {
   notEnterPw = "비밀번호를 입력해주세요.",
 }
 
-const SignInPage = () => {
+const SignInPage = ({ goToSignUp }) => {
   const [errorText, setErrorText] = useState("");
   const idRef = useRef<HTMLInputElement>(null);
   const pwRef = useRef<HTMLInputElement>(null);
@@ -34,7 +34,7 @@ const SignInPage = () => {
     <div className="flex flex-col w-[360px]">
       <div className="flex gap-2 mb-4">
         <img className="w-10 mb-4" src={logo} />
-        <h1 className="text-black font-black text-4xl">TOIFTALAE</h1>
+        <h1 className="text-black font-black text-4xl">DO YOU READ ME</h1>
       </div>
       <p className="text-placeholder">아이디</p>
       <input
@@ -77,7 +77,7 @@ const SignInPage = () => {
       </button>
       <div className="flex gap-8">
         <p className="text-placeholder">아직 계정이 없으신가요?</p>
-        <a className="text-main" href="#">
+        <a className="text-main" href="#" onClick={goToSignUp}>
           회원가입
         </a>
       </div>

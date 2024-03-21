@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-const SignUpPage = () => {
+const SignUpPage = ({ goToSignIn }) => {
   const idRef = useRef<HTMLInputElement>(null);
   const codeRef = useRef<HTMLInputElement>(null);
   const pwRef = useRef<HTMLInputElement>(null);
@@ -10,7 +10,9 @@ const SignUpPage = () => {
     <div className="flex flex-col w-[360px]">
       <div className="flex justify-between mb-4 items-center">
         <h1 className="text-black text-xl">회원가입</h1>
-        <a className="text-main">홈으로</a>
+        <a className="text-main" onClick={goToSignIn}>
+          홈으로
+        </a>
       </div>
       <p className="text-placeholder">아이디</p>
       <div className="flex gap-2">
@@ -46,10 +48,7 @@ const SignUpPage = () => {
         ref={pwCheckRef}
       />
 
-      <button
-        onClick={() => {}}
-        className="bg-main text-white p-4 rounded-md my-5"
-      >
+      <button className="bg-main text-white p-4 rounded-md my-5">
         회원가입
       </button>
     </div>
