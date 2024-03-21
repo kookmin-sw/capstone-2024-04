@@ -1,6 +1,7 @@
 import { Carousel } from "antd";
 import carousel_1 from "../../assets/images/carousel_1.svg";
 import SignInPage from "./sign_in";
+import SignUpPage from "./sign_up";
 
 const carouselArray = [
   {
