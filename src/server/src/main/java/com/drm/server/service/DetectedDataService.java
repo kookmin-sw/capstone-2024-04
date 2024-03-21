@@ -1,0 +1,108 @@
+package com.drm.server.service;
+
+import com.drm.server.controller.dto.request.ModelRequest;
+import com.drm.server.domain.detectedface.DetectedFace;
+import com.drm.server.domain.detectedface.DetectedFaceRepository;
+import com.drm.server.domain.location.LocationRepository;
+import com.drm.server.domain.media.MediaRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class DetectedDataService {
+
+    // 아래의 Service / Repository 를 어떤 식으로 주입해줄 수 있을까? -> 추후에 사진이 아닌, 영상용 데이터가 들어왔을때를 고려한다.
+    // 궁금한 것 -> 이런 식으로 autowired 없이 필드 주입시에, DetectedDataService 호출시마다,
+    // 새로운 필드 변수(mediaService, DetectedFaceRepository) 가 생성될까?
+    private final MediaService mediaService;
+    private final DetectedFaceRepository detectedFaceRepository;
+    private final MediaRepository mediaRepository;
+    private final LocationRepository locationRepository;
+
+    public void processDetectedData(ModelRequest modelRequest){
+        // 사람별 Data 저장하는 서비스 로직
+        // 데이터 상에 문제가 없을 시 해당 Media 관련 데이터 업데이트(광고별 통계)
+        boolean mediaExist = checkMediaExist(modelRequest.getMediaTitle());
+        boolean locationExist = checkLocationExist(modelRequest.getLocationId());
+        boolean dataValid = checkDataValid(modelRequest);
+        boolean peopleIndexValid = checkPeopleIndex(modelRequest.getPeopleId());
+        boolean useThisData = false;
+
+        if(mediaExist && locationExist &&  dataValid && peopleIndexValid) {
+            boolean interestBool = checkPeopleInterest(modelRequest.getInterestFrameCnt());
+            // mediaRepository 여러번 쿼리 던지는 것 리팩토링 해야됨.
+            Long mediaId = mediaRepository.findByTitle(modelRequest.getMediaTitle()).getMediaId();
+            mediaService.updateMediaData(mediaId, interestBool);
+            useThisData = true;
+        }
+        // 데이터 문제 여부와 상관 없이 DetectedFace에 사람별 데이터 그대로 저장
+        this.saveDetectedData(modelRequest, useThisData);
+    }
+
+    public void saveDetectedData(ModelRequest modelRequest, Boolean useBool){
+        DetectedFace detectedFace = DetectedFace.builder()
+                .detectedFaceId(modelRequest.getPeopleId())
+                .arriveAt(modelRequest.getArriveTime())
+                .leaveAt(modelRequest.getLeaveTime())
+                .faceCaptureCnt(modelRequest.getInterestFrameCnt())
+                .staring(modelRequest.getFrameData())
+                .used(useBool)
+                .build();
+        detectedFaceRepository.save(detectedFace);
+    }
+
+
+
+    public boolean checkMediaExist(String mediaTitle){
+        // mediaId 존재 여부 검증 / peopleId (사람 라벨링 인덱스가 순차적으로 들어오는지 판단)
+        if(!(mediaRepository.existsByTitle(mediaTitle))){
+            System.out.println("[FAIL] MEDIA TITLE : " + mediaTitle + " NOT EXIST "  + "\n");
+            return false;
+        }
+        System.out.println("[SUCCESS] MEDIA TITLE : " + mediaTitle + " EXIST " + "\n");
+        return true;
+    }
+
+    public boolean checkLocationExist(Long locationId){
+        // cameraId(location) 존재 여부 검증
+        if(!(locationRepository.existsById(locationId))){
+            System.out.println("[FAIL] CAMERA(LOCATION) ID : " + locationId + " NOT EXIST " + "\n");
+            return false;
+        }
+        System.out.println("[SUCCESS] CAMERA(LOCATION) ID : " + locationId + " EXIST "  + "\n");
+        return true;
+    }
+    public boolean checkDataValid(ModelRequest modelRequest){
+        // staring List Data 검증
+        // Bad case - FrameCnt 와 데이터의 개수가 맞지 않을 경우
+        if(modelRequest.getFrameData().size() != modelRequest.getPresentFrameCnt()){
+            System.out.println("[FAIL] DATA SIZE DIFFERS FROM PROMISED FRAME CNT " + modelRequest.getFrameData()  + "\n");
+            return false;
+        }
+        System.out.println("[SUCCESS] FRAME DATA VALID " + "\n");
+
+        return true;
+    }
+    public boolean checkPeopleIndex(Long peopleId){
+        // 사람 인덱스 확인 요구사항 = 기존에 나왔던 라벨과 중복 없이 올라가는지
+        // Bad case - 같은 사람에 대한 데이터를 여러번 보내는 경우
+        // Bad case - 모델의 처리 문제 등으로 라벨이 1,5,7 등 불연속적으로 붙어서 요청 들어올 경우 - 어떻게? 기존 사람 디비의 라벨링 넘버 + 1 인지 확인할까?
+
+        return true;
+    }
+
+
+
+    public boolean checkPeopleInterest(int interestFrameCnt){
+        // Data 를 판단하여 Interest 으로 판단할지 아닐지 검증하는 로직
+        if(interestFrameCnt > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
