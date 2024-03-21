@@ -2,12 +2,14 @@ package com.drm.server.domain.detectedface;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Builder
+@Getter
 public class DetectedFace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
