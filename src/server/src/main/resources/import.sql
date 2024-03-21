@@ -1,0 +1,2 @@
+INSERT INTO user(user_id,email,password,is_deleted) values (1,"test@email","$2a$e10$iPFzYQC.Yw/fESftpYk.TOBQqIX18dD14E7A6y.eV/BrTSxCDKvI.",0);
+# INSERT INTO user(user_id,email,password) values (1,"test@email","$2a$10$iPFzYQC.Yw/fESftpYk.TOBQqIX18dD14E7A6y.eV/BrTSxCDKvI.");
