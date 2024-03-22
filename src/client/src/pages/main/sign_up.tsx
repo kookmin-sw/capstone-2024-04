@@ -30,8 +30,9 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
           className="w-full p-4 rounded-md ring-1 ring-inset ring-[#d9d9d9] outline-none"
           placeholder="example@google.com"
           ref={idRef}
+          onFocus={() => setIdErr("")}
           onBlur={(e: any) => {
-            if (e.target.value == "") setIdErr("이메일을 입력해주세요.");
+            if (e.target.value === "") setIdErr("이메일을 입력해주세요.");
           }}
         />
         <button className="p-4 whitespace-nowrap text-main ring-1 ring-main rounded-md">
@@ -45,8 +46,9 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
         type="number"
         className="p-4 rounded-md ring-1 ring-inset ring-[#d9d9d9] outline-none"
         ref={codeRef}
+        onFocus={() => setCodeErr("")}
         onBlur={(e: any) => {
-          if (e.target.value == "") setCodeErr("인증번호를 입력해주세요.");
+          if (e.target.value === "") setCodeErr("인증번호를 입력해주세요.");
         }}
       />
       <p className="h-7 text-error text-sm">{codeErr}</p>
@@ -56,8 +58,9 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
         type="password"
         className="p-4 rounded-md ring-1 ring-inset ring-[#d9d9d9] outline-none"
         ref={pwRef}
+        onFocus={() => setPwErr("")}
         onBlur={(e: any) => {
-          if (e.target.value == "") setPwErr("비밀번호를 입력해주세요.");
+          if (e.target.value === "") setPwErr("비밀번호를 입력해주세요.");
         }}
       />
       <p className="h-7 text-error text-sm">{pwErr}</p>
@@ -67,6 +70,13 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
         type="password"
         className="p-4 rounded-md ring-1 ring-inset ring-[#d9d9d9] outline-none"
         ref={pwCheckRef}
+        onChange={() => {
+          if (pwCheckRef.current?.value !== pwRef.current?.value) {
+            setPwCheckErr("비밀번호가 일치하지 않습니다.");
+          } else {
+            setPwCheckErr("");
+          }
+        }}
       />
       <p className="h-7 text-error text-sm">{pwCheckErr}</p>
 
