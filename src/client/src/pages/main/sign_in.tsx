@@ -7,7 +7,11 @@ enum ErrorText {
   notEnterPw = "비밀번호를 입력해주세요.",
 }
 
-const SignInPage = ({ goToSignUp }) => {
+interface SignInPageProps {
+  goToSignUp: any;
+}
+
+const SignInPage = ({ goToSignUp }: SignInPageProps) => {
   const [errorText, setErrorText] = useState("");
   const idRef = useRef<HTMLInputElement>(null);
   const pwRef = useRef<HTMLInputElement>(null);

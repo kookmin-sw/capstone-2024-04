@@ -1,6 +1,10 @@
 import { useRef } from "react";
 
-const SignUpPage = ({ goToSignIn }) => {
+interface SignUpPageProps {
+  goToSignIn: any;
+}
+
+const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
   const idRef = useRef<HTMLInputElement>(null);
   const codeRef = useRef<HTMLInputElement>(null);
   const pwRef = useRef<HTMLInputElement>(null);
