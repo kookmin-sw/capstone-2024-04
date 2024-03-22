@@ -5,6 +5,8 @@ export default {
     extend: {
       colors: {
         main: "#4200ff",
+        error: "#ff0000",
+        placeholder: "#6b6b6b",
       },
     },
   },
