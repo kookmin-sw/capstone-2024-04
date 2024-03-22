@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 interface SignUpPageProps {
   goToSignIn: any;
@@ -9,6 +9,11 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
   const codeRef = useRef<HTMLInputElement>(null);
   const pwRef = useRef<HTMLInputElement>(null);
   const pwCheckRef = useRef<HTMLInputElement>(null);
+
+  const [idErr, setIdErr] = useState("");
+  const [pwErr, setPwErr] = useState("");
+  const [codeErr, setCodeErr] = useState("");
+  const [pwCheckErr, setPwCheckErr] = useState("");
 
   return (
     <div className="flex flex-col w-[360px]">
@@ -25,32 +30,45 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
           className="w-full p-4 rounded-md ring-1 ring-inset ring-[#d9d9d9] outline-none"
           placeholder="example@google.com"
           ref={idRef}
+          onBlur={(e: any) => {
+            if (e.target.value == "") setIdErr("이메일을 입력해주세요.");
+          }}
         />
         <button className="p-4 whitespace-nowrap text-main ring-1 ring-main rounded-md">
           인증하기
         </button>
       </div>
+      <p className="h-7 text-error text-sm">{idErr}</p>
 
-      <p className="text-placeholder mt-4">인증번호</p>
+      <p className="text-placeholder">인증번호</p>
       <input
         type="number"
         className="p-4 rounded-md ring-1 ring-inset ring-[#d9d9d9] outline-none"
         ref={codeRef}
+        onBlur={(e: any) => {
+          if (e.target.value == "") setCodeErr("인증번호를 입력해주세요.");
+        }}
       />
+      <p className="h-7 text-error text-sm">{codeErr}</p>
 
-      <p className="text-placeholder mt-4">비밀번호</p>
+      <p className="text-placeholder">비밀번호</p>
       <input
         type="password"
         className="p-4 rounded-md ring-1 ring-inset ring-[#d9d9d9] outline-none"
         ref={pwRef}
+        onBlur={(e: any) => {
+          if (e.target.value == "") setPwErr("비밀번호를 입력해주세요.");
+        }}
       />
+      <p className="h-7 text-error text-sm">{pwErr}</p>
 
-      <p className="text-placeholder mt-4">비밀번호 확인</p>
+      <p className="text-placeholder">비밀번호 확인</p>
       <input
         type="password"
         className="p-4 rounded-md ring-1 ring-inset ring-[#d9d9d9] outline-none"
         ref={pwCheckRef}
       />
+      <p className="h-7 text-error text-sm">{pwCheckErr}</p>
 
       <button className="bg-main text-white p-4 rounded-md my-5">
         회원가입
