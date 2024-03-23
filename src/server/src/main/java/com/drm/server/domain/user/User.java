@@ -27,7 +27,7 @@ public class User extends BaseTimeEntity {
     private String company;
     private boolean deleted;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",orphanRemoval = true)
     private List<Dashboard> dashboards = new ArrayList<>();
     public static User toEntity(String email,String password){
         return User.builder().email(email).password(password).deleted(false).build();

@@ -1,14 +1,12 @@
 package com.drm.server.service;
 
 import com.drm.server.controller.dto.request.ModelRequest;
-import com.drm.server.domain.detectedface.DetectedFace;
-import com.drm.server.domain.detectedface.DetectedFaceRepository;
+import com.drm.server.domain.detectedFace.DetectedFace;
+import com.drm.server.domain.detectedFace.DetectedFaceRepository;
 import com.drm.server.domain.location.LocationRepository;
 import com.drm.server.domain.media.MediaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +31,7 @@ public class DetectedDataService {
 
         if(mediaExist && locationExist &&  dataValid && peopleIndexValid) {
             boolean interestBool = checkPeopleInterest(modelRequest.getInterestFrameCnt());
-            // mediaRepository 여러번 쿼리 던지는 것 리팩토링 해야됨.
+            // mediaRepository 여러번 쿼리 던지는 것 리팩토링 해야됨.ㅌ
             Long mediaId = mediaRepository.findByTitle(modelRequest.getMediaTitle()).getMediaId();
             mediaService.updateMediaData(mediaId, interestBool);
             useThisData = true;

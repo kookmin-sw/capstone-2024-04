@@ -1,13 +1,23 @@
 package com.drm.server.domain.media;
 
+import com.drm.server.common.BaseTimeEntity;
+import com.drm.server.domain.dashboard.Dashboard;
+import com.drm.server.domain.mediaApplication.MediaApplication;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
-public class Media {
+public class Media extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mediaId;
@@ -16,5 +26,11 @@ public class Media {
     private String mediaLink;
     private String title;
     // FK - dashboardId
+    @OneToOne
+    @JoinColumn(name = "dashboard_id")
+    private Dashboard dashboard;
     // mediaLength
+
+    @OneToMany(mappedBy = "media")
+    private List<MediaApplication> mediaApplicationList = new ArrayList<>();
 }
