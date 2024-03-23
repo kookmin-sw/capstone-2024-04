@@ -23,7 +23,7 @@ public class Dashboard extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "dashboard")
+    @OneToOne(mappedBy = "dashboard",orphanRemoval = true)
     private Media media;
 
 }
