@@ -11,11 +11,12 @@ import java.util.List;
 public class ModelRequest {
     private Long peopleId;
     private Long locationId;
-    private String mediaTitle;
+    private Long mediaId;
 
     private LocalDateTime arriveTime;
     private LocalDateTime leaveTime;
     private int presentFrameCnt;
     private int interestFrameCnt;
-    private List<Boolean> frameData;
+
+    private List<Integer> frameData;
 }
