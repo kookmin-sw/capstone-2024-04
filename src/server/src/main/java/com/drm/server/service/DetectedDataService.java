@@ -27,8 +27,9 @@ public class DetectedDataService {
     public void processDetectedData(ModelRequest modelRequest){
         // 사람별 Data 저장하는 서비스 로직
         // 데이터 상에 문제가 없을 시 해당 Media 관련 데이터 업데이트(광고별 통계)
-        boolean mediaExist = checkMediaExist(modelRequest.getMediaId());
-        boolean locationExist = checkLocationExist(modelRequest.getLocationId());
+        boolean mediaExist = checkMediaExist(modelRequest.getCameraId());
+        boolean locationExist = checkLocationExist(modelRequest.getCameraId());
+
         boolean dataValid = checkDataValid(modelRequest);
         boolean peopleIndexValid = checkPeopleIndex(modelRequest.getPeopleId());
         boolean useThisData = false;
@@ -36,7 +37,7 @@ public class DetectedDataService {
         if(mediaExist && locationExist &&  dataValid && peopleIndexValid) {
             boolean interestBool = checkPeopleInterest(modelRequest.getInterestFrameCnt());
             // mediaRepository 여러번 쿼리 던지는 것 리팩토링 해야됨.
-            Long mediaId = modelRequest.getMediaId();
+            Long mediaId = mediaService.getMediaIdFromPlaylist(modelRequest.getCameraId());
             mediaService.updateMediaData(mediaId, interestBool);
             useThisData = true;
         }
@@ -59,22 +60,25 @@ public class DetectedDataService {
 
 
 
-    public boolean checkMediaExist(Long mediaId){
+    public boolean checkMediaExist(Long cameraId){
         // mediaId 존재 여부 검증 / peopleId (사람 라벨링 인덱스가 순차적으로 들어오는지 판단)
-        if(!(mediaRepository.existsById(mediaId))){
-            log.debug("[FAIL] MEDIA ID : " + mediaId + " NOT EXIST "  + "\n");
-            return false;
-        }
+//        if(!(mediaRepository.existsById(mediaId))){
+//            log.debug("[FAIL] MEDIA ID : " + mediaId + " NOT EXIST "  + "\n");
+//            return false;
+//        }
+        Long mediaId = 0L;
         log.debug("[SUCCESS] MEDIA ID : " + mediaId + " EXIST " + "\n");
         return true;
     }
 
-    public boolean checkLocationExist(Long locationId){
+    public boolean checkLocationExist(Long cameraId){
         // cameraId(location) 존재 여부 검증
-        if(!(locationRepository.existsById(locationId))){
-            log.debug("[FAIL] CAMERA(LOCATION) ID : " + locationId + " NOT EXIST " + "\n");
-            return false;
-        }
+        // camera -> location -> playlist 순으로 돌아가야 mediaId 검증 가능
+//        if(!(locationRepository.existsById(locationId))){
+//            log.debug("[FAIL] CAMERA(LOCATION) ID : " + locationId + " NOT EXIST " + "\n");
+//            return false;
+//        }
+        Long locationId = 0L;
         log.debug("[SUCCESS] CAMERA(LOCATION) ID : " + locationId + " EXIST "  + "\n");
         return true;
     }

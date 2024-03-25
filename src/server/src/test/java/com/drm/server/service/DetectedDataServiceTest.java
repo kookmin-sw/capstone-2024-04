@@ -64,8 +64,7 @@ class DetectedDataServiceTest {
             intList.add(randomInt);
         }
         ModelRequest modelRequest = ModelRequest.builder()
-                .locationId(3L)
-                .mediaId(0L)
+                .cameraId(3L)
                 .arriveTime(time.minusSeconds(20))
                 .leaveTime(time)
                 .presentFrameCnt(totalFrameCnt)
@@ -97,8 +96,7 @@ class DetectedDataServiceTest {
             intList.add(randomInt);
         }
         ModelRequest modelRequest = ModelRequest.builder()
-                .locationId(3L)
-                .mediaId(0L)
+                .cameraId(3L)
                 .arriveTime(time.minusSeconds(20))
                 .leaveTime(time)
                 .presentFrameCnt(totalFrameCnt)
