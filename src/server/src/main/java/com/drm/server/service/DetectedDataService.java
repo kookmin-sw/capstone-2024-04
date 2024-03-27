@@ -1,15 +1,13 @@
 package com.drm.server.service;
 
 import com.drm.server.controller.dto.request.ModelRequest;
-import com.drm.server.domain.detectedFace.DetectedFace;
-import com.drm.server.domain.detectedFace.DetectedFaceRepository;
+import com.drm.server.domain.detectedface.DetectedFace;
+import com.drm.server.domain.detectedface.DetectedFaceRepository;
 import com.drm.server.domain.location.LocationRepository;
 import com.drm.server.domain.media.MediaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @Slf4j
@@ -57,7 +55,6 @@ public class DetectedDataService {
                 .build();
         detectedFaceRepository.save(detectedFace);
     }
-
 
 
     public boolean checkMediaExist(Long cameraId){

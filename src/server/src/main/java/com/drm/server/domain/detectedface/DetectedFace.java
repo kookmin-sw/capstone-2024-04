@@ -1,7 +1,6 @@
-package com.drm.server.domain.detectedFace;
+package com.drm.server.domain.detectedface;
 
 import com.drm.server.common.BaseTimeEntity;
-import com.drm.server.handler.StringListConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +12,8 @@ import java.util.List;
 
 @Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class DetectedFace extends BaseTimeEntity {
     @Id
@@ -24,7 +25,7 @@ public class DetectedFace extends BaseTimeEntity {
     private LocalDateTime leaveAt;
 
 
-    @Convert(converter = DetectedDataConverter.class)
+    @Convert(converter = com.drm.server.domain.detectedface.DetectedDataConverter.class)
     private List<Integer> staring;
 
 //    private Long mediaId; (FK)
