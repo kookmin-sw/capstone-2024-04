@@ -10,4 +10,8 @@ public class MediaService {
     public void updateMediaData(Long mediaId, boolean interest){
 
     }
+
+    public Long getMediaIdFromPlaylist(Long cameraId){
+        return 0L;
+    }
 }

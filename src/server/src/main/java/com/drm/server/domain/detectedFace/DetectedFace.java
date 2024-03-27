@@ -13,8 +13,6 @@ import java.util.List;
 
 @Entity
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 public class DetectedFace extends BaseTimeEntity {
     @Id
@@ -24,9 +22,12 @@ public class DetectedFace extends BaseTimeEntity {
     @Column
     private LocalDateTime arriveAt;
     private LocalDateTime leaveAt;
-    @Convert(converter = StringListConverter.class)
-    private List<Boolean> staring;
-//    private int videoLocation; (FK)
+
+
+    @Convert(converter = DetectedDataConverter.class)
+    private List<Integer> staring;
+
+//    private Long mediaId; (FK)
     private int faceCaptureCnt;
     private int entireCaptureCnt;
     private boolean used;

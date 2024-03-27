@@ -22,7 +22,7 @@ public class DetectedDataController {
 
     private final DetectedDataService detectedDataService;
 
-    @PostMapping("/send")
+    @PostMapping()
     public ResponseEntity sendReactionData(@RequestBody ModelRequest modelRequest){
         // 모델 서버가 보낸 데이터를 저장하는 컨트롤러
         detectedDataService.processDetectedData(modelRequest);
