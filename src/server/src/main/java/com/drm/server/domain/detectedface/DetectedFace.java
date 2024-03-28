@@ -25,7 +25,7 @@ public class DetectedFace extends BaseTimeEntity {
     private LocalDateTime leaveAt;
 
 
-    @Convert(converter = com.drm.server.domain.detectedface.DetectedDataConverter.class)
+    @Convert(converter = DetectedDataConverter.class)
     private List<Integer> staring;
 
 //    private Long mediaId; (FK)
