@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/locations")
+@RequestMapping("api/v1/location")
 @RequiredArgsConstructor
 @Tag(name = "Location")
 public class LocationController {

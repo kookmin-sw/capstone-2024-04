@@ -29,7 +29,15 @@ public class MediaApplication extends BaseTimeEntity {
     @JoinColumn(name = "media_id")
     private Media media;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+
+
     @OneToOne(mappedBy = "mediaApplication")
     private PlayList playList;
+
+
 
 }

@@ -4,4 +4,5 @@ import jakarta.validation.Valid;
 
 @Valid
 public class MediaApplicationRequest {
+
 }

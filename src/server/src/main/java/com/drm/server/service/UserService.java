@@ -86,4 +86,7 @@ public class UserService {
         User getUser =userRepository.save(setUser);
         return new UserResponse.UserInfo(getUser.getUserId(), getUser.getEmail());
     }
+    public User getUser(String userId){
+        return userRepository.findById(Long.valueOf(userId)).orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+    }
 }

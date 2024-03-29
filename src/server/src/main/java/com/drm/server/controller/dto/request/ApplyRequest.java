@@ -1,16 +1,18 @@
 package com.drm.server.controller.dto.request;
 
 import jakarta.validation.Valid;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
 @Valid
-public class MediaRequest {
+public class ApplyRequest {
+    @Builder
     @Getter
     @Setter
     public static class Create{
-        private Long dashBoardId;
-        private String title;
 
+        private Long locationId;
+        private String startDate;
+        private String endDate;
     }
 }

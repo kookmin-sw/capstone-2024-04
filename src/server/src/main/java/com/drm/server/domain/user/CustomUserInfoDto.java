@@ -11,6 +11,6 @@ public class CustomUserInfoDto {
     Long userId;
     String email;
     String password;
-    boolean isDeleted;
+    boolean deleted;
 
 }
