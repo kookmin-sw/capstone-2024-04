@@ -1,16 +1,21 @@
 package com.drm.server.domain.detectedface;
 
+import com.drm.server.common.BaseTimeEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
-public class DetectedFace {
+public class DetectedFace extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long detectedFaceId;
@@ -18,8 +23,12 @@ public class DetectedFace {
     @Column
     private LocalDateTime arriveAt;
     private LocalDateTime leaveAt;
-    private List<Boolean> staring;
-//    private int videoLocation; (FK)
+
+
+    @Convert(converter = DetectedDataConverter.class)
+    private List<Integer> staring;
+
+//    private Long mediaId; (FK)
     private int faceCaptureCnt;
     private int entireCaptureCnt;
     private boolean used;

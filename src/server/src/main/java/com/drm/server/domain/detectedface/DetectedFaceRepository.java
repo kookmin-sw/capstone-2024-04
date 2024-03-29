@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DetectedFaceRepository extends JpaRepository<DetectedFace, Long> {
+    DetectedFace findFirstByOrderByDetectedFaceIdDesc();
 }
