@@ -36,8 +36,10 @@ git clone https://github.com/kookmin-sw/capstone-2024-04.git
 <details>
 <summary>Server</summary>
 <div markdown="1">
-
-    실행 방법을 작성해주세요.
+    
+    cd src/server/
+    docker-compose up -d
+    ./gradlew bootRun
 
 </div>
 </details>
