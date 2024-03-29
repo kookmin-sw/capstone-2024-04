@@ -1,5 +1,6 @@
 package com.drm.server.domain.detectedface;
 
+import com.drm.server.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +12,10 @@ import java.util.List;
 
 @Entity
 @Builder
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DetectedFace {
+@Getter
+public class DetectedFace extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long detectedFaceId;

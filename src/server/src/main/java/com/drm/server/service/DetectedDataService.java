@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -59,7 +57,6 @@ public class DetectedDataService {
     }
 
 
-
     public boolean checkMediaExist(Long cameraId){
         // mediaId 존재 여부 검증 / peopleId (사람 라벨링 인덱스가 순차적으로 들어오는지 판단)
 //        if(!(mediaRepository.existsById(mediaId))){
@@ -89,7 +86,7 @@ public class DetectedDataService {
             log.debug("[FAIL] DATA SIZE DIFFERS FROM PROMISED FRAME CNT " + modelRequest.getFrameData()  + "\n");
             return false;
         }
-        log.debug("[SUCCESS] FRAME DATA VALID " + "\n");
+        System.out.println("[SUCCESS] FRAME DATA VALID " + "\n");
 
         return true;
     }
