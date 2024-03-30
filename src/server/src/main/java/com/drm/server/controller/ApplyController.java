@@ -16,6 +16,7 @@ public class ApplyController {
     private final MediaService mediaService;
     @PostMapping("{mediaId}/apply")
     public ResponseEntity<?> apply (@PathVariable Long mediaId, @RequestBody ApplyRequest.Create request){
+
     }
 }
 

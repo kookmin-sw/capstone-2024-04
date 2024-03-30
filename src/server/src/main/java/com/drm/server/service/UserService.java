@@ -21,7 +21,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
-    private static final String AUTH_CODE_PREFIX = "AuthCode";
+    private static final String AUTH_CODE_PREFIX = "AuthCode:";
 
     private final UserRepository userRepository;
 
