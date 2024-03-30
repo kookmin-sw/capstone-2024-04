@@ -50,7 +50,9 @@ git clone https://github.com/kookmin-sw/capstone-2024-04.git
 <summary>Model</summary>
 <div markdown="1">
 
-    실행 방법을 작성해주세요.
+    cd src/model
+    pip install -r requirements.txt
+    python fastapi/main.py
 
 </div>
 </details>
