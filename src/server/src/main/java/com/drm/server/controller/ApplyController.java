@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/dashboard/media/")
 @Tag(name = "Apply")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "x-requested-with, Authorization, Content-Type")
 public class ApplyController {
     private final MediaService mediaService;
     @PostMapping("{mediaId}/apply")

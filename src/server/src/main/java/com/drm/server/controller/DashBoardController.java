@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/dashboard")
 @RequiredArgsConstructor
 @Tag(name = "Dashboard",description = "대시보드 관련 API")
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "x-requested-with, Authorization, Content-Type")
 public class DashBoardController {
     @GetMapping()
     @Operation(summary = "전체 대시보드 리스트 조회")

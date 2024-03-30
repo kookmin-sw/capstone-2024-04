@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/media")
 @RequiredArgsConstructor
 @Tag(name = "Media",description = "광고 등록 관련 api")
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "x-requested-with, Authorization, Content-Type")
 public class MediaController {
     private final UserService userService;
     private final DashboardService dashboardService;
