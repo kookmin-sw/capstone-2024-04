@@ -1,76 +1,56 @@
-# Welcome to GitHub
+# Do you Read me? (DRM)
+### 1. 프로젝트 소개
 
-캡스톤 팀 생성을 축하합니다.
+"Do you read me?"는 데이터 분석을 통해 옥외 광고의 효율성을 극대화하는 웹 서비스입니다. DRM은 디스플레이 근처의 유동 인구와 타겟층 정보를 분석하여 광고주가 시각적으로 쉽게 이해할 수 있는 대시보드를 제공합니다. 광고주는 대시보드를 통해 사람들의 관심도와 반응을 분석하고 이를 바탕으로 최적의 광고 전략을 수립할 수 있습니다. DRM은 광고주에게 데이터 기반의 솔루션을 제공함으로써 광고의 효과를 극대화하고 광고 캠페인의 ROI를 향상시키는 데 기여합니다. 
 
-## 팀소개 및 페이지를 꾸며주세요..
+### 2. Abstract
 
-- 프로젝트 소개
-  - 프로젝트 설치방법 및 데모, 사용방법, 프리뷰등을 readme.md에 작성.
-  - Api나 사용방법등 내용이 많을경우 wiki에 꾸미고 링크 추가.
+The "Do you read me?" project is a web service designed to optimize the effectiveness of outdoor advertising through data analysis. By providing a dashboard that visually represents the flow of people and target demographics near display locations, it enables advertisers to easily understand and analyze public interest and responses. This data-driven solution allows for the development of optimal advertising strategies, maximizing the impact of advertisements and enhancing the return on investment (ROI) for advertisers.
 
-- 팀페이지 꾸미기
-  - 프로젝트 소개 및 팀원 소개
-  - index.md 예시보고 수정.
-
-- GitHub Pages 리파지토리 Settings > Options > GitHub Pages 
-  - Source를 marster branch
-  - Theme Chooser에서 태마선택
-  - 수정후 팀페이지 확인하여 점검.
-
-**팀페이지 주소** -> https://kookmin-sw.github.io/ '{{자신의 리파지토리 아이디}}'
-
-**예시)** 2023년 0조  https://kookmin-sw.github.io/capstone-2023-00/
+### 3. 소개 영상
 
 
-## 내용에 아래와 같은 내용들을 추가하세요.
+### 4. 팀 소개
 
-### 1. 프로잭트 소개
+|<img width="60" src="https://github.com/donggook-me.png">|<img width="60" src="https://github.com/ssoree912.png">|<img width="60" src="https://github.com/soobinheo.png">|<img width="60" src="https://github.com/khleexv.png">|<img width="60" src="https://github.com/Choi-Jiwon-38.png">|<img width="60" src="https://github.com/jangsumi.png">|
+|---|---|---|---|---|---|
+|[이동국(****2282)](https://github.com/donggook-me)|[황솔희(****3168)](https://github.com/ssoree912)|[허수빈(****1320)](https://github.com/soobinheo)|[이강희(****1653)](https://github.com/khleexv)|[최지원(****3091)](https://github.com/Choi-Jiwon-38)|[장수미(****3216)](https://github.com/jangsumi)|
+|Back-End|Back-End|AI|AI|Front-End|PM, Designer|
 
-프로젝트
+### 5. 사용법
 
-### 2. 소개 영상
-
-프로젝트 소개하는 영상을 추가하세요
-
-### 3. 팀 소개
-
-팀을 소개하세요.
-
-팀원정보 및 담당이나 사진 및 SNS를 이용하여 소개하세요.
-
-### 4. 사용법
-
-소스코드제출시 설치법이나 사용법을 작성하세요.
-
-### 5. 기타
-
-추가적인 내용은 자유롭게 작성하세요.
-
-
-## Markdown을 사용하여 내용꾸미기
-
-Markdown은 작문을 스타일링하기위한 가볍고 사용하기 쉬운 구문입니다. 여기에는 다음을위한 규칙이 포함됩니다.
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+Common
+```bash
+git clone https://github.com/kookmin-sw/capstone-2024-04.git
 ```
 
-자세한 내용은 [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+<details>
+<summary>Client</summary>
+<div markdown="1">
 
-### Support or Contact
+    cd src/client/ 
+    yarn
+    yarn run dev
 
-readme 파일 생성에 추가적인 도움이 필요하면 [도움말](https://help.github.com/articles/about-readmes/) 이나 [contact support](https://github.com/contact) 을 이용하세요.
+</div>
+</details>
+
+<details>
+<summary>Server</summary>
+<div markdown="1">
+    
+    cd src/server/
+    docker-compose up -d
+    ./gradlew bootRun
+
+</div>
+</details>
+
+<details>
+<summary>Model</summary>
+<div markdown="1">
+
+    실행 방법을 작성해주세요.
+
+</div>
+</details>
