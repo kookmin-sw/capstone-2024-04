@@ -26,6 +26,7 @@ public class Media extends BaseTimeEntity {
     @Column
     private String mediaLink;
     private String title;
+    private String description;
     // FK - dashboardId
     @OneToOne
     @JoinColumn(name = "dashboard_id")
@@ -36,7 +37,7 @@ public class Media extends BaseTimeEntity {
     private List<MediaApplication> mediaApplicationList = new ArrayList<>();
 
     public static Media toEntity(MediaRequest.Create mediaRequest, String mediaLink,Dashboard dashboard){
-        return Media.builder().mediaLink(mediaLink).title(mediaRequest.getTitle()).dashboard(dashboard).build();
+        return Media.builder().mediaLink(mediaLink).title(mediaRequest.getAdvertisementTitle()).description(mediaRequest.getAdvertisementDescription()).dashboard(dashboard).build();
     }
 
 }

@@ -29,8 +29,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("서버 api")
-                .description("이것은 설명")
+                .title("DRM 서버 api")
+                .description("DRM 서버 api , ip 주소 변경 예정")
                 .version("1.0.0");
     }
 }
