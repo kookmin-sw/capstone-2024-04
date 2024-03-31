@@ -21,15 +21,15 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect # ?? ?? ??
     generate-ddl: true
-
   sql:
     init:
       mode: always
   mail:
     host: smtp.gmail.com
     port: 587
-#    username: ${mail-account}
-#    password: ${mail-password}
+    username: ${mail-account}
+    password: ${mail-password}
+
     properties:
       mail:
         smtp:
@@ -41,6 +41,10 @@ spring:
           timeout: 5000
           writetimeout: 5000
     auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30?
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 springdoc:
   swagger-ui:
