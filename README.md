@@ -9,6 +9,8 @@ The "Do you read me?" project is a web service designed to optimize the effectiv
 
 ### 3. 소개 영상
 
+[![Video Label](http://img.youtube.com/vi/Qv744Msoz18/0.jpg)](https://youtu.be/Qv744Msoz18)
+
 
 ### 4. 팀 소개
 
