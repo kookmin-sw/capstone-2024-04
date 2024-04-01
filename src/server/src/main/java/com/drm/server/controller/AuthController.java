@@ -7,6 +7,7 @@ import com.drm.server.controller.dto.request.UserRequest;
 import com.drm.server.controller.dto.response.UserResponse;
 import com.drm.server.service.TokenService;
 import com.drm.server.service.UserService;
+import com.google.firebase.internal.FirebaseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -77,5 +78,4 @@ public class AuthController {
         APIResponse response = APIResponse.of(SuccessCode.INSERT_SUCCESS, tokenInfo);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-
 }

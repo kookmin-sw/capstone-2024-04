@@ -2,11 +2,15 @@ package com.drm.server.domain.location;
 
 import com.drm.server.common.BaseTimeEntity;
 import com.drm.server.domain.admin.Admin;
+import com.drm.server.domain.mediaApplication.MediaApplication;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -25,4 +29,7 @@ public class Location extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "admin_id")
     private Admin admin;
+
+    @OneToMany(mappedBy = "location")
+    private List<MediaApplication> mediaApplications = new ArrayList<>();
 }

@@ -59,6 +59,9 @@ springdoc:
   writer-with-default-pretty-printer: true
   model-and-view-allowed: true
 
+s3:
+  access-key: ${access-key}
+  secret-key: ${secret-key}
 #server:
 #  port: 80
 
