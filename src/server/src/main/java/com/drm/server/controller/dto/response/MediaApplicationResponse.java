@@ -32,12 +32,10 @@ public class MediaApplicationResponse {
 
     public static class TotalApplicationInfo{
         private MediaResponse.MediaInfo mediaInfo;
-        private DashboardResponse.DashboardInfo dashboardInfo;
         private MediaApplicationInfo mediaApplicationInfo;
 
-        public TotalApplicationInfo(Media media, Dashboard dashboard, MediaApplication mediaApplication, Location location) {
+        public TotalApplicationInfo(Media media, MediaApplication mediaApplication, Location location) {
             this.mediaInfo = new MediaResponse.MediaInfo(media);
-            this.dashboardInfo = new DashboardResponse.DashboardInfo(dashboard);
             this.mediaApplicationInfo = new MediaApplicationInfo(mediaApplication,location);
         }
     }

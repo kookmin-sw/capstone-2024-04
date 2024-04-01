@@ -61,7 +61,7 @@ public class MediaController {
         Media media=  mediaService.createMedia(create, dashboard,multipartFile);
         MediaApplication mediaApplication = mediaApplicationService.createMediaApplication(media,location,create.getStartDate(),create.getEndDate());
 
-        MediaApplicationResponse.TotalApplicationInfo applicationInfo = new MediaApplicationResponse.TotalApplicationInfo(media, dashboard, mediaApplication, location);
+        MediaApplicationResponse.TotalApplicationInfo applicationInfo = new MediaApplicationResponse.TotalApplicationInfo(media, mediaApplication, location);
         APIResponse response = APIResponse.of(SuccessCode.INSERT_SUCCESS, applicationInfo);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

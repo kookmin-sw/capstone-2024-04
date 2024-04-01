@@ -1,9 +1,19 @@
 package com.drm.server.controller;
 
+import com.drm.server.common.APIResponse;
 import com.drm.server.common.ErrorResponse;
+import com.drm.server.common.enums.SuccessCode;
 import com.drm.server.controller.dto.request.ApplyRequest;
+import com.drm.server.controller.dto.response.MediaApplicationResponse;
+import com.drm.server.domain.location.Location;
 import com.drm.server.domain.media.Media;
+import com.drm.server.domain.mediaApplication.MediaApplication;
+import com.drm.server.domain.user.CustomUserDetails;
+import com.drm.server.domain.user.User;
+import com.drm.server.service.LocationService;
+import com.drm.server.service.MediaApplicationService;
 import com.drm.server.service.MediaService;
+import com.drm.server.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,16 +21,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/dashboard/media/")
+@RequestMapping("/api/v1/media/")
 @Tag(name = "Apply")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "x-requested-with, Authorization, Content-Type")
 public class ApplyController {
     private final MediaService mediaService;
+    private final UserService userService;
+    private final LocationService locationService;
+    private final MediaApplicationService mediaApplicationService;
     @PostMapping("{mediaId}/apply")
     @Operation(summary = "광고 신청")
     @ApiResponses(value = {
@@ -31,7 +46,16 @@ public class ApplyController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    public void apply (@PathVariable Long mediaId, @RequestBody ApplyRequest.Create request){
+    public ResponseEntity<APIResponse<MediaApplicationResponse.TotalApplicationInfo>> apply (@PathVariable Long mediaId, @RequestBody ApplyRequest.Create request, @AuthenticationPrincipal CustomUserDetails userDetails){
+        User getUser = userService.getUser(userDetails.getUsername());
+        Location location = locationService.findById(request.getLocationId());
+        Media media = mediaService.findById(mediaId,getUser);
+
+        MediaApplication mediaApplication = mediaApplicationService.createMediaApplication(media, location, request.getStartDate(), request.getEndDate());
+        MediaApplicationResponse.TotalApplicationInfo info = new MediaApplicationResponse.TotalApplicationInfo(media, mediaApplication, location);
+
+        APIResponse response = APIResponse.of(SuccessCode.INSERT_SUCCESS, info);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @DeleteMapping("{mediaId}/apply/{applyId}")
     @Operation(summary = "신청 취소")

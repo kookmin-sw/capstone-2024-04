@@ -14,12 +14,14 @@ public class MediaResponse {
         private String mediaLink;
         private String title;
         private String description;
+        private DashboardResponse.DashboardInfo dashboardInfo;
 
         public MediaInfo(Dashboard dashboard) {
             this.mediaId = dashboard.getMedia().getMediaId();
             this.mediaLink = dashboard.getMedia().getMediaLink();
             this.title = dashboard.getMedia().getTitle();
             this.description = dashboard.getMedia().getDescription();
+            this.dashboardInfo = new DashboardResponse.DashboardInfo(dashboard);
         }
 
         public MediaInfo(Media media) {
@@ -27,13 +29,8 @@ public class MediaResponse {
             this.mediaLink = media.getMediaLink();
             this.title = media.getTitle();
             this.description = media.getDescription();
+            this.dashboardInfo = new DashboardResponse.DashboardInfo(media.getDashboard());
         }
     }
-    @Getter
-    @Setter
-    @Builder
-    public static class MediaAndDashboardInfo{
-        private MediaInfo mediaInfo;
-        private DashboardResponse.DashboardInfo dashboardInfo;
-    }
+
 }

@@ -9,6 +9,7 @@ import com.drm.server.domain.dashboard.DashboardRepository;
 import com.drm.server.domain.media.Media;
 import com.drm.server.domain.media.MediaRepository;
 import com.drm.server.domain.user.User;
+import com.drm.server.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +40,9 @@ public class MediaService {
         List<MediaResponse.MediaInfo> mediaResponses = dashboards.stream().map(MediaResponse.MediaInfo::new).collect(Collectors.toList());
         return mediaResponses;
     }
-    public Media findById(Long mediaId){
-        return mediaRepository.findById(mediaId).orElseThrow(() -> new IllegalArgumentException("Invalid mediaId"));
+    public Media findById(Long mediaId,User user){
+        Media media =mediaRepository.findById(mediaId).orElseThrow(() -> new IllegalArgumentException("Invalid mediaId"));
+        if(media.getDashboard().getUser()!=user) throw new ForbiddenException("해당 유저가 등록한 광고가 아닙니다");
+        return media;
     }
 }
