@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -40,8 +42,8 @@ public class MediaApplication extends BaseTimeEntity {
     @JoinColumn(name = "location_id")
     private Location location;
 
-    @OneToOne(mappedBy = "mediaApplication")
-    private PlayList playList;
+    @OneToMany(mappedBy = "mediaApplication")
+    private List<PlayList> playList = new ArrayList<>();
 
     public static MediaApplication toEntity(String startDate,String endDate, Media media, Location location){
         return MediaApplication.builder()

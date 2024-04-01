@@ -5,12 +5,7 @@ import com.drm.server.common.ErrorResponse;
 import com.drm.server.common.enums.SuccessCode;
 import com.drm.server.controller.dto.request.ApplyRequest;
 import com.drm.server.controller.dto.response.MediaApplicationResponse;
-import com.drm.server.domain.admin.Admin;
 import com.drm.server.domain.mediaApplication.MediaApplication;
-import com.drm.server.domain.mediaApplication.Status;
-import com.drm.server.domain.user.CustomUserDetails;
-import com.drm.server.service.AdminService;
-import com.drm.server.service.LocationService;
 import com.drm.server.service.MediaApplicationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,8 +29,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "x-requested-with, Authorization, Content-Type")
 public class ApplyController {
-    private final AdminService adminService;
-    private final LocationService locationService;
     private final MediaApplicationService mediaApplicationService;
     @PatchMapping("/{applyId}")
     @Operation(summary = "신청 상태 변경")

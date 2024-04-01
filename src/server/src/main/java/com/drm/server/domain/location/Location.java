@@ -3,6 +3,7 @@ package com.drm.server.domain.location;
 import com.drm.server.common.BaseTimeEntity;
 import com.drm.server.domain.admin.Admin;
 import com.drm.server.domain.mediaApplication.MediaApplication;
+import com.drm.server.domain.playlist.PlayList;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,4 +33,7 @@ public class Location extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "location")
     private List<MediaApplication> mediaApplications = new ArrayList<>();
+
+    @OneToMany(mappedBy = "location")
+    private List<PlayList> playLists = new ArrayList<>();
 }
