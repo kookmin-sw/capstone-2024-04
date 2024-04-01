@@ -1,4 +1,4 @@
-package com.drm.server.controller;
+package com.drm.server.controller.client;
 
 import com.drm.server.common.APIResponse;
 import com.drm.server.common.ErrorResponse;
@@ -29,7 +29,7 @@ public class LocationController {
     private final LocationService locationService;
     @Operation(summary = "디스플레이 장소 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "성공"),
+            @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "토큰 시간 만료, 형식 오류,로그아웃한 유저 접근,헤더에 값이 없을때",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "권한이 없는 경우",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),

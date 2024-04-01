@@ -1,6 +1,8 @@
 package com.drm.server.domain.mediaApplication;
 
 import com.drm.server.common.BaseTimeEntity;
+import com.drm.server.common.KoreaLocalDateTime;
+import com.drm.server.domain.location.Location;
 import com.drm.server.domain.media.Media;
 import com.drm.server.domain.playlist.PlayList;
 import jakarta.persistence.*;
@@ -9,7 +11,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -22,8 +27,8 @@ public class MediaApplication extends BaseTimeEntity {
     private Long mediaApplicationId;
 
     @Column
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     @ManyToOne
     @JoinColumn(name = "media_id")
@@ -33,11 +38,25 @@ public class MediaApplication extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
+
+    @OneToMany(mappedBy = "mediaApplication")
+    private List<PlayList> playList = new ArrayList<>();
+
+    public static MediaApplication toEntity(String startDate,String endDate, Media media, Location location){
+        return MediaApplication.builder()
+                .startDate(KoreaLocalDateTime.stringToLocalDateTime(startDate))
+                .endDate(KoreaLocalDateTime.stringToLocalDateTime(endDate))
+                .media(media)
+                .location(location)
+                .status(Status.WAITING)
+                .build();
+    }
 
 
-    @OneToOne(mappedBy = "mediaApplication")
-    private PlayList playList;
-
-
-
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }

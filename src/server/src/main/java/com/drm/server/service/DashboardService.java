@@ -9,6 +9,9 @@ import com.drm.server.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DashboardService {
@@ -17,5 +20,9 @@ public class DashboardService {
     public Dashboard createDashboard(MediaRequest.Create create, User user){
         Dashboard dashboard = Dashboard.toEntity(create.getDashboardTitle(), create.getDashboardDescription(), user);
         return dashboardRepository.save(dashboard);
+    }
+    public List<Dashboard> findByUser(User user){
+        List<Dashboard> dashboards = dashboardRepository.findByUser(user).orElse(Collections.emptyList());
+        return dashboards;
     }
 }

@@ -1,4 +1,4 @@
-package com.drm.server.controller;
+package com.drm.server.controller.client;
 
 import com.drm.server.common.APIResponse;
 import com.drm.server.common.ErrorResponse;
@@ -7,6 +7,8 @@ import com.drm.server.controller.dto.request.UserRequest;
 import com.drm.server.controller.dto.response.UserResponse;
 import com.drm.server.service.TokenService;
 import com.drm.server.service.UserService;
+import com.google.firebase.internal.FirebaseService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,6 +30,7 @@ public class AuthController {
 
     private final UserService userService;
     private final TokenService tokenService;
+    @Hidden
     @Operation(summary = "인증번호 전송")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "성공"),
@@ -43,6 +46,7 @@ public class AuthController {
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+    @Hidden
     @Operation(summary = "인증번호 확인")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "성공"),
@@ -65,8 +69,9 @@ public class AuthController {
     })
     @PostMapping("/signup")
     public ResponseEntity<APIResponse<UserResponse.UserInfo>> signUp(@Valid @RequestBody UserRequest.SignUp signUp){
-        userService.verifiedCode(signUp.getEmail(), signUp.getAuthCode());
-        UserResponse.UserInfo userInfo = userService.createUser(signUp.getEmail(), signUp.getPassword());
+//        userService.verifiedCode(signUp.getEmail(), signUp.getAuthCode());
+        userService.checkDuplicatedEmail(signUp.getEmail());
+        UserResponse.UserInfo userInfo = userService.createUser(signUp.getEmail(), signUp.getPassword(),signUp.getCompany());
         APIResponse response = APIResponse.of(SuccessCode.INSERT_SUCCESS, userInfo);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -77,5 +82,4 @@ public class AuthController {
         APIResponse response = APIResponse.of(SuccessCode.INSERT_SUCCESS, tokenInfo);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-
 }

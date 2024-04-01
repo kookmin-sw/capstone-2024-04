@@ -13,7 +13,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LocationService {
     private final LocationRepository locationRepository;
-
+    public Location findById(Long locationId){
+        return locationRepository.findById(locationId).orElseThrow(() -> new IllegalArgumentException("Invalid locationId"));
+    }
     public List<LocationResponse.LocationInfo> getLocations(){
         List<Location> locations = locationRepository.findAll();
         List<LocationResponse.LocationInfo> locationInfos = locations.stream().map(LocationResponse.LocationInfo::new).collect(Collectors.toList());

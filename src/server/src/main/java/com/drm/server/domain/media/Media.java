@@ -24,6 +24,7 @@ public class Media extends BaseTimeEntity {
     private Long mediaId;
 
     @Column
+    private String fileName;
     private String mediaLink;
     private String title;
     private String description;
@@ -36,8 +37,8 @@ public class Media extends BaseTimeEntity {
     @OneToMany(mappedBy = "media")
     private List<MediaApplication> mediaApplicationList = new ArrayList<>();
 
-    public static Media toEntity(MediaRequest.Create mediaRequest, String mediaLink,Dashboard dashboard){
-        return Media.builder().mediaLink(mediaLink).title(mediaRequest.getAdvertisementTitle()).description(mediaRequest.getAdvertisementDescription()).dashboard(dashboard).build();
+    public static Media toEntity(MediaRequest.Create mediaRequest,String fileName, String mediaLink,Dashboard dashboard){
+        return Media.builder().fileName(fileName).mediaLink(mediaLink).title(mediaRequest.getAdvertisementTitle()).description(mediaRequest.getAdvertisementDescription()).dashboard(dashboard).build();
     }
 
 }
