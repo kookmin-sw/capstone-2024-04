@@ -1,6 +1,7 @@
 package com.drm.server.domain.user;
 
 import com.drm.server.common.BaseTimeEntity;
+import com.drm.server.common.enums.Authority;
 import com.drm.server.domain.dashboard.Dashboard;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,9 @@ public class User extends BaseTimeEntity {
     private String password;
     private String company;
     private boolean deleted;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Authority authority = Authority.USER;
 
     @OneToMany(mappedBy = "user",orphanRemoval = true)
     private List<Dashboard> dashboards = new ArrayList<>();

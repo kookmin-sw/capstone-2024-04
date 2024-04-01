@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
     private static final String USER_ID = "userId";
+    private static final String AUTHORITY = "authority";
     private static final String BEARER_TYPE = "Bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 12 * 60 * 60 * 1000L;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
@@ -77,6 +78,7 @@ public class JwtTokenProvider {
     public UserResponse.TokenInfo generateToken(CustomUserInfoDto user) {
         Claims claims = Jwts.claims();
         claims.put(USER_ID, user.getUserId());
+        claims.put(AUTHORITY, user.getAuthority());
 //        log.info(claims.get("userId",Long.class).toString());
         // Check if the user has the TEST role
 //        if (getUser.getRole() == Role.TEST) {
@@ -141,7 +143,6 @@ public class JwtTokenProvider {
 
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(claims.get(USER_ID,Long.class).toString());
 //        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
-        log.info(userDetails.getUsername());
         return new UsernamePasswordAuthenticationToken(userDetails, accessToken, userDetails.getAuthorities());
     }
 

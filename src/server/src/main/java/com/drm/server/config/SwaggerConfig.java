@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,6 +27,22 @@ public class SwaggerConfig {
                 .components(components)
                 .info(apiInfo());
     }
+    @Bean
+    public GroupedOpenApi group1() {
+        return GroupedOpenApi.builder()
+                .group("client")
+                .pathsToMatch("/api/v1/**")
+                // .packagesToScan("com.example.swagger") // package 필터 설정
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi group2() {
+        return GroupedOpenApi.builder()
+                .group("admin")
+                .pathsToMatch("/api/v2/**")
+                .build();
+    }
 
     private Info apiInfo() {
         return new Info()
@@ -33,4 +50,5 @@ public class SwaggerConfig {
                 .description("DRM 서버 api , ip 주소 변경 예정")
                 .version("1.0.0");
     }
+
 }

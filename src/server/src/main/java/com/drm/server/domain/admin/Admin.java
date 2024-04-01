@@ -1,6 +1,7 @@
 package com.drm.server.domain.admin;
 
 import com.drm.server.common.BaseTimeEntity;
+import com.drm.server.common.enums.Authority;
 import com.drm.server.domain.location.Location;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class Admin extends BaseTimeEntity {
     @Column
     private String email;
     private String password;
+    private Authority authority;
 
     @OneToMany(mappedBy = "admin")
     private List<Location> locations = new ArrayList<>();
