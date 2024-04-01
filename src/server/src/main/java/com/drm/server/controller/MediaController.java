@@ -79,9 +79,8 @@ public class MediaController {
         User getUser = userService.getUser(userDetails.getUsername());
         List<Dashboard> dashboards = dashboardService.findByUser(getUser);
         List<MediaResponse.MediaInfo> mediaInfos = mediaService.findByDashboard(dashboards);
-        APIResponse response = APIResponse.of(SuccessCode.INSERT_SUCCESS, mediaInfos);
+        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, mediaInfos);
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
     @Operation(summary = "광고 삭제")
     @ApiResponses(value = {
