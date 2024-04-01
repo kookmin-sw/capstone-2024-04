@@ -1,5 +1,6 @@
 package com.drm.server.config.jwt;
 
+import com.drm.server.common.enums.Authority;
 import com.drm.server.controller.dto.response.UserResponse;
 import com.drm.server.domain.user.CustomUserInfoDto;
 import com.drm.server.domain.user.UserRepository;
@@ -80,34 +81,30 @@ public class JwtTokenProvider {
         claims.put(USER_ID, user.getUserId());
         claims.put(AUTHORITY, user.getAuthority());
 //        log.info(claims.get("userId",Long.class).toString());
-        // Check if the user has the TEST role
-//        if (getUser.getRole() == Role.TEST) {
-//            // Set the access token expiration time to infinity for TEST users
-//            long now = (new Date()).getTime();
-//            Date accessTokenExpiresIn = new Date(Long.MAX_VALUE);
-//
-//            // Generate the access token
-//            String accessToken = Jwts.builder()
-//                    .setSubject(email)
-//                    .claim(AUTHORITIES_KEY, "authorities")
-//                    .setExpiration(accessTokenExpiresIn)
-//                    .signWith(key, SignatureAlgorithm.HS256)
-//                    .compact();
-//
-//            // Generate the refresh token
-//            String refreshToken = Jwts.builder()
-//                    .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-//                    .signWith(key, SignatureAlgorithm.HS256)
-//                    .compact();
-//
-//            return UsersResponseDTO.TokenInfo.builder()
-//                    .grantType(BEARER_TYPE)
-//                    .accessToken(accessToken)
-//                    .refreshToken(refreshToken)
-//                    .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
-//                    .role(role)
-//                    .build();
-//        } else {
+        if (user.getUserId() == 1 || user.getAuthority().equals(Authority.ADMIN)) {
+            // Set the access token expiration time to infinity for TEST users
+            Date accessTokenExpiresIn = new Date(Long.MAX_VALUE);
+
+            // Generate the access token
+            String accessToken = Jwts.builder()
+                    .setClaims(claims)
+                    .setExpiration(accessTokenExpiresIn)
+                    .signWith(key, SignatureAlgorithm.HS256)
+                    .compact();
+
+            // Generate the refresh token
+            String refreshToken = Jwts.builder()
+                    .setExpiration(accessTokenExpiresIn)
+                    .signWith(key, SignatureAlgorithm.HS256)
+                    .compact();
+
+            return UserResponse.TokenInfo.builder()
+                    .grantType(BEARER_TYPE)
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
+                    .build();
+        } else {
 //            // Generate the access and refresh tokens normally for non-TEST users
             ZonedDateTime now = ZonedDateTime.now();
             ZonedDateTime accessTokenExpiresIn = now.plusSeconds( ACCESS_TOKEN_EXPIRE_TIME);
@@ -133,7 +130,7 @@ public class JwtTokenProvider {
                     .refreshToken(refreshToken)
                     .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
                     .build();
-//        }
+        }
     }
 
     // JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드

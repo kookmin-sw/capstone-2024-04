@@ -1,5 +1,6 @@
 package com.drm.server.controller.dto.request;
 
+import com.drm.server.domain.mediaApplication.Status;
 import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,5 +15,11 @@ public class ApplyRequest {
         private Long locationId;
         private String startDate;
         private String endDate;
+    }
+    @Getter
+    @Setter
+    public static class UpdateStatus{
+        private Status status;
+
     }
 }

@@ -58,7 +58,7 @@ public class ApplyController {
         Media media = mediaService.findById(mediaId,getUser);
 
         MediaApplication mediaApplication = mediaApplicationService.createMediaApplication(media, location, request.getStartDate(), request.getEndDate());
-        MediaApplicationResponse.TotalApplicationInfo info = new MediaApplicationResponse.TotalApplicationInfo(media, mediaApplication);
+        MediaApplicationResponse.TotalApplicationInfo info = new MediaApplicationResponse.TotalApplicationInfo(mediaApplication);
 
         APIResponse response = APIResponse.of(SuccessCode.INSERT_SUCCESS, info);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -109,8 +109,8 @@ public class ApplyController {
         User getUser = userService.getUser(userDetails.getUsername());
         Media getMedia = mediaService.findById(mediaId,getUser);
         List<MediaApplication> mediaApplications = mediaApplicationService.findByMedia(getMedia);
-        List<MediaApplicationResponse.MediaApplicationInfo> mediaApplicationInfos = mediaApplications.stream().map(MediaApplicationResponse.MediaApplicationInfo::new).collect(Collectors.toList());
-        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, mediaApplicationInfos);
+        List<MediaApplicationResponse.MediaApplicationInfo> totalApplicationInfos = mediaApplications.stream().map(MediaApplicationResponse.MediaApplicationInfo::new).collect(Collectors.toList());
+        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, totalApplicationInfos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

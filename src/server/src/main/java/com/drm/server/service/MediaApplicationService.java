@@ -24,19 +24,29 @@ public class MediaApplicationService {
         return mediaApplicationRepository.save(mediaApplication);
     }
     public void deleteMediaApplication(Long mediaId, Long mediaApplicationId, User user){
-        MediaApplication mediaApplication = findById(mediaId, mediaApplicationId, user);
-        mediaApplicationRepository.delete(mediaApplication);
-    }
-    public MediaApplication findById(Long mediaId, Long mediaApplicationId, User user){
-        MediaApplication mediaApplication = mediaApplicationRepository.findById(mediaApplicationId).orElseThrow(() -> new IllegalArgumentException("Invalid applicationId"));
+        MediaApplication mediaApplication = findById( mediaApplicationId);
         if(mediaApplication.getMedia().getMediaId() != mediaId) throw new IllegalArgumentException("mediaId가 잘못되었습니다");
         verifyApplication(mediaApplication, user);
+        mediaApplicationRepository.delete(mediaApplication);
+    }
+
+    public MediaApplication updateStatus(Long mediaApplicationId, Status status) {
+        MediaApplication mediaApplication =findById(mediaApplicationId);
+        mediaApplication.updateStatus(status);
+        return mediaApplicationRepository.save(mediaApplication);
+    }
+    public MediaApplication findById(Long mediaApplicationId){
+        MediaApplication mediaApplication = mediaApplicationRepository.findById(mediaApplicationId).orElseThrow(() -> new IllegalArgumentException("Invalid applicationId"));
         return mediaApplication;
     }
     public void verifyApplication (MediaApplication mediaApplication,User user){
         if(mediaApplication.getMedia().getDashboard().getUser()!=user)
             throw new ForbiddenException("해당 신청에 접근 권한이 없습니다");
         if(mediaApplication.getStatus() != Status.WAITING) throw new ForbiddenException("신청 대기일때만 삭제 가능합니다");
+    }
+    public List<MediaApplication> findAllApplications(){
+        List<MediaApplication> mediaApplications = mediaApplicationRepository.findAll();
+        return mediaApplications;
     }
 
     public List<MediaApplication> findByMedia(Media getMedia) {

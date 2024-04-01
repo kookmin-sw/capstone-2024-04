@@ -25,7 +25,9 @@ public class Admin extends BaseTimeEntity {
     @Column
     private String email;
     private String password;
-    private Authority authority;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Authority authority = Authority.ADMIN;
 
     @OneToMany(mappedBy = "admin")
     private List<Location> locations = new ArrayList<>();

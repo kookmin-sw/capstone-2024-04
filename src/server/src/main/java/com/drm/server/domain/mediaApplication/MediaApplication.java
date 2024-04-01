@@ -54,4 +54,7 @@ public class MediaApplication extends BaseTimeEntity {
     }
 
 
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }

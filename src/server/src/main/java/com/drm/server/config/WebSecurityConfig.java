@@ -31,7 +31,7 @@ public class WebSecurityConfig {
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     private static final String[] AUTH_WHITELIST ={
-            "/","/swagger-ui/index.html","auth-service/api/v2/**","/api/v1/auth/**","**/index.html","/api/docs/v2/**","/v3/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**"
+            "/","/swagger-ui/index.html","/api/v2/auth/**","/api/v1/auth/**","**/index.html","/api/docs/v2/**","/v3/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**"
     };
     private final RedisTemplate redisTemplate;
 
@@ -55,6 +55,7 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(AUTH_WHITELIST).permitAll()
+                .requestMatchers("api/v2/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated());
         return http.build();
 
