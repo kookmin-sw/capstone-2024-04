@@ -1,4 +1,4 @@
-package com.drm.server.controller;
+package com.drm.server.controller.client;
 
 import com.drm.server.common.APIResponse;
 import com.drm.server.common.ErrorResponse;

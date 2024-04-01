@@ -10,7 +10,9 @@ public class LocationResponse {
     @Setter
     @Schema(description = "디스플레이 장소 정보")
     public static class LocationInfo{
+        @Schema(description = "디스플레이 Id",example = "1")
         private Long locationId;
+        @Schema(description = "디스플레이 상세 주소",example = "복지관 4층 복도")
         private String address;
 
         public LocationInfo(Location location) {

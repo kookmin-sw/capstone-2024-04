@@ -38,13 +38,17 @@ public class UserRequest {
         @Email
         @Schema(description = "이메일", example = "abc@gmail.com")
         private String email;
-        @NotEmpty(message = "인증번호를 입력해주세요.")
-        @Schema(description = "인증번호", example = "010716")
-        private String authCode;
+//        @NotEmpty(message = "인증번호를 입력해주세요.")
+//        @Schema(description = "인증번호", example = "010716")
+//        private String authCode;
+
         @NotEmpty(message = "비밀번호를 입력해주세요.")
         @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "영문자,숫자를 조합하여 8글자 이상 입력해주세요.")
         @Schema(description = "비밀번호",example = "drmdrm1234")
         private String password;
+        @NotEmpty(message = "회사명을 입력해주세요")
+        @Schema(description = "회사명")
+        private String company;
 
     }
 

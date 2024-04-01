@@ -2,6 +2,7 @@ package com.drm.server.controller.dto.response;
 
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import com.drm.server.domain.mediaApplication.Status;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,9 +10,13 @@ public class MediaApplicationResponse {
     @Getter
     @Setter
     public static class MediaApplicationInfo{
+        @Schema(description = "신청 id")
         private Long applicationId;
+        @Schema(description = "마감날짜",example = "2024-04-05")
         private String startDate;
+        @Schema(description = "마감날짜",example = "2024-04-15")
         private String endDate;
+        @Schema(description = "지원상태",example = "WAITING")
         private Status status;
         private LocationResponse.LocationInfo location;
         private UserResponse.UserInfo user;

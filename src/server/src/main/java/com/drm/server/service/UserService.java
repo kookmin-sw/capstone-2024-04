@@ -56,7 +56,8 @@ public class UserService {
             throw new IllegalArgumentException("잘못된 인증정보 입니다");
         }
     }
-    private void checkDuplicatedEmail(String email)  {
+
+    public void checkDuplicatedEmail(String email)  {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             log.debug("UserService.checkDuplicatedEmail exception occur email: {}", email);
@@ -80,9 +81,9 @@ public class UserService {
     }
 
 
-    public UserResponse.UserInfo createUser(String email, String password) {
+    public UserResponse.UserInfo createUser(String email, String password,String company) {
         this.checkDuplicatedEmail(email);
-        User setUser = User.toEntity(email, passwordEncoder.encode(password));
+        User setUser = User.toEntity(email, passwordEncoder.encode(password),company);
         User getUser =userRepository.save(setUser);
         return new UserResponse.UserInfo(getUser.getUserId(), getUser.getEmail(), getUser.getCompany());
     }
