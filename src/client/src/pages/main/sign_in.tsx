@@ -34,9 +34,9 @@ const SignInPage = ({ goToSignUp }: SignInPageProps) => {
       return false;
     }
 
-    let body = { email: id, password: pw };
+    const body = { email: id, password: pw };
 
-    let result = await signin(body);
+    const result = await signin(body);
     console.log(result);
     // 로그인에 실패한 경우(가입되지 않은 아이디 입력 및 비밀번호 틀림)
 
