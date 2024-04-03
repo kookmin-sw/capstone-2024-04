@@ -1,5 +1,6 @@
 import { FormEvent, useRef, useState } from "react";
 import logo from "../../assets/images/logo.svg";
+import { signin } from "../../api/auth";
 
 enum ErrorText {
   incorrect = "아이디 또는 비밀번호를 잘못 입력했습니다.",
@@ -17,18 +18,26 @@ const SignInPage = ({ goToSignUp }: SignInPageProps) => {
   const pwRef = useRef<HTMLInputElement>(null);
   const checkBoxRef = useRef<HTMLInputElement>(null);
 
-  const login = (e: FormEvent) => {
+  let id = idRef.current?.value || "";
+  let pw = pwRef.current?.value || "";
+
+  const login = async (e: FormEvent) => {
     e.preventDefault();
     // 아이디를 미입력한 경우
-    if (idRef.current?.value === "") {
+    if (id === "") {
       setErrorText(ErrorText.notEnterId);
       return false;
     }
     // 비밀번호를 미입력한 경우
-    if (pwRef.current?.value === "") {
+    if (pw === "") {
       setErrorText(ErrorText.notEnterPw);
       return false;
     }
+
+    let body = { email: id, password: pw };
+
+    let result = await signin(body);
+    console.log(result);
     // 로그인에 실패한 경우(가입되지 않은 아이디 입력 및 비밀번호 틀림)
 
     return true;
