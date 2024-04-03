@@ -89,6 +89,7 @@ const HomePage = () => {
         <div className="grid grid-cols-2 gap-y-3 gap-x-4 flex-grow bg-[#F0F2F5] p-[60px]">
           {menuButtons.map((button, index) => (
             <MenuButton
+              key={`menu-button-${index}`}
               title={button.title}
               iconBlackSrc={button.iconBlackSrc}
               iconWhiteSrc={button.iconWhiteSrc}
