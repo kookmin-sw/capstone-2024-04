@@ -18,11 +18,10 @@ const SignInPage = ({ goToSignUp }: SignInPageProps) => {
   const pwRef = useRef<HTMLInputElement>(null);
   const checkBoxRef = useRef<HTMLInputElement>(null);
 
-  let id = idRef.current?.value || "";
-  let pw = pwRef.current?.value || "";
-
   const login = async (e: FormEvent) => {
     e.preventDefault();
+    let id = idRef.current?.value || "";
+    let pw = pwRef.current?.value || "";
     // 아이디를 미입력한 경우
     if (id === "") {
       setErrorText(ErrorText.notEnterId);
