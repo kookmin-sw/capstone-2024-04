@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Dashboard",description = "대시보드 관련 API")
 @Hidden
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "x-requested-with, Authorization, Content-Type")
+@CrossOrigin(origins = "http://localhost:5173")
 public class DashBoardController {
     @GetMapping()
     @Operation(summary = "전체 대시보드 리스트 조회")
