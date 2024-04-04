@@ -19,7 +19,7 @@ export const signup = async ({email, password, company}: SignUpAPIProps) => {
         password,
         company,
     }, {withCredentials: true}).catch((err) => {
-        console.log(err);
+        return err.response;
     });
     return response;
 }
@@ -29,7 +29,7 @@ export const signin = async ({email, password}: SignInAPIProps) => {
         email,
         password,
     }, {withCredentials: true}).catch((err) => {
-        console.log(err);
+        return err.response;
     });
     return response;
 }
