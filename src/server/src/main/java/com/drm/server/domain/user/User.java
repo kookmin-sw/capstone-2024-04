@@ -29,12 +29,12 @@ public class User extends BaseTimeEntity {
     private boolean deleted;
     @Column
     @Enumerated(EnumType.STRING)
-    private Authority authority = Authority.USER;
+    private Authority authority;
 
     @OneToMany(mappedBy = "user",orphanRemoval = true)
     private List<Dashboard> dashboards = new ArrayList<>();
     public static User toEntity(String email,String password,String company){
-        return User.builder().email(email).password(password).company(company).deleted(false).build();
+        return User.builder().email(email).password(password).company(company).authority(Authority.USER).deleted(false).build();
     }
 
 }
