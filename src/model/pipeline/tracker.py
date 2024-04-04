@@ -203,3 +203,28 @@ if __name__ == '__main__':
     tracker = Tracker()
     results = tracker.detect('lena.jpg')
     print(results[0].boxes.xyxy)
+
+    results = tracker.track('out.avi')
+    print(len(results))
+    
+    dtypes = {
+        'frame_id': 'int64',
+        'left': 'float64',
+        'top': 'float64',
+        'right': 'float64',
+        'bottom': 'float64',
+        'track_id': 'int64',
+        'conf': 'float64',
+    }
+    import pandas as pd
+    import numpy as np
+    df = pd.DataFrame(columns=['frame_id', 'left', 'top', 'right', 'bottom', 'track_id', 'conf']).astype(dtypes)
+    for i, r in enumerate(results):
+        boxes = r.boxes
+        data  = boxes.data.cpu().numpy()
+        if len(data) == 0:
+            continue
+        frame_ids = np.full((data.shape[0], 1), i)
+        t = np.hstack((frame_ids, data[:,:-1]))
+        df = pd.concat([df, pd.DataFrame(t, columns=df.columns).astype(dtypes)], ignore_index=True)
+    df.to_csv('tmp.csv', index=False)
