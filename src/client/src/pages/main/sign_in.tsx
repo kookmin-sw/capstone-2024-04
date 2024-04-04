@@ -1,5 +1,7 @@
 import { FormEvent, useRef, useState } from "react";
 import logo from "../../assets/images/logo.svg";
+import { signin } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 
 enum ErrorText {
   incorrect = "아이디 또는 비밀번호를 잘못 입력했습니다.",
@@ -16,20 +18,42 @@ const SignInPage = ({ goToSignUp }: SignInPageProps) => {
   const idRef = useRef<HTMLInputElement>(null);
   const pwRef = useRef<HTMLInputElement>(null);
   const checkBoxRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
-  const login = (e: FormEvent) => {
+  const login = async (e: FormEvent) => {
     e.preventDefault();
+    let id = idRef.current?.value || "";
+    let pw = pwRef.current?.value || "";
     // 아이디를 미입력한 경우
-    if (idRef.current?.value === "") {
+    if (id === "") {
       setErrorText(ErrorText.notEnterId);
       return false;
     }
     // 비밀번호를 미입력한 경우
-    if (pwRef.current?.value === "") {
+    if (pw === "") {
       setErrorText(ErrorText.notEnterPw);
       return false;
     }
-    // 로그인에 실패한 경우(가입되지 않은 아이디 입력 및 비밀번호 틀림)
+
+    const body = { email: id, password: pw };
+
+    const result = await signin(body);
+    console.log(result);
+
+    if (result.status === 200) {
+      // 로그인 성공
+      // token 값 저장 방식이 확정되면 추후 관련 로직 추가 예정
+      navigate("/home");
+      return true;
+    }
+
+    if (result.status === 400) {
+      if (result.data.divisionCode === "G014") {
+        // 이메일 정보가 없음 or 잘못된 비밀번호 입력
+        setErrorText("아이디 또는 비밀번호를 잘못 입력하였습니다.");
+      }
+      return false;
+    }
 
     return true;
   };
