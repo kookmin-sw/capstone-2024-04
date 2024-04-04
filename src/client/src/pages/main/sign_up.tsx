@@ -28,6 +28,19 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
 
     const result = await signup(body);
     console.log(result);
+
+    if (result.status === 400) {
+      if (result.data.divisionCode === "G014") {
+        setIdErr("이미 사용 중인 이메일입니다.");
+      }
+      return false;
+    }
+
+    if (result.status === 201) {
+      // Toast 메세지 출력 <- 계정 생성에 대한
+      
+      goToSignIn(); // 로그인 화면으로 이동
+    }
   };
 
   useEffect(() => {
@@ -35,6 +48,7 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
       email !== "" &&
         company !== "" &&
         password !== "" &&
+        pwErr === "" &&
         password === passwordCheck
     );
   }, [email, company, password, passwordCheck]);
@@ -82,7 +96,19 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
       <input
         type="password"
         className="p-4 rounded-md ring-1 ring-inset ring-[#d9d9d9] outline-none"
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => {
+          setPassword(e.target.value);
+          if (
+            // 영문자 조합 8글자 이상, 특수문자 제외
+            !/^(?=.*[a-zA-Z])(?=.*[0-9])(?!.*[^a-zA-Z0-9]).{8,}$/.test(password)
+          ) {
+            // 주어진 정규식을 만족하지 못하는 경우
+            setPwErr("영문자, 숫자를 조합하여 8글자 이상 입력해주세요.");
+          } else {
+            // 주어진 정규식을 만족하는 경우
+            setPwErr("");
+          }
+        }}
         onFocus={() => setPwErr("")}
         onBlur={(e: any) => {
           if (e.target.value === "") setPwErr("비밀번호를 입력해주세요.");
