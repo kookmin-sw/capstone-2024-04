@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Tag(name = "Apply")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "x-requested-with, Authorization, Content-Type")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ApplyController {
     private final MediaService mediaService;
     private final UserService userService;

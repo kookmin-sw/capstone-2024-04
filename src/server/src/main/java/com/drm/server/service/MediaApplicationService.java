@@ -1,5 +1,6 @@
 package com.drm.server.service;
 
+import com.drm.server.controller.dto.response.MediaApplicationResponse;
 import com.drm.server.domain.location.Location;
 import com.drm.server.domain.media.Media;
 import com.drm.server.domain.mediaApplication.MediaApplication;
@@ -10,6 +11,7 @@ import com.drm.server.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,12 +31,20 @@ public class MediaApplicationService {
         mediaApplicationRepository.delete(mediaApplication);
     }
 
-    public MediaApplication updateStatus(Long mediaApplicationId, Status status) {
-        MediaApplication mediaApplication =findById(mediaApplicationId);
-        boolean available = mediaApplicationRepository.hasOverlappingApplications(mediaApplication.getStartDate(), mediaApplication.getEndDate(),mediaApplication.getLocation());
-        if(available) throw new IllegalArgumentException("해당 날짜와 장소에는 이미 광고가 등록되어있습니다");
-        mediaApplication.updateStatus(status);
-        return mediaApplicationRepository.save(mediaApplication);
+    public List<MediaApplicationResponse.MediaApplicationInfo> updateStatus(List<Long> mediaApplicationIds, Status status) {
+
+        List<MediaApplicationResponse.MediaApplicationInfo> infos = new ArrayList<>();
+        mediaApplicationIds.forEach(applyid -> {
+            MediaApplication mediaApplication = mediaApplicationRepository.findById(applyid).orElseThrow(() -> new IllegalArgumentException("Invalid applyId"));
+            boolean available = mediaApplicationRepository.hasOverlappingApplications(mediaApplication.getStartDate(), mediaApplication.getEndDate(),mediaApplication.getLocation());
+            if(available) throw new IllegalArgumentException("해당 날짜와 장소에는 이미 광고가 등록되어있습니다");
+            mediaApplication.updateStatus(status);
+            mediaApplicationRepository.save(mediaApplication);
+            MediaApplicationResponse.MediaApplicationInfo mediaApplicationInfo = new MediaApplicationResponse.MediaApplicationInfo(mediaApplication);
+            infos.add(mediaApplicationInfo);
+        });
+        return infos;
+
     }
     public MediaApplication findById(Long mediaApplicationId){
         MediaApplication mediaApplication = mediaApplicationRepository.findById(mediaApplicationId).orElseThrow(() -> new IllegalArgumentException("Invalid applicationId"));

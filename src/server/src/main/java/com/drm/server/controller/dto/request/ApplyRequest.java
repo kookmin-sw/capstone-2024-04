@@ -7,6 +7,9 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
+
 @Valid
 public class ApplyRequest {
     @Builder
@@ -23,8 +26,10 @@ public class ApplyRequest {
     @Getter
     @Setter
     public static class UpdateStatus{
+        private List<Long> applyId;
         @Schema(description = "신청 상태",example = "ACCEPT")
         private Status status;
 
     }
+
 }

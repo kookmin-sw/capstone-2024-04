@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping("api/v1/location")
 @RequiredArgsConstructor
 @Tag(name = "Location")
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "x-requested-with, Authorization, Content-Type")
+@CrossOrigin(origins = "http://localhost:5173")
 public class LocationController {
     private final LocationService locationService;
     @Operation(summary = "디스플레이 장소 조회")

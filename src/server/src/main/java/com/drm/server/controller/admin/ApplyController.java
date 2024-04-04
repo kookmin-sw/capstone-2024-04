@@ -29,10 +29,10 @@ import java.util.stream.Collectors;
 @Tag(name = "Apply")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "x-requested-with, Authorization, Content-Type")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ApplyController {
     private final MediaApplicationService mediaApplicationService;
-    @PatchMapping("/{applyId}")
+    @PatchMapping("")
     @Operation(summary = "신청 상태 변경")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
@@ -42,11 +42,11 @@ public class ApplyController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    public ResponseEntity<APIResponse<MediaApplicationResponse.MediaApplicationInfo>> updateApply (@PathVariable Long applyId,  @RequestBody ApplyRequest.UpdateStatus status){
+    public ResponseEntity<APIResponse<List<MediaApplicationResponse.MediaApplicationInfo>>> updateApply (  @RequestBody ApplyRequest.UpdateStatus status){
 
-        MediaApplication mediaApplication = mediaApplicationService.updateStatus(applyId,status.getStatus());
-        MediaApplicationResponse.MediaApplicationInfo mediaApplicationInfo = new MediaApplicationResponse.MediaApplicationInfo(mediaApplication);
-        APIResponse response = APIResponse.of(SuccessCode.UPDATE_SUCCESS, mediaApplicationInfo);
+        List<MediaApplicationResponse.MediaApplicationInfo> infos = mediaApplicationService.updateStatus(status.getApplyId(),status.getStatus());
+
+        APIResponse response = APIResponse.of(SuccessCode.UPDATE_SUCCESS, infos);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
