@@ -1,4 +1,5 @@
 import os
+import warnings
 
 import cv2
 import torch
@@ -113,13 +114,14 @@ class PAR:
         if PAR.PAR_WEIGHT_PATH is not None:
             self.model.load_state_dict(torch.load(PAR.PAR_WEIGHT_PATH))
         else:
-            print('PAR model weight is not given.')
+            warnings.warn('PAR model weight is not given.')
         self.model.eval()
-    
+
     @torch.no_grad()
-    def predict(self, image_path):
-        im = cv2.imread(image_path)
-        im = transforms(im)
+    def predict(self, image):
+        if isinstance(image, (str, os.PathLike)):
+            image = cv2.imread(image)
+        im = transforms(image)
         im = im.unsqueeze(0)
         out = self.model.forward(im)
         age_idx = out[0,:4].argmax()
@@ -136,4 +138,8 @@ if __name__ == '__main__':
     
     par = PAR()
     result = par.predict('lena.jpg')
+    print(result)
+
+    im = cv2.imread('lena.jpg')
+    result = par.predict(im)
     print(result)
