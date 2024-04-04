@@ -119,6 +119,11 @@ class PAR:
 
     @torch.no_grad()
     def predict(self, image):
+        """
+        Args:
+            image: 이미지 경로 혹은 ndarray
+                한 사람의 외형만 잘린 형태의 이미지여야 함
+        """
         if isinstance(image, (str, os.PathLike)):
             image = cv2.imread(image)
         im = transforms(image)

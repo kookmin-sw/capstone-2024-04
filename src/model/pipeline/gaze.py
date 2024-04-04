@@ -56,6 +56,13 @@ class Gaze:
         
         
     def estimate(self, image_path):
+        """
+        Args:
+            image_path: 이미지 경로
+                카메라로 얻은 일반적인 이미지. 내부적으로 얼굴 탐지를 수행함.
+                하지만 여러 명이 등장하는 이미지에서 성능이 떨어지기 때문에,
+                내부 얼굴 탐지를 사용하는 대신 직접 구현해야 함
+        """
         demo = self.get_demo(image_path)
         
         image = cv2.imread(demo.config.demo.image_path)
