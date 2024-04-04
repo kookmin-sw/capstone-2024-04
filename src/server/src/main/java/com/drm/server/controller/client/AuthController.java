@@ -49,7 +49,7 @@ public class AuthController {
     @Hidden
     @Operation(summary = "인증번호 확인")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "성공"),
+            @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -77,9 +77,15 @@ public class AuthController {
     }
     @Operation(summary = "로그인")
     @PostMapping("/signin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+    })
     public ResponseEntity<APIResponse<UserResponse.TokenInfo>> sigIn(@Valid @RequestBody UserRequest.SignIn signIn){
         UserResponse.TokenInfo tokenInfo = tokenService.createToken(signIn);
-        APIResponse response = APIResponse.of(SuccessCode.INSERT_SUCCESS, tokenInfo);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, tokenInfo);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
