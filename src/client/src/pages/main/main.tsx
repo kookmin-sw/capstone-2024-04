@@ -2,7 +2,7 @@ import { Carousel } from "antd";
 import carousel_1 from "../../assets/images/carousel_1.svg";
 import SignInPage from "./sign_in";
 import SignUpPage from "./sign_up";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 const carouselArray = [
   {
@@ -34,11 +34,11 @@ const CarouselContent = ({ title, text, imgSrc }: CarouselContentType) => {
         {title}
       </h1>
       <p className="text-center text-xl text-white mb-5">
-        {text.split("\n").map((line) => (
-          <>
+        {text.split("\n").map((line, index) => (
+          <Fragment key={index}>
             {line}
             <br />
-          </>
+          </Fragment>
         ))}
       </p>
     </div>
