@@ -19,11 +19,20 @@ public class Dashboard extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dashboardId;
 
+    @Column
+    private String title;
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToOne(mappedBy = "dashboard",orphanRemoval = true)
     private Media media;
+
+    public static Dashboard toEntity(String title, String description, User user){
+        return Dashboard.builder().title(title).description(description).user(user).build();
+    }
+
 
 }

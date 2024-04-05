@@ -4,6 +4,11 @@ import com.drm.server.common.ErrorResponse;
 import com.drm.server.common.enums.ErrorCode;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.firebase.auth.FirebaseAuthException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import jakarta.validation.UnexpectedTypeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -209,37 +214,31 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-//    /**
-//     * [Exception] 잘못된 인수로 요청 한 경우
-//     *
-//     * @param ex IllegalArgumentException
-//     * @return ResponseEntity<ErrorResponse>
-//     */
-//    @ExceptionHandler(UnexpectedTypeException.class)
-//    protected ResponseEntity<ErrorResponse> UnexpectedTypeExceptionHandler(UnexpectedTypeException ex) {
-//        log.error("UnexpectedTypeException", ex);
-//        final ErrorResponse response = ErrorResponse.of(ErrorCode.VALIDATION_CONSTRAINT_NOT_FOUND, ex.getMessage());
-//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//    }
-//    @ExceptionHandler(FirebaseAuthException.class)
-//    protected final ResponseEntity<ErrorResponse> handleFirebaseAuthException(FirebaseAuthException ex) {
-//        log.error("FirebaseAuthException", ex);
-//        final ErrorResponse response = ErrorResponse.of(ErrorCode.UNAUTHORIZED_ERROR, ex.getMessage());
-//        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-//    }
-//    토큰 401에러
-//    @ExceptionHandler({
-//            io.jsonwebtoken.security.SecurityException.class,
-//            io.jsonwebtoken.io.DecodingException.class,
-//            MalformedJwtException.class,
-//            ExpiredJwtException.class,
-//            UnsupportedJwtException.class,
-//    })
-//    protected ResponseEntity<ErrorResponse> handleExpiredJwtException(Exception ex) {
-//        log.error("handleExpiredJwtException", ex);
-//        final ErrorResponse response = ErrorResponse.of(ErrorCode.UNAUTHORIZED_ERROR, ex.getMessage());
-//        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-//    }
+    /**
+     * [Exception] 잘못된 인수로 요청 한 경우
+     *
+     * @param ex IllegalArgumentException
+     * @return ResponseEntity<ErrorResponse>
+     */
+    @ExceptionHandler(UnexpectedTypeException.class)
+    protected ResponseEntity<ErrorResponse> UnexpectedTypeExceptionHandler(UnexpectedTypeException ex) {
+        log.error("UnexpectedTypeException", ex);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.VALIDATION_CONSTRAINT_NOT_FOUND, ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({
+            io.jsonwebtoken.security.SecurityException.class,
+            io.jsonwebtoken.io.DecodingException.class,
+            MalformedJwtException.class,
+            ExpiredJwtException.class,
+            UnsupportedJwtException.class,
+    })
+    protected ResponseEntity<ErrorResponse> handleExpiredJwtException(Exception ex) {
+        log.error("handleExpiredJwtException", ex);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.UNAUTHORIZED_ERROR, ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
 
 
     // ==================================================================================================================

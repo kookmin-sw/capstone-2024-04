@@ -1,5 +1,6 @@
 package com.drm.server.domain.user;
 
+import com.drm.server.common.enums.Authority;
 import lombok.*;
 
 @Getter
@@ -11,6 +12,7 @@ public class CustomUserInfoDto {
     Long userId;
     String email;
     String password;
-    boolean isDeleted;
+    boolean deleted;
+    Authority authority;
 
 }

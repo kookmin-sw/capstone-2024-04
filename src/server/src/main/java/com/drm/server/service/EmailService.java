@@ -28,16 +28,6 @@ public class EmailService {
         }
     }
 
-
-    private SimpleMailMessage createEmailForm(String toEmail, String title, String text){
-        SimpleMailMessage message = new SimpleMailMessage();
-
-        message.setTo(toEmail);
-        message.setSubject(title);
-        message.setText(text);
-
-        return message;
-    }
     public MimeMessage createMail(String mail,String text){
         MimeMessage message = javaMailSender.createMimeMessage();
 
