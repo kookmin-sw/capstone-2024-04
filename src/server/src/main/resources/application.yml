@@ -14,7 +14,7 @@ spring:
     hibernate:
       format-sql: true
       highlight-sql: true
-      ddl-auto: create
+      ddl-auto: update
 
       dialect: org.hibernate.dialect.MySQLDialect # ??? ??
     properties:
@@ -58,7 +58,12 @@ springdoc:
   default-produces-media-type: application/json
   writer-with-default-pretty-printer: true
   model-and-view-allowed: true
+#  paths-to-match:
+#    - /**
 
+s3:
+  access-key: ${access-key}
+  secret-key: ${secret-key}
 #server:
 #  port: 80
 
