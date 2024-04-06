@@ -31,5 +31,8 @@ public class DetectedFace extends BaseTimeEntity {
 //    private Long mediaId; (FK)
     private int faceCaptureCnt;
     private int entireCaptureCnt;
+
+    private int age;
+    private boolean male;
     private boolean used;
 }
