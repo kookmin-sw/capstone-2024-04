@@ -25,8 +25,8 @@ public class DetectedFace extends BaseTimeEntity {
     private LocalDateTime leaveAt;
 
 
-    @Convert(converter = DetectedDataConverter.class)
-    private List<Integer> staring;
+    @Convert(converter = DataConverter.class)
+    private List<Boolean> staring;
 
 //    private Long mediaId; (FK)
     private int faceCaptureCnt;
