@@ -11,7 +11,7 @@ import java.util.List;
 
 @Slf4j
 @Converter
-public class DetectedDataConverter implements AttributeConverter<List<Integer>, String> {
+public class DataConverter implements AttributeConverter<List<Integer>, String> {
 
     @Override
     public String convertToDatabaseColumn(List<Integer> list) {
