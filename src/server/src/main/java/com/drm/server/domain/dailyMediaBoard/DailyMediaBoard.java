@@ -41,8 +41,6 @@ public class DailyMediaBoard {
 
     // 해당 광고 평균 시청 시간
     private float avgStaringTime;
-    // 해당 광고 평균 시청 남자의 비율 (0.0 ~ 100.0)
-    private float avgMale;
     // 해당 광고 평균 시청 나이 (0.0 ~ F )
     private float avgAge;
 }
