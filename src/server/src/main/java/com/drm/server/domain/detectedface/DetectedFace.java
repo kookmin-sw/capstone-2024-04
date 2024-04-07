@@ -1,6 +1,7 @@
 package com.drm.server.domain.detectedface;
 
 import com.drm.server.common.BaseTimeEntity;
+import com.drm.server.handler.StringListConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +26,8 @@ public class DetectedFace extends BaseTimeEntity {
     private LocalDateTime leaveAt;
 
 
-    @Convert(converter = DetectedDataConverter.class)
-    private List<Integer> staring;
+    @Convert(converter = StringListConverter.class)
+    private List<Boolean> staring;
 
 //    private Long mediaId; (FK)
     private int faceCaptureCnt;

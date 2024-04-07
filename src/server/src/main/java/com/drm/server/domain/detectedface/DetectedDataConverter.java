@@ -11,10 +11,10 @@ import java.util.List;
 
 @Slf4j
 @Converter
-public class DetectedDataConverter implements AttributeConverter<List<Integer>, String> {
+public class DetectedDataConverter implements AttributeConverter<List<Boolean>, String> {
 
     @Override
-    public String convertToDatabaseColumn(List<Integer> list) {
+    public String convertToDatabaseColumn(List<Boolean> list) {
         if(CollectionUtils.isEmpty(list)) {
             return new String();
         }
