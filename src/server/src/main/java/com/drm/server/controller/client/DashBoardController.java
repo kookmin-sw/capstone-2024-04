@@ -48,7 +48,7 @@ public class DashBoardController {
     })
     ResponseEntity<APIResponse<List<DashboardResponse.DashboardInfo>>> getDashboards(@AuthenticationPrincipal CustomUserDetails userDetails){
         User getUser = userService.getUser(userDetails.getUsername());
-        List<DashboardResponse> dashboards = dashboardService.findDashboardsByUser(getUser);
+        List<DashboardResponse.DashboardInfo> dashboards = dashboardService.findDashboardsByUser(getUser);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, dashboards);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -64,8 +64,8 @@ public class DashBoardController {
     })
     ResponseEntity<APIResponse<List<DashboardResponse.DashboardInfo>>> getDashboardsById(@RequestParam Long dashboardId, @AuthenticationPrincipal CustomUserDetails userDetails){
         Long userId = userDetails.getCustomUserInfo().getUserId();
-        DashboardResponse boards = dashboardService.findDashboardById(userId, dashboardId);
-        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, boards);
+        DashboardResponse.DashboardInfo board = dashboardService.findDashboardById(userId, dashboardId);
+        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, board);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -81,7 +81,7 @@ public class DashBoardController {
     })
     ResponseEntity<APIResponse<List<DashboardResponse.DashboardInfo>>> getBoards(@RequestParam Long dashboardId, @AuthenticationPrincipal CustomUserDetails userDetails){
         Long userId = userDetails.getCustomUserInfo().getUserId();
-        List<DashboardResponse> boards = dashboardService.findRegisteredBoardsById(userId, dashboardId);
+        List<DashboardResponse.DashboardInfo> boards = dashboardService.findRegisteredBoardsById(userId, dashboardId);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, boards);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -97,7 +97,7 @@ public class DashBoardController {
     })
     ResponseEntity<APIResponse<List<DashboardResponse.DashboardInfo>>> getBoardPerDay(@RequestParam Long dashboardId, @RequestParam Long boardId, @AuthenticationPrincipal CustomUserDetails userDetails){
         Long userId = userDetails.getCustomUserInfo().getUserId();
-        List<DashboardResponse> boards = dashboardService.getDayBoards(userId, dashboardId, boardId);
+        List<DashboardResponse.DashboardInfo> boards = dashboardService.getDayBoards(userId, dashboardId, boardId);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, boards);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -26,15 +26,23 @@ public class DashboardService {
     }
 
 
-    public List<DashboardResponse> findDashboardsByUser(User getUser) {
+    public List<DashboardResponse.DashboardInfo> findDashboardsByUser(User getUser) {
+        List<DashboardResponse.DashboardInfo> responses = null;
+        return responses;
     }
 
-    public DashboardResponse findDashboardById(Long userId, Long dashboardId) {
+    public DashboardResponse.DashboardInfo findDashboardById(Long userId, Long dashboardId) {
+        DashboardResponse.DashboardInfo response = null;
+        return response;
     }
 
-    public List<DashboardResponse> findRegisteredBoardsById(Long userId, Long dashboardId) {
+    public List<DashboardResponse.DashboardInfo> findRegisteredBoardsById(Long userId, Long dashboardId) {
+        List<DashboardResponse.DashboardInfo> responses = null;
+        return responses;
     }
 
-    public List<DashboardResponse> getDayBoards(Long userId, Long dashboardId, Long boardId) {
+    public List<DashboardResponse.DashboardInfo> getDayBoards(Long userId, Long dashboardId, Long boardId) {
+        List<DashboardResponse.DashboardInfo> responses = null;
+        return responses;
     }
 }
