@@ -52,16 +52,16 @@ class DetectedDataServiceTest {
         // 통합 테스트
         // given
         LocalDateTime time = LocalDateTime.now();
-        List<Integer> intList = new ArrayList<>();
+        List<Boolean> intList = new ArrayList<>();
 
         // Create a Random Int
         Random random = new Random();
         int totalFrameCnt = random.nextInt(10) + 10;
         int interestFrameCnt = 0;
         for (int i = 0; i < totalFrameCnt; i++) {
-            int randomInt = random.nextInt(2);
-            if(randomInt > 0) { interestFrameCnt += 1;}
-            intList.add(randomInt);
+            boolean randomBool = random.nextBoolean();
+            if(randomBool) { interestFrameCnt += 1;}
+            intList.add(randomBool);
         }
         ModelRequest modelRequest = ModelRequest.builder()
                 .cameraId(3L)
@@ -84,16 +84,15 @@ class DetectedDataServiceTest {
     @Test
     public void SaveDetectedData() {
         LocalDateTime time = LocalDateTime.now();
-        List<Integer> intList = new ArrayList<>();
-
+        List<Boolean> intList = new ArrayList<>();
         // Create a Random Int
         Random random = new Random();
         int totalFrameCnt = random.nextInt(10) + 10;
         int interestFrameCnt = 0;
         for (int i = 0; i < totalFrameCnt; i++) {
-            int randomInt = random.nextInt(2);
-            if(randomInt > 0) { interestFrameCnt += 1;}
-            intList.add(randomInt);
+            boolean randomBool = random.nextBoolean();
+            if(randomBool) { interestFrameCnt += 1;}
+            intList.add(randomBool);
         }
         ModelRequest modelRequest = ModelRequest.builder()
                 .cameraId(3L)

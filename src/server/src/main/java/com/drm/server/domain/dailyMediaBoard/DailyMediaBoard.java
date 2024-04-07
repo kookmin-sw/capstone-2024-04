@@ -1,5 +1,6 @@
 package com.drm.server.domain.dailyMediaBoard;
 
+import com.drm.server.domain.detectedface.DataConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,8 +21,12 @@ public class DailyMediaBoard {
 
     @Column
     private Long totalPeopleCount;
+
+    @Convert(converter = DataConverter.class)
     private List<Long> hourlyPassedCount;
+    @Convert(converter = DataConverter.class)
     private List<Long> hourlyInterestedCount;
+
     private float avgMale;
     private float avgAge;
 }
