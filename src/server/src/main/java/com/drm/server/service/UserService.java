@@ -90,4 +90,10 @@ public class UserService {
     public User getUser(String userId){
         return userRepository.findById(Long.valueOf(userId)).orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
     }
+    public User getUser(Long userId){
+        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+    }
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email).get();
+    }
 }
