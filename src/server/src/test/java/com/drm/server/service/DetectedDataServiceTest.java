@@ -52,7 +52,7 @@ class DetectedDataServiceTest {
         // 통합 테스트
         // given
         LocalDateTime time = LocalDateTime.now();
-        List<Boolean> intList = new ArrayList<>();
+        List<Boolean> boolList = new ArrayList<>();
 
         // Create a Random Int
         Random random = new Random();
@@ -61,7 +61,7 @@ class DetectedDataServiceTest {
         for (int i = 0; i < totalFrameCnt; i++) {
             boolean randomBool = random.nextBoolean();
             if(randomBool) { interestFrameCnt += 1;}
-            intList.add(randomBool);
+            boolList.add(randomBool);
         }
         ModelRequest modelRequest = ModelRequest.builder()
                 .cameraId(3L)
@@ -69,7 +69,9 @@ class DetectedDataServiceTest {
                 .leaveTime(time)
                 .presentFrameCnt(totalFrameCnt)
                 .interestFrameCnt(interestFrameCnt)
-                .frameData(intList)
+                .frameData(boolList)
+                .male(true)
+                .age(25)
                 .build();
 
         // when
@@ -84,7 +86,7 @@ class DetectedDataServiceTest {
     @Test
     public void SaveDetectedData() {
         LocalDateTime time = LocalDateTime.now();
-        List<Boolean> intList = new ArrayList<>();
+        List<Boolean> boolList = new ArrayList<>();
         // Create a Random Int
         Random random = new Random();
         int totalFrameCnt = random.nextInt(10) + 10;
@@ -92,7 +94,7 @@ class DetectedDataServiceTest {
         for (int i = 0; i < totalFrameCnt; i++) {
             boolean randomBool = random.nextBoolean();
             if(randomBool) { interestFrameCnt += 1;}
-            intList.add(randomBool);
+            boolList.add(randomBool);
         }
         ModelRequest modelRequest = ModelRequest.builder()
                 .cameraId(3L)
@@ -100,7 +102,9 @@ class DetectedDataServiceTest {
                 .leaveTime(time)
                 .presentFrameCnt(totalFrameCnt)
                 .interestFrameCnt(interestFrameCnt)
-                .frameData(intList)
+                .frameData(boolList)
+                .male(true)
+                .age(25)
                 .build();
 
         detectedDataService.saveDetectedData(modelRequest, true);

@@ -6,6 +6,9 @@ import com.drm.server.controller.dto.response.DashboardResponse;
 import com.drm.server.controller.dto.response.UserResponse;
 import com.drm.server.domain.dashboard.Dashboard;
 import com.drm.server.domain.dashboard.DashboardRepository;
+import com.drm.server.domain.location.Location;
+import com.drm.server.domain.media.Media;
+import com.drm.server.domain.mediaApplication.MediaApplication;
 import com.drm.server.domain.user.User;
 import com.google.api.client.http.MultipartContent;
 import jakarta.mail.Multipart;
@@ -27,15 +30,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class DashboardServiceTest {
-    DashboardService dashboardService;
-    DetectedDataService detectedDataService;
-
-    DashboardRepository dashboardRepository;
-    UserService userService;
-    MediaService mediaService;
+    private final DashboardService dashboardService;
+    private final DetectedDataService detectedDataService;
+    
+    private final LocationService locationService;
+    private final MediaApplicationService mediaApplicationService;
+    private final DashboardRepository dashboardRepository;
+    private final UserService userService;
+    private final MediaService mediaService;
 
     @Autowired
-    public DashboardServiceTest(DashboardService dashboardService, DetectedDataService detectedDataService, UserService userService, MediaService mediaService, DashboardRepository dashboardRepository){
+    public DashboardServiceTest(DashboardService dashboardService, DetectedDataService detectedDataService, MediaApplicationService mediaApplicationService, LocationService locationService, UserService userService, MediaService mediaService, DashboardRepository dashboardRepository){
+        this.locationService = locationService;
+        this.mediaApplicationService = mediaApplicationService;
         this.dashboardService = dashboardService;
         this.detectedDataService = detectedDataService;
         this.userService = userService;
@@ -126,11 +133,17 @@ public class DashboardServiceTest {
                 "translate.png",
                 "image/png",
                 new FileInputStream("/Users/dongguk/Desktop/동국자료/해외여행/CES"));
-        mediaService.createMedia(media, ds, file);
+        Media mediaEntity = mediaService.createMedia(media, ds, file);
+        
+        // mediaApplication(광고 집행)
+        // locationId = 1 (import.sql 로 미리 생성)
+        Location location = locationService.findById(1L);
+        mediaApplicationService.createMediaApplication(mediaEntity, location,  "2023-01-10", "2023-01-15");
+        
 
         // 데이터 들어오는 상황
         LocalDateTime time = LocalDateTime.now();
-        List<Boolean> intList = new ArrayList<>();
+        List<Boolean> boolList = new ArrayList<>();
 
         // 랜덤하게 Initalized 된 데이터가 들어오는 경우
         Random random = new Random();
@@ -139,27 +152,22 @@ public class DashboardServiceTest {
         for (int i = 0; i < totalFrameCnt; i++) {
             boolean randomBool = random.nextBoolean();
             if(randomBool) { interestFrameCnt += 1;}
-            intList.add(randomBool);
+            boolList.add(randomBool);
         }
         ModelRequest modelRequest = ModelRequest.builder()
-                .cameraId(3L)
+                .cameraId(1L)
                 .arriveTime(time.minusSeconds(20))
                 .leaveTime(time)
                 .presentFrameCnt(totalFrameCnt)
                 .interestFrameCnt(interestFrameCnt)
-                .frameData(intList)
+                .frameData(boolList)
                 .build();
+
+
 
         // when
         detectedDataService.processDetectedData(modelRequest);
-
-
-
-
-
-        // when
-        DashboardResponse.DashboardInfo dashboardList = dashboardService.findDashboardById(0L, ds.getDashboardId());
-
+//
         // then
 
     }

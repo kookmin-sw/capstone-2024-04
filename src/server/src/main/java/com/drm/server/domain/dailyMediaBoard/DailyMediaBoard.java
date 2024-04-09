@@ -3,11 +3,9 @@ package com.drm.server.domain.dailyMediaBoard;
 import com.drm.server.domain.detectedface.DataConverter;
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -15,11 +13,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class DailyMediaBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mediaDataId;
 
+    @Column
+    private LocalDate date;
     // 전체 포착된 사람 수
     @Column
     private Long totalPeopleCount;

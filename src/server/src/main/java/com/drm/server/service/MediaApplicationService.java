@@ -1,6 +1,7 @@
 package com.drm.server.service;
 
 import com.drm.server.controller.dto.response.MediaApplicationResponse;
+import com.drm.server.domain.dailyMediaBoard.DailyMediaBoardRepository;
 import com.drm.server.domain.location.Location;
 import com.drm.server.domain.media.Media;
 import com.drm.server.domain.mediaApplication.MediaApplication;
@@ -11,6 +12,7 @@ import com.drm.server.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,9 +21,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MediaApplicationService {
     private final MediaApplicationRepository mediaApplicationRepository;
+    private final DailyMediaBoardService dailyMediaBoardService;
 
-    public MediaApplication createMediaApplication(Media media, Location location,String startDate,String endDate){
+    public MediaApplication createMediaApplication(Media media, Location location, String startDate,String endDate){
         MediaApplication mediaApplication = MediaApplication.toEntity(startDate, endDate, media, location);
+        // 광고 집행 등록시, 해당되는 일자(시작일 - 종료일 사이)의 daily media board 를 만들어주는 로직 요구됨.
+        LocalDate localStartDate = LocalDate.parse(startDate);
+        LocalDate localEndDate = LocalDate.parse(endDate);
+        while (!localStartDate.isAfter(localEndDate)) {
+            dailyMediaBoardService.createDailyData(mediaApplication, localStartDate);
+            // Move to the next date
+            localStartDate = localStartDate.plusDays(1); // Increment by one day
+        }
         return mediaApplicationRepository.save(mediaApplication);
     }
     public void deleteMediaApplication(Long mediaId, Long mediaApplicationId, User user){
