@@ -30,4 +30,8 @@ public class PlayListService {
         List<PlayList> playLists = mediaApplications.stream().map(PlayList::new).collect(Collectors.toList());
         playListRepository.saveAll(playLists);
     }
+
+    public Long getMediaIdFromPlaylist(Long locationId){
+        return 0L;
+    }
 }

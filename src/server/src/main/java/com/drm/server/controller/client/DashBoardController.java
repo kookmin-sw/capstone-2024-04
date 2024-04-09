@@ -47,8 +47,8 @@ public class DashBoardController {
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     ResponseEntity<APIResponse<List<DashboardResponse.DashboardInfo>>> getDashboards(@AuthenticationPrincipal CustomUserDetails userDetails){
-        User getUser = userService.getUser(userDetails.getUsername());
-        List<DashboardResponse.DashboardInfo> dashboards = dashboardService.findDashboardsByUser(getUser);
+        Long userId = userDetails.getCustomUserInfo().getUserId();
+        List<DashboardResponse.DashboardInfo> dashboards = dashboardService.findDashboardsByUser(userId);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, dashboards);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

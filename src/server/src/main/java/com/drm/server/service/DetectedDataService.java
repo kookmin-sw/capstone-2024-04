@@ -18,6 +18,8 @@ public class DetectedDataService {
     // 궁금한 것 -> 이런 식으로 autowired 없이 필드 주입시에, DetectedDataService 호출시마다,
     // 새로운 필드 변수(mediaService, DetectedFaceRepository) 가 생성될까?
     private final MediaService mediaService;
+    private final PlayListService playListService;
+    private final DailyMediaBoardService dailyMediaBoardService;
     private final DetectedFaceRepository detectedFaceRepository;
     private final MediaRepository mediaRepository;
     private final LocationRepository locationRepository;
@@ -35,8 +37,8 @@ public class DetectedDataService {
         if(mediaExist && locationExist &&  dataValid && peopleIndexValid) {
             boolean interestBool = checkPeopleInterest(modelRequest.getInterestFrameCnt());
             // mediaRepository 여러번 쿼리 던지는 것 리팩토링 해야됨.
-            Long mediaId = mediaService.getMediaIdFromPlaylist(modelRequest.getCameraId());
-            mediaService.updateMediaData(mediaId, interestBool);
+            Long mediaId = playListService.getMediaIdFromPlaylist(modelRequest.getCameraId());
+            dailyMediaBoardService.updateMediaData(mediaId, modelRequest, interestBool);
             useThisData = true;
         }
         // 데이터 문제 여부와 상관 없이 DetectedFace에 사람별 데이터 그대로 저장

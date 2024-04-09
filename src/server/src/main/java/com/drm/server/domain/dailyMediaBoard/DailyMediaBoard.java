@@ -1,6 +1,7 @@
 package com.drm.server.domain.dailyMediaBoard;
 
 import com.drm.server.domain.detectedface.DataConverter;
+import com.drm.server.domain.mediaApplication.MediaApplication;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +32,9 @@ public class DailyMediaBoard {
     @Convert(converter = DataConverter.class)
     private List<Long> hourlyInterestedCount;
 
+    @ManyToOne
+    @JoinColumn(name = "mediaApplicationId")
+    private MediaApplication mediaApplication;
 
     // 관심을 표현한 남자의 인원 수
     private Long maleInterestCnt;
