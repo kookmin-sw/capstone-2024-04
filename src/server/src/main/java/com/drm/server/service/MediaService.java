@@ -23,13 +23,8 @@ import java.util.stream.Collectors;
 public class MediaService {
     private final MediaRepository mediaRepository;
     private final FileService fileService;
-    public void updateMediaData(Long mediaId, boolean interest){
 
-    }
 
-    public Long getMediaIdFromPlaylist(Long cameraId){
-        return 0L;
-    }
     @Transactional
     public Media createMedia(MediaRequest.Create create, Dashboard dashboard, MultipartFile multipartFile) {
         FileDto fileDto = fileService.uploadFile(multipartFile);
