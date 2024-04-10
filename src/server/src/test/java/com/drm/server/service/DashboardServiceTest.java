@@ -9,6 +9,7 @@ import com.drm.server.domain.dashboard.DashboardRepository;
 import com.drm.server.domain.location.Location;
 import com.drm.server.domain.media.Media;
 import com.drm.server.domain.mediaApplication.MediaApplication;
+import com.drm.server.domain.mediaApplication.Status;
 import com.drm.server.domain.user.User;
 import com.google.api.client.http.MultipartContent;
 import jakarta.mail.Multipart;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +34,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DashboardServiceTest {
     private final DashboardService dashboardService;
     private final DetectedDataService detectedDataService;
-    
+
+    private final PlayListService playListService;
     private final LocationService locationService;
     private final MediaApplicationService mediaApplicationService;
     private final DashboardRepository dashboardRepository;
@@ -40,8 +43,9 @@ public class DashboardServiceTest {
     private final MediaService mediaService;
 
     @Autowired
-    public DashboardServiceTest(DashboardService dashboardService, DetectedDataService detectedDataService, MediaApplicationService mediaApplicationService, LocationService locationService, UserService userService, MediaService mediaService, DashboardRepository dashboardRepository){
+    public DashboardServiceTest(DashboardService dashboardService, PlayListService playListService, DetectedDataService detectedDataService, MediaApplicationService mediaApplicationService, LocationService locationService, UserService userService, MediaService mediaService, DashboardRepository dashboardRepository){
         this.locationService = locationService;
+        this.playListService = playListService;
         this.mediaApplicationService = mediaApplicationService;
         this.dashboardService = dashboardService;
         this.detectedDataService = detectedDataService;
@@ -58,12 +62,16 @@ public class DashboardServiceTest {
     @Transactional
     public void getDashBoardsTest(){
         // given
+        // 회원 가입 세팅
         String email = "ert1306@naver.com";
-        User user = userService.getUserByEmail(email);
-
-        if(user == null){
+        Optional<User> userOptional = userService.getUserByEmail(email);
+        User user = new User();
+        if(userOptional.isEmpty()){
             UserResponse.UserInfo userInfo = userService.createUser(email, "dkdk", "drm");
             user = userService.getUser(userInfo.getUserId());
+        }
+        else{
+            user = userOptional.get();
         }
 
         MediaRequest.Create media = MediaRequest.Create.builder().dashboardTitle("maxmax chicken board").dashboardDescription("this is awesome")
@@ -105,20 +113,24 @@ public class DashboardServiceTest {
     }
 
     @Test
-    @Transactional
+//    @Transactional
     public void getBoardPerAdSummaryTest() throws IOException {
         // given
         // 회원 가입 세팅
         String email = "ert1306@naver.com";
-        User user = userService.getUserByEmail(email);
-
-        if(user == null){
+        Optional<User> userOptional = userService.getUserByEmail(email);
+        User user = new User();
+        if(userOptional.isEmpty()){
             UserResponse.UserInfo userInfo = userService.createUser(email, "dkdk", "drm");
             user = userService.getUser(userInfo.getUserId());
         }
+        else{
+            user = userOptional.get();
+        }
         // 미디어 생성 요청 세팅
-        MediaRequest.Create media = MediaRequest.Create.builder().dashboardTitle("maxmax chicken board").dashboardDescription("this is awesome")
-                .startDate("2024-04-01").endDate("2024-04-10").locationId(0L).build();
+        String title = LocalDateTime.now() + " maxmax chicken board";
+        MediaRequest.Create media = MediaRequest.Create.builder().dashboardTitle(title).dashboardDescription("this is awesome")
+                .startDate("2024-04-02").endDate("2024-04-13").locationId(0L).build();
 
         List<MediaRequest.Create> testMediaList = new ArrayList<>();
         testMediaList.add(media);
@@ -129,17 +141,25 @@ public class DashboardServiceTest {
             ds = dashboardService.createDashboard(testMedia, user);
         }
         // 미디어 생성
+        // 올린 것으로 가정하고 진행
         MockMultipartFile file = new MockMultipartFile("image",
                 "translate.png",
                 "image/png",
-                new FileInputStream("/Users/dongguk/Desktop/동국자료/해외여행/CES"));
-        Media mediaEntity = mediaService.createMedia(media, ds, file);
+                new FileInputStream("/Users/dongguk/Desktop/동국자료/해외여행/CES/translate.png"));
+        Media mediaEntity = mediaService.createMockMedia(media, ds, file);
         
         // mediaApplication(광고 집행)
         // locationId = 1 (import.sql 로 미리 생성)
-        Location location = locationService.findById(1L);
-        mediaApplicationService.createMediaApplication(mediaEntity, location,  "2023-01-10", "2023-01-15");
-        
+        Location location = locationService.findById(2L);
+        MediaApplication medApp = mediaApplicationService.createMediaApplication(mediaEntity, location,  "2024-04-04", "2024-04-15");
+
+        // 승인 가정
+        List<Long> medAppIdList = new ArrayList<>();
+        medAppIdList.add(medApp.getMediaApplicationId());
+        mediaApplicationService.updateStatus(medAppIdList, Status.ACCEPT);
+
+        // PlayList 가 해당일 board 생성 가정
+        playListService.testUpdatePlayList();
 
         // 데이터 들어오는 상황
         LocalDateTime time = LocalDateTime.now();
@@ -155,7 +175,7 @@ public class DashboardServiceTest {
             boolList.add(randomBool);
         }
         ModelRequest modelRequest = ModelRequest.builder()
-                .cameraId(1L)
+                .cameraId(2L)
                 .arriveTime(time.minusSeconds(20))
                 .leaveTime(time)
                 .presentFrameCnt(totalFrameCnt)
@@ -167,19 +187,28 @@ public class DashboardServiceTest {
 
         // when
         detectedDataService.processDetectedData(modelRequest);
-//
+
         // then
+
+        // remove
+//        mediaApplicationService.deleteMediaApplication(mediaEntity.getMediaId(), medApp.getMediaApplicationId(), user);
+
 
     }
 
     @Test
     public void getBoardListTest(){
         // given
+        // 회원 가입 세팅
         String email = "ert1306@naver.com";
-        User user = userService.getUserByEmail(email);
-        if(user == null){
+        Optional<User> userOptional = userService.getUserByEmail(email);
+        User user = new User();
+        if(userOptional.isEmpty()){
             UserResponse.UserInfo userInfo = userService.createUser(email, "dkdk", "drm");
             user = userService.getUser(userInfo.getUserId());
+        }
+        else{
+            user = userOptional.get();
         }
 
         MediaRequest.Create media = MediaRequest.Create.builder().dashboardTitle("maxmax chicken board").dashboardDescription("this is awesome")
@@ -197,11 +226,16 @@ public class DashboardServiceTest {
     @Test
     public void getBoardPerDaysTest(){
         // given
+        // 회원 가입 세팅
         String email = "ert1306@naver.com";
-        User user = userService.getUserByEmail(email);
-        if(user == null){
+        Optional<User> userOptional = userService.getUserByEmail(email);
+        User user = new User();
+        if(userOptional.isEmpty()){
             UserResponse.UserInfo userInfo = userService.createUser(email, "dkdk", "drm");
             user = userService.getUser(userInfo.getUserId());
+        }
+        else{
+            user = userOptional.get();
         }
 
         MediaRequest.Create media = MediaRequest.Create.builder().dashboardTitle("maxmax chicken board").dashboardDescription("this is awesome")
