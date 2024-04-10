@@ -31,6 +31,14 @@ public class MediaService {
         Media media = Media.toEntity(create, fileDto.getUploadFileName(),fileDto.getUploadFileUrl(), dashboard);
        return mediaRepository.save(media);
     }
+
+    @Transactional
+    public Media createMockMedia(MediaRequest.Create create, Dashboard dashboard, MultipartFile multipartFile){
+        FileDto fileDto = null;
+        Media media = Media.toEntity(create, "fakefile.png", "C://fake_d", dashboard);
+        return mediaRepository.save(media);
+    }
+
     public List<MediaResponse.MediaInfo> findByDashboard(List<Dashboard> dashboards){
         List<MediaResponse.MediaInfo> mediaResponses = dashboards.stream().map(MediaResponse.MediaInfo::new).collect(Collectors.toList());
         return mediaResponses;

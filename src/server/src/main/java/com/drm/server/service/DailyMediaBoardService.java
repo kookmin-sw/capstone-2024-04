@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import software.amazon.ion.NullValueException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,25 +24,38 @@ public class DailyMediaBoardService {
 
 //    private final MediaApplicationService mediaApplicationService;
     private final DailyMediaBoardRepository dailyMediaBoardRepository;
-    public void createDailyData(MediaApplication mediaApplication, LocalDate date){
-        DailyMediaBoard dailyData = DailyMediaBoard.builder().mediaApplication(mediaApplication).date(date).build();
+    public void createDailyBoard(MediaApplication mediaApplication, LocalDate date){
+        List<Long> hourlyInterestList = new ArrayList<>(Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
+        List<Long> hourlyPassedList = new ArrayList<>(Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
+
+        DailyMediaBoard dailyData = DailyMediaBoard.builder().totalPeopleCount(0L)
+                .hourlyInterestedCount(hourlyInterestList).hourlyPassedCount(hourlyPassedList)
+                .mediaApplication(mediaApplication)
+                .maleInterestCnt(0L).femaleInterestCnt(0L).maleCnt(0L)
+                .avgStaringTime(0F).avgAge(0F)
+                .build();
         dailyMediaBoardRepository.save(dailyData);
         String msg = "CREATE DAILY DATA : " + date;
         log.info(msg);
     }
-    public void updateMediaData(Long mediaId, ModelRequest modelRequest, boolean interestBool) {
+
+    public void updateMediaData(MediaApplication application, ModelRequest modelRequest, boolean interestBool) {
+        // 광고의 집행 정보 application 이 Param 으로 들어온다.
         LocalDate date = modelRequest.getArriveTime().toLocalDate();
-        Optional<DailyMediaBoard> dailyBoard = dailyMediaBoardRepository.findByMediaIdAndDate(mediaId, date);
+        Optional<DailyMediaBoard> dailyBoard = findDailyBoardByDateAndApplication(application, date);
+
+
         if(dailyBoard.isEmpty()){
             throw new NullValueException("DAILY BOARD NOT EXISTS : " + date);
         }
 
         // calculate new Board data
         DailyMediaBoard prevBoard = dailyBoard.get();
-        int dataHour = modelRequest.getArriveTime().getHour();
+        int dataHour = modelRequest.getArriveTime().getHour() % 12;
+        validateDailyMediaBoard(prevBoard);
 
-        List<Long> hourlyInterest = new ArrayList<>();
-        List<Long> hourlyPassed = new ArrayList<>();
+        List<Long> hourlyInterest = prevBoard.getHourlyInterestedCount();
+        List<Long> hourlyPassed = prevBoard.getHourlyPassedCount();
         if(interestBool){
             hourlyInterest = prevBoard.getHourlyInterestedCount();
             Long value = hourlyInterest.get(dataHour);
@@ -77,5 +93,27 @@ public class DailyMediaBoardService {
         dailyMediaBoardRepository.save(newBoard);
         String msg = "Daily Board Update ";
         log.info(msg);
+    }
+
+    private void validateDailyMediaBoard(DailyMediaBoard prevBoard) {
+        if(prevBoard.getHourlyPassedCount() == null){
+            throw new IllegalStateException("DAILY BOARD HOURLY PASSED LIST IS NULL");
+        }
+        if(prevBoard.getHourlyInterestedCount() == null){
+            throw new IllegalStateException("DAILY BOARD HOURLY INTERESTED LIST IS NULL");
+        }
+        if(prevBoard.getHourlyPassedCount().size() != 12){
+            throw new IllegalStateException("DAILY BOARD HOURLY PASSED LIST SIZE PROBLEM");
+        }
+        if(prevBoard.getHourlyInterestedCount().size() != 12){
+            throw new IllegalStateException("DAILY BOARD HOURLY INTERESTED LIST SIZE PROBLEM");
+        }
+    }
+
+    public Optional<DailyMediaBoard> findDailyBoardByDateAndApplication(MediaApplication application, LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX); // End of the day (23:59:59.999999999)
+
+        return dailyMediaBoardRepository.findByMediaApplicationAndCreateDateBetween(application, startOfDay, endOfDay);
     }
 }

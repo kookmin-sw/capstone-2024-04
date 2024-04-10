@@ -25,14 +25,6 @@ public class MediaApplicationService {
 
     public MediaApplication createMediaApplication(Media media, Location location, String startDate,String endDate){
         MediaApplication mediaApplication = MediaApplication.toEntity(startDate, endDate, media, location);
-        // 광고 집행 등록시, 해당되는 일자(시작일 - 종료일 사이)의 daily media board 를 만들어주는 로직 요구됨.
-        LocalDate localStartDate = LocalDate.parse(startDate);
-        LocalDate localEndDate = LocalDate.parse(endDate);
-        while (!localStartDate.isAfter(localEndDate)) {
-            dailyMediaBoardService.createDailyData(mediaApplication, localStartDate);
-            // Move to the next date
-            localStartDate = localStartDate.plusDays(1); // Increment by one day
-        }
         return mediaApplicationRepository.save(mediaApplication);
     }
     public void deleteMediaApplication(Long mediaId, Long mediaApplicationId, User user){

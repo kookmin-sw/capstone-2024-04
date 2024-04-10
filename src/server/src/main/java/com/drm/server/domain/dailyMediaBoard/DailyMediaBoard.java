@@ -1,5 +1,6 @@
 package com.drm.server.domain.dailyMediaBoard;
 
+import com.drm.server.common.BaseTimeEntity;
 import com.drm.server.domain.detectedface.DataConverter;
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import jakarta.persistence.*;
@@ -14,13 +15,11 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class DailyMediaBoard {
+public class DailyMediaBoard extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mediaDataId;
 
-    @Column
-    private LocalDate date;
     // 전체 포착된 사람 수
     @Column
     private Long totalPeopleCount;
