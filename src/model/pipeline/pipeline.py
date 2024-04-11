@@ -1,5 +1,6 @@
 from tracker import Tracker
 from par import PAR
+from look import LOOK
 
 from typing import List
 from dataclasses import dataclass
@@ -16,11 +17,13 @@ class INFO:
     gender: str
     age: str
     attention: float # 관심도 정도. 아직 정해지지 않음
+    staring_list: list
 
 class Pipeline:
     def __init__(self):
         self.tracker = Tracker()
         self.par = PAR()
+        self.look = LOOK()
         
     def detect(self, image_path):
         results = self.tracker.detect(image_path)
@@ -39,10 +42,12 @@ class Pipeline:
     def run(self, video_path) -> List[INFO]:
         """
         비디오 입력을 받아, 모든 모델을 사용하여 백엔드에 넘겨줄 정보를 만드는 함수
-        #TODO: 관심도 측정 기능 구현
         """
+        # 1. 객체 추적
         info_list = []
         results = self.track(video_path)
+        h, w, c = results[0].orig_img.shape
+        image_size = (h, w)
         dtypes = {
             'frame_id': 'int64',
             'left': 'float64',
@@ -62,34 +67,44 @@ class Pipeline:
             t = np.hstack((frame_ids, data[:,:-1]))
             df = pd.concat([df, pd.DataFrame(t, columns=df.columns).astype(dtypes)], ignore_index=True)
         
+        # 객체 추적 결과를 바탕으로 각 사람의 속성, 관심도 예측하는 루프
         for track_id in df.track_id.unique():
             df_track = df.query(f'track_id == {track_id}')
 
             frame_in = int(df_track.frame_id.min())
             frame_out = int(df_track.frame_id.max())
-            if frame_out - frame_in < 20:
+            if frame_out - frame_in < 20: # 20 프레임 이하로 등장한 사람은 처리하지 않음
                 continue
 
             ages = defaultdict(int)
             genders = defaultdict(int)
+            staring_list = [0] * (frame_out - frame_in + 1)
 
             for i, row in df_track.iterrows():
                 frame_id, left, top, right, bottom, track_id, _ = row
+                frame_id = int(frame_id)
                 top = round(top)
                 left = round(left)
                 right = round(right)
                 bottom = round(bottom)
                 
-                frame = results[int(frame_id)].orig_img
+                frame = results[frame_id].orig_img
                 src = frame[top:bottom, left:right]
                 h, w, _ = src.shape
                 if w < 10 or h < 10: # 탐지된 이미지가 너무 작은 경우 추론 X
                     continue
 
-                out = self.par.predict(src)
+                out = self.par.predict(src) # 성별, 연령대 인식(PAR) 모델
                 
                 ages[out['age']] += 1
                 genders[out['gender']] += 1
+                
+                # 관심도 측정 모델
+                kps_idx = (results[frame_id].boxes.id == track_id).nonzero()
+                kps = results[frame_id].keypoints.data[kps_idx].detach().cpu().numpy().squeeze(0)
+                out_look = self.look.predict(kps, image_size)
+                if out_look > 0.5:
+                    staring_list[frame_id - frame_in] = 1
                 
             age = max(ages.items(), key=lambda x:x[1])[0]
             gender = max(genders.items(), key=lambda x:x[1])[0]
@@ -99,7 +114,8 @@ class Pipeline:
                 frame_out,
                 gender,
                 age,
-                0
+                sum(staring_list) / len(staring_list),
+                staring_list
             )
             info_list.append(info)
         return info_list
