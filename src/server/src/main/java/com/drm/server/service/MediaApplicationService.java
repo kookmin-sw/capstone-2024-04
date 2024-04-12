@@ -1,6 +1,7 @@
 package com.drm.server.service;
 
 import com.drm.server.controller.dto.response.MediaApplicationResponse;
+import com.drm.server.domain.dailyMediaBoard.DailyMediaBoardRepository;
 import com.drm.server.domain.location.Location;
 import com.drm.server.domain.location.LocationRepository;
 import com.drm.server.domain.media.Media;
@@ -25,8 +26,9 @@ public class MediaApplicationService {
     private final MediaApplicationRepository mediaApplicationRepository;
     private final LocationRepository locationRepository;
     private final PlayListRepository playListRepository;
+    private final DailyMediaBoardService dailyMediaBoardService;
 
-    public MediaApplication createMediaApplication(Media media, Location location,String startDate,String endDate){
+    public MediaApplication createMediaApplication(Media media, Location location, String startDate,String endDate){
         MediaApplication mediaApplication = MediaApplication.toEntity(startDate, endDate, media, location);
         return mediaApplicationRepository.save(mediaApplication);
     }

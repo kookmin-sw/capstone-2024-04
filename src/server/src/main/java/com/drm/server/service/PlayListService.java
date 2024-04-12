@@ -8,7 +8,6 @@ import com.drm.server.domain.playlist.PlayList;
 import com.drm.server.domain.playlist.PlayListRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.processing.Find;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +25,8 @@ public class PlayListService {
     private final PlayListRepository playListRepository;
     private final LocationRepository locationRepository;
 
+    private final DailyMediaBoardService dailyMediaBoardService;
+
     @Scheduled(cron = "0 0 0 * * ?")
 //    @Scheduled(cron = "0/5 * * * * ?")
     public List<PlayList> updatePlayList(){
@@ -33,7 +34,10 @@ public class PlayListService {
         List<MediaApplication> mediaApplications = mediaApplicationRepository.findAcceptedApplicationsForToday( currentDate).orElse(Collections.emptyList());
         log.info(String.valueOf(mediaApplications.stream().count()));
         verifyPlayList(currentDate,mediaApplications);
-        List<PlayList> playLists = mediaApplications.stream().map(PlayList::new).collect(Collectors.toList());
+        List<PlayList> playLists = mediaApplications.stream()
+                .peek(mediaApplication -> dailyMediaBoardService.createDailyBoard(mediaApplication,currentDate))
+                .map(PlayList::new).collect(Collectors.toList());
+        playListRepository.saveAll(playLists);
         return playListRepository.saveAll(playLists);
     }
     public List<PlayList> todayList(Long locationId){
@@ -47,5 +51,19 @@ public class PlayListService {
             if(playListRepository.existsByCreateDateAndMediaApplications(localDate.atStartOfDay(),mediaApplication))
                 throw new IllegalArgumentException("해당 플레이리스트는 이미 등록되어있습니다");
         });
+        // currentDate 에 해당되는 MediaAplication 의 daily Board 들 각각 생성
+
+    }
+
+    public MediaApplication getMediaAplicationFromPlaylist(Long locationId, LocalDateTime time){
+        // 해당 location(camera) 에서 해당 일-분-초에 틀어지고 있는 mediaAplication 반환
+        // 구현 필요
+        MediaApplication mediaApp = mediaApplicationRepository.findFirstByOrderByCreateDateDesc();;
+        return mediaApp;
+    }
+
+    // test 코드용 호출
+    public void testUpdatePlayList(){
+        updatePlayList();
     }
 }

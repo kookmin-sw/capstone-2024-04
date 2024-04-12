@@ -23,19 +23,22 @@ import java.util.stream.Collectors;
 public class MediaService {
     private final MediaRepository mediaRepository;
     private final FileService fileService;
-    public void updateMediaData(Long mediaId, boolean interest){
 
-    }
 
-    public Long getMediaIdFromPlaylist(Long cameraId){
-        return 0L;
-    }
     @Transactional
     public Media createMedia(MediaRequest.Create create, Dashboard dashboard, MultipartFile multipartFile) {
         FileDto fileDto = fileService.uploadFile(multipartFile);
         Media media = Media.toEntity(create, fileDto.getUploadFileName(),fileDto.getUploadFileUrl(), dashboard);
        return mediaRepository.save(media);
     }
+
+    @Transactional
+    public Media createMockMedia(MediaRequest.Create create, Dashboard dashboard, MultipartFile multipartFile){
+        FileDto fileDto = null;
+        Media media = Media.toEntity(create, "fakefile.png", "C://fake_d", dashboard);
+        return mediaRepository.save(media);
+    }
+
     public List<MediaResponse.MediaInfo> findByDashboard(List<Dashboard> dashboards){
         List<MediaResponse.MediaInfo> mediaResponses = dashboards.stream().map(MediaResponse.MediaInfo::new).collect(Collectors.toList());
         return mediaResponses;
