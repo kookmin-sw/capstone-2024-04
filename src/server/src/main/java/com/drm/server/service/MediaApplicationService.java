@@ -1,16 +1,21 @@
 package com.drm.server.service;
 
 import com.drm.server.controller.dto.response.MediaApplicationResponse;
+import com.drm.server.domain.dailyMediaBoard.DailyMediaBoardRepository;
 import com.drm.server.domain.location.Location;
+import com.drm.server.domain.location.LocationRepository;
 import com.drm.server.domain.media.Media;
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import com.drm.server.domain.mediaApplication.MediaApplicationRepository;
 import com.drm.server.domain.mediaApplication.Status;
+import com.drm.server.domain.playlist.PlayList;
+import com.drm.server.domain.playlist.PlayListRepository;
 import com.drm.server.domain.user.User;
 import com.drm.server.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,8 +24,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MediaApplicationService {
     private final MediaApplicationRepository mediaApplicationRepository;
+    private final LocationRepository locationRepository;
+    private final PlayListRepository playListRepository;
+    private final DailyMediaBoardService dailyMediaBoardService;
 
-    public MediaApplication createMediaApplication(Media media, Location location,String startDate,String endDate){
+    public MediaApplication createMediaApplication(Media media, Location location, String startDate,String endDate){
         MediaApplication mediaApplication = MediaApplication.toEntity(startDate, endDate, media, location);
         return mediaApplicationRepository.save(mediaApplication);
     }
@@ -63,5 +71,19 @@ public class MediaApplicationService {
     public List<MediaApplication> findByMedia(Media getMedia) {
         List<MediaApplication> mediaApplications = mediaApplicationRepository.findByMedia(getMedia).orElse(Collections.emptyList());
         return mediaApplications;
+    }
+
+    /**
+     * 모델에서 카메라번호를 입력받으면 해당 카메라와 패핑되는 장소 조회, 장소와 날짜 데이터로 playlist 조회 playlist에 mediaApplication 조회
+     * @param cameraId
+     * @param today
+     * @return
+     */
+    public MediaApplication findByCameraIdAndDate(int cameraId, LocalDateTime today){
+        Location getLocation = locationRepository.findByCameraId(cameraId).orElseThrow(() -> new IllegalArgumentException("Invalid cameraId"));
+        MediaApplication mediaApplication = playListRepository.findMediaApplicationsByLocationAndCreateDate(getLocation, today).orElseThrow(() -> new IllegalArgumentException("광고가 걸려있지 않습니다"));
+
+        return mediaApplication;
+
     }
 }

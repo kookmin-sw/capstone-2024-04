@@ -2,6 +2,7 @@ package com.drm.server.domain.mediaApplication;
 
 import com.drm.server.common.BaseTimeEntity;
 import com.drm.server.common.KoreaLocalDateTime;
+import com.drm.server.domain.dailyMediaBoard.DailyMediaBoard;
 import com.drm.server.domain.location.Location;
 import com.drm.server.domain.media.Media;
 import com.drm.server.domain.playlist.PlayList;
@@ -44,6 +45,9 @@ public class MediaApplication extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "mediaApplication")
     private List<PlayList> playList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "mediaApplication")
+    private List<DailyMediaBoard> dailyMediaBoards = new ArrayList<>();
 
     public static MediaApplication toEntity(String startDate,String endDate, Media media, Location location){
         return MediaApplication.builder()
