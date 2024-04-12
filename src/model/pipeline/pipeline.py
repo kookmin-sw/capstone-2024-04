@@ -8,6 +8,7 @@ from collections import defaultdict
 
 import pandas as pd
 import numpy as np
+import cv2
 
 @dataclass
 class INFO:
@@ -39,7 +40,7 @@ class Pipeline:
     def gaze(self, image_array):
         ...
     
-    def run(self, video_path) -> List[INFO]:
+    def run(self, video_path, visualize = False) -> List[INFO]:
         """
         비디오 입력을 받아, 모든 모델을 사용하여 백엔드에 넘겨줄 정보를 만드는 함수
         """
@@ -118,9 +119,47 @@ class Pipeline:
                 staring_list
             )
             info_list.append(info)
+            
+        if visualize:
+            frames = []
+            for r in results:
+                plotted = r.plot()
+                frames.append(plotted)
+            
+            for info in info_list:
+                track_id = info.id
+                gender = info.gender
+                staring_list = info.staring_list
+                df_track = df.query(f'track_id == {track_id}')
+                frame_in = int(df_track.frame_id.min())
+                for i, row in df_track.iterrows():
+                    frame_id, left, top, right, bottom, *_ = row
+                    frame_id = int(frame_id)
+                    top = round(top)
+                    left = round(left)
+                    right = round(right)
+                    bottom = round(bottom)
+                    GREEN = (0, 255, 0)
+                    RED = (0, 0, 255)
+                    cv2.putText(frames[frame_id], f'{gender}', (left, top+40), cv2.FONT_HERSHEY_SIMPLEX,
+                                1, GREEN, 3, cv2.LINE_AA)
+                    look = staring_list[frame_id - frame_in]
+                    cv2.putText(frames[frame_id], f'{look}', (left, top+80), cv2.FONT_HERSHEY_SIMPLEX,
+                                1, GREEN if look else RED, 3, cv2.LINE_AA)
+            
+            height, width, _ = frames[0].shape
+            cap = cv2.VideoCapture(video_path)
+            fps = cap.get(cv2.CAP_PROP_FPS)
+            cap.release()
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            out = cv2.VideoWriter('out-vis.avi', fourcc, fps, (width, height)) # TODO: 저장 경로 설정
+            for i, frame in enumerate(frames):
+                out.write(frame)
+            out.release()
+
         return info_list
     
 if __name__ == '__main__':
     pipeline = Pipeline()
-    ret = pipeline.run('out.avi')
+    ret = pipeline.run('out.avi', visualize=True)
     print(ret)
