@@ -105,8 +105,12 @@ def _parse_opt(argv):
 class Tracker:
     def __init__(self):
         self.opt = _parse_opt([
-            '--classes', '0'
+            '--classes', '0',
+            '--yolo-mode', 'yolov8n-pose'
         ])
+        self.yolo = YOLO(
+            self.opt.yolo_model if 'yolov8' in str(self.opt.yolo_model) else 'yolov8n.pt',
+        )
         
     @torch.no_grad()
     def track(self, source = None):
@@ -115,11 +119,7 @@ class Tracker:
         if source is not None:
             args.source = source
 
-        yolo = YOLO(
-            args.yolo_model if 'yolov8' in str(args.yolo_model) else 'yolov8n.pt',
-        )
-
-        results = yolo.track(
+        results = self.yolo.track(
             source=args.source,
             conf=args.conf,
             iou=args.iou,
@@ -141,20 +141,20 @@ class Tracker:
             line_width=args.line_width
         )
 
-        yolo.add_callback('on_predict_start', partial(_on_predict_start, persist=True))
+        self.yolo.add_callback('on_predict_start', partial(_on_predict_start, persist=True))
 
         if 'yolov8' not in str(args.yolo_model):
             # replace yolov8 model
             m = get_yolo_inferer(args.yolo_model)
             model = m(
                 model=args.yolo_model,
-                device=yolo.predictor.device,
-                args=yolo.predictor.args
+                device=self.yolo.predictor.device,
+                args=self.yolo.predictor.args
             )
-            yolo.predictor.model = model
+            self.yolo.predictor.model = model
 
         # store custom args in predictor
-        yolo.predictor.custom_args = args
+        self.yolo.predictor.custom_args = args
 
         ret = []
         for r in results:
@@ -168,12 +168,8 @@ class Tracker:
         args = self.opt
         if source is not None:
             args.source = source
-
-        yolo = YOLO(
-            args.yolo_model if 'yolov8' in str(args.yolo_model) else 'yolov8n.pt',
-        )
         
-        results = yolo(
+        results = self.yolo(
             source=args.source,
             conf=args.conf,
             iou=args.iou,
@@ -206,6 +202,7 @@ if __name__ == '__main__':
 
     results = tracker.track('out.avi')
     print(len(results))
+    print(results[0].keypoints.data)
     
     dtypes = {
         'frame_id': 'int64',
