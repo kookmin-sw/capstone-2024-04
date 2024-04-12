@@ -3,6 +3,8 @@
     "react-toastify": "^10.0.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
     "husky": "^8.0.0",
     "lint-staged": "^15.2.2"
   },
