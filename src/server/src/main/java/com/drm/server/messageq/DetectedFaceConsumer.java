@@ -63,7 +63,6 @@ public class DetectedFaceConsumer {
 
         MediaApplication mediaApplication = mediaApplicationService.findByCameraIdAndDate((Integer) map.get("cameraId"), detectedFace.getArriveAt());
         detectedFace.updateMediaApplication(mediaApplication);
-
-        detectedFaceRepository.save(detectedFace);
+        DetectedFace savedDetectedFace = detectedFaceRepository.save(detectedFace);
     }
 }
