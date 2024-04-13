@@ -1,6 +1,7 @@
 import { useState } from "react";
 import inbox from "../../../assets/icons/Inbox.svg";
 import upload from "../../../assets/icons/Upload.svg";
+import { DatePicker, Select, Input } from "antd";
 
 const PostMediaScreen = () => {
   const enum PostMode {
@@ -10,7 +11,7 @@ const PostMediaScreen = () => {
 
   const [postMode, setPostMode] = useState<PostMode>(PostMode.UPLOAD);
   const [video, setVideo] = useState<File | null>(null);
-
+  const { RangePicker } = DatePicker;
   const uploadVideo = () => {
     const inputElement = document.createElement("input");
     inputElement.type = "file";
@@ -82,7 +83,9 @@ const PostMediaScreen = () => {
             )
           ) : (
             // 히스토리 모드
-            <></>
+            <div className="border-gray2 border-[1px] mb-12 min-h-[420px]">
+              {/* 히스토리가 존재하지 않은 경우에도 스크린이 필요 */}
+            </div>
           )}
         </div>
 
@@ -90,7 +93,26 @@ const PostMediaScreen = () => {
           광고 등록하기
         </button>
       </div>
-      <div className="flex-1 px-[30px]"></div>
+      <div className="flex-1 flex-col px-[30px]">
+        <p>광고 등록일</p>
+        <RangePicker style={{ width: "100%" }} />
+        <p>디스플레이 선택</p>
+        <Select style={{ width: "100%" }} />
+
+        {postMode === PostMode.UPLOAD ? (
+          <div className="flex flex-col">
+            <p>광고 타이틀</p>
+            <Input />
+            <p>광고 설명</p>
+            <Input.TextArea style={{ resize: "none" }} rows={5} />
+          </div>
+        ) : (
+          <div className="flex flex-col">
+            <p>광고 이미지 미리보기</p>
+            <div className="w-full aspect-video border-gray2 border-[1px] rounded-lg" />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
