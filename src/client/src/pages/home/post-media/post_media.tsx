@@ -2,6 +2,7 @@ import { useState } from "react";
 import inbox from "../../../assets/icons/Inbox.svg";
 import upload from "../../../assets/icons/Upload.svg";
 import { DatePicker, Select, Input } from "antd";
+import { Body1, Subtitle1 } from "../../../components/text";
 
 const PostMediaScreen = () => {
   const enum PostMode {
@@ -31,7 +32,7 @@ const PostMediaScreen = () => {
     <div className="flex h-full">
       <div className="flex-1 flex flex-col px-[30px] h-full justify-between">
         <div>
-          <h3>등록 타입</h3>
+          <Subtitle1 text="등록 타입" color="black" />
           <div className="flex gap-1 mt-2 mb-5">
             <button
               onClick={() => setPostMode(PostMode.UPLOAD)}
@@ -57,12 +58,12 @@ const PostMediaScreen = () => {
           {postMode === PostMode.UPLOAD ? ( // 업로드 모드
             video === null ? ( // 업로드된 비디오가 없는 경우
               <div
-                className="flex flex-col items-center justify-center w-full h-[320px] border-gray2 border-[1px] bg-[#fafafa] cursor-pointer"
+                className="flex flex-col gap-1 items-center justify-center w-full h-[320px] border-gray2 border-[1px] bg-[#fafafa] cursor-pointer"
                 onClick={uploadVideo}
               >
-                <img className="w-12 h-12" src={inbox} />
-                <p>로컬에서 파일 업로드하기</p>
-                <p>최대 1.3GB 등록 가능</p>
+                <img className="w-12 h-12 mb-4" src={inbox} />
+                <Subtitle1 text="로컬에서 파일 업로드하기" color="black" />
+                <Body1 text="최대 1.3GB 등록 가능" color="gray2" />
               </div>
             ) : (
               // 업로드된 비디오가 있는 경우
@@ -72,7 +73,7 @@ const PostMediaScreen = () => {
                   onClick={uploadVideo}
                 >
                   <img className="w-[14px] h-[14px]" src={upload} />
-                  <p>Upload</p>
+                  <Body1 text="Upload" color="black" />
                 </button>
                 <video
                   className="w-[full] aspect-video bg-black mt-3"
@@ -94,22 +95,34 @@ const PostMediaScreen = () => {
         </button>
       </div>
       <div className="flex-1 flex-col px-[30px]">
-        <p>광고 등록일</p>
-        <RangePicker style={{ width: "100%" }} />
-        <p>디스플레이 선택</p>
-        <Select style={{ width: "100%" }} />
+        <Subtitle1 text="광고 등록일" color="black" />
+        <RangePicker className="mt-2 mb-7" style={{ width: "100%" }} />
+        <Subtitle1 text="디스플레이 선택" color="black" />
+        <Select
+          className="mt-2 mb-7"
+          style={{ width: "100%" }}
+          placeholder="디스플레이를 선택해주세요"
+        />
 
         {postMode === PostMode.UPLOAD ? (
-          <div className="flex flex-col">
-            <p>광고 타이틀</p>
-            <Input />
-            <p>광고 설명</p>
-            <Input.TextArea style={{ resize: "none" }} rows={5} />
+          <div className="flex flex-col mt-4">
+            <Subtitle1 text="광고 타이틀" color="black" />
+            <Input
+              className="mt-2 mb-10"
+              placeholder="해당 광고의 대시보드 타이틀을 입력해주세요"
+            />
+            <Subtitle1 text="광고 설명" color="black" />
+            <Input.TextArea
+              className="mt-2"
+              style={{ resize: "none" }}
+              rows={5}
+              placeholder="해당 광고의 대시보드 설명을 입력해주세요"
+            />
           </div>
         ) : (
           <div className="flex flex-col">
-            <p>광고 이미지 미리보기</p>
-            <div className="w-full aspect-video border-gray2 border-[1px] rounded-lg" />
+            <Subtitle1 text="광고 이미지 미리보기" color="black" />
+            <div className="w-full mt-2 aspect-video border-gray2 border-[1px] rounded-lg" />
           </div>
         )}
       </div>
