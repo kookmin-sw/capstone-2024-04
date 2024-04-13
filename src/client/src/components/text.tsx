@@ -1,13 +1,14 @@
 interface TextProps {
   text: string;
-  color: null | string;
+  color: string;
 }
 
+/** 18px, Regular */
 const Headline1 = ({ text, color }: TextProps) => {
   return (
     <h2
       className={`text-lg font-normal ${
-        color !== null ? `text-${color}` : "text-black"
+        color ? `text-${color}` : "text-black"
       }`}
     >
       {text}
@@ -15,11 +16,12 @@ const Headline1 = ({ text, color }: TextProps) => {
   );
 };
 
+/** 18px, Medium */
 const Headline2 = ({ text, color }: TextProps) => {
   return (
     <h2
       className={`text-lg font-medium ${
-        color !== null ? `text-${color}` : "text-black"
+        color ? `text-${color}` : "text-black"
       }`}
     >
       {text}
@@ -27,11 +29,12 @@ const Headline2 = ({ text, color }: TextProps) => {
   );
 };
 
+/** 18px, SemiBold */
 const Headline3 = ({ text, color }: TextProps) => {
   return (
     <h2
       className={`text-lg font-semibold ${
-        color !== null ? `text-${color}` : "text-black"
+        color ? `text-${color}` : "text-black"
       }`}
     >
       {text}
@@ -39,11 +42,12 @@ const Headline3 = ({ text, color }: TextProps) => {
   );
 };
 
+/** 16px, Regular */
 const Subtitle1 = ({ text, color }: TextProps) => {
   return (
     <h3
       className={`text-base font-normal ${
-        color !== null ? `text-${color}` : "text-black"
+        color ? `text-${color}` : "text-black"
       }`}
     >
       {text}
@@ -51,11 +55,12 @@ const Subtitle1 = ({ text, color }: TextProps) => {
   );
 };
 
+/** 16px, Medium */
 const Subtitle2 = ({ text, color }: TextProps) => {
   return (
     <h3
       className={`text-base font-medium ${
-        color !== null ? `text-${color}` : "text-black"
+        color ? `text-${color}` : "text-black"
       }`}
     >
       {text}
@@ -63,11 +68,12 @@ const Subtitle2 = ({ text, color }: TextProps) => {
   );
 };
 
+/** 16px, SemiBold */
 const Subtitle3 = ({ text, color }: TextProps) => {
   return (
     <h3
       className={`text-base font-semibold ${
-        color !== null ? `text-${color}` : "text-black"
+        color ? `text-${color}` : "text-black"
       }`}
     >
       {text}
@@ -75,11 +81,12 @@ const Subtitle3 = ({ text, color }: TextProps) => {
   );
 };
 
+/** 14px, Regular */
 const Body1 = ({ text, color }: TextProps) => {
   return (
     <p
-      className={`text-sm font-semibold ${
-        color !== null ? `text-${color}` : "text-black"
+      className={`text-sm font-normal ${
+        color ? `text-${color}` : "text-black"
       }`}
     >
       {text}
@@ -87,11 +94,12 @@ const Body1 = ({ text, color }: TextProps) => {
   );
 };
 
+/** 14px, Medium */
 const Body2 = ({ text, color }: TextProps) => {
   return (
     <p
-      className={`text-sm font-semibold ${
-        color !== null ? `text-${color}` : "text-black"
+      className={`text-sm font-medium ${
+        color ? `text-${color}` : "text-black"
       }`}
     >
       {text}
@@ -99,11 +107,12 @@ const Body2 = ({ text, color }: TextProps) => {
   );
 };
 
+/** 12px, Regular */
 const Caption1 = ({ text, color }: TextProps) => {
   return (
     <p
-      className={`text-xs font-semibold ${
-        color !== null ? `text-${color}` : "text-black"
+      className={`text-xs font-normal ${
+        color ? `text-${color}` : "text-black"
       }`}
     >
       {text}
@@ -111,11 +120,12 @@ const Caption1 = ({ text, color }: TextProps) => {
   );
 };
 
+/** 12px, Medium */
 const Caption2 = ({ text, color }: TextProps) => {
   return (
     <p
-      className={`text-xs font-semibold ${
-        color !== null ? `text-${color}` : "text-black"
+      className={`text-xs font-medium ${
+        color ? `text-${color}` : "text-black"
       }`}
     >
       {text}
@@ -123,7 +133,7 @@ const Caption2 = ({ text, color }: TextProps) => {
   );
 };
 
-export default {
+export {
   Headline1,
   Headline2,
   Headline3,
