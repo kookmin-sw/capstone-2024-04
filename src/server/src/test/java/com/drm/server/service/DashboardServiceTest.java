@@ -11,8 +11,6 @@ import com.drm.server.domain.media.Media;
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import com.drm.server.domain.mediaApplication.Status;
 import com.drm.server.domain.user.User;
-import com.google.api.client.http.MultipartContent;
-import jakarta.mail.Multipart;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -92,8 +89,8 @@ public class DashboardServiceTest {
         }
 
         // when
-        List<DashboardResponse.DashboardInfo> dashboardList = dashboardService.findDashboardsByUser(user.getUserId());
-        DashboardResponse.DashboardInfo dashboard = dashboardService.findDashboardById(user.getUserId(), ds.getDashboardId());
+        List<DashboardResponse.DashboardDataInfo> dashboardList = dashboardService.findDashboardsByUser(user.getUserId());
+        DashboardResponse.DashboardDataInfo dashboard = dashboardService.findDashboardById(user.getUserId(), ds.getDashboardId());
 
         // then
         // 개별 findDashboardById 작동 확인
@@ -101,7 +98,7 @@ public class DashboardServiceTest {
         assertEquals(dashboard.getDescription(), testMediaList.get(testMediaList.size()-1).getDashboardDescription());
         // 하나씩 Loop 돌면서 확인
         for(int i=1; i<= testMediaList.size(); i++){
-            DashboardResponse.DashboardInfo info = dashboardList.get(dashboardList.size()-i);
+            DashboardResponse.DashboardDataInfo info = dashboardList.get(dashboardList.size()-i);
             assertEquals(info.getTitle(), testMediaList.get(testMediaList.size() - i).getDashboardTitle());
             assertEquals(info.getDescription(), testMediaList.get(testMediaList.size() - i).getDashboardDescription());
         }
@@ -218,7 +215,7 @@ public class DashboardServiceTest {
         // 집행 기간 별 데이터가 필요함.
 
         // when
-        List<DashboardResponse.DashboardInfo> dashboardList = dashboardService.findRegisteredBoardsById(0L, ds.getDashboardId());
+        List<DashboardResponse.DashboardDataInfo> dashboardList = dashboardService.findRegisteredBoardsById(0L, ds.getDashboardId());
 
         // then
     }
@@ -245,7 +242,7 @@ public class DashboardServiceTest {
         // when
         Long dashboardId = ds.getDashboardId();
         Long boardId = 0L;
-        List<DashboardResponse.DashboardInfo> dashboardList = dashboardService.getDayBoards(0L, dashboardId, boardId);
+        List<DashboardResponse.DashboardDataInfo> dashboardList = dashboardService.getDayBoards(0L, dashboardId, boardId);
 
         // then
     }

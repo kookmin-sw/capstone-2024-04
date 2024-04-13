@@ -43,6 +43,9 @@ public class MediaService {
         List<MediaResponse.MediaInfo> mediaResponses = dashboards.stream().map(MediaResponse.MediaInfo::new).collect(Collectors.toList());
         return mediaResponses;
     }
+    public Media findOneMediaByDashboard(Dashboard dashboard){
+        return mediaRepository.findByDashboard(dashboard);
+    }
     public Media findById(Long mediaId,User user){
         Media media =mediaRepository.findById(mediaId).orElseThrow(() -> new IllegalArgumentException("Invalid mediaId"));
         if(media.getDashboard().getUser()!=user) throw new ForbiddenException("해당 유저가 등록한 광고가 아닙니다");
