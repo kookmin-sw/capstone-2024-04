@@ -3,6 +3,7 @@ package com.drm.server.service;
 import com.drm.server.controller.dto.request.ModelRequest;
 import com.drm.server.domain.dailyMediaBoard.DailyMediaBoard;
 import com.drm.server.domain.dailyMediaBoard.DailyMediaBoardRepository;
+import com.drm.server.domain.detectedface.DetectedFace;
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,15 +43,10 @@ public class DailyMediaBoardService {
     public void updateMediaData(MediaApplication application, ModelRequest modelRequest, boolean interestBool) {
         // 광고의 집행 정보 application 이 Param 으로 들어온다.
         LocalDate date = modelRequest.getArriveTime().toLocalDate();
-        Optional<DailyMediaBoard> dailyBoard = findDailyBoardByDateAndApplication(application, date);
+        DailyMediaBoard prevBoard = findDailyBoardByDateAndApplication(application, date);
 
-
-        if(dailyBoard.isEmpty()){
-            throw new NullValueException("DAILY BOARD NOT EXISTS : " + date);
-        }
 
         // calculate new Board data
-        DailyMediaBoard prevBoard = dailyBoard.get();
         int dataHour = modelRequest.getArriveTime().getHour() % 12;
         validateDailyMediaBoard(prevBoard);
 
@@ -94,7 +90,53 @@ public class DailyMediaBoardService {
         String msg = "Daily Board Update ";
         log.info(msg);
     }
+    public void updateDailyBoard(DetectedFace detectedFace) {
+        // 광고의 집행 정보 application 이 Param 으로 들어온다.
+        DailyMediaBoard prevBoard = findDailyBoardByDateAndApplication(detectedFace.getMediaApplication(), detectedFace.getArriveAt().toLocalDate());
 
+        // calculate new Board data
+        int dataHour = detectedFace.getArriveAt().getHour() % 12;
+        validateDailyMediaBoard(prevBoard);
+
+        float newAvgStaringTime = ((prevBoard.getAvgStaringTime() * prevBoard.getTotalPeopleCount() ) + detectedFace.getInterestFrameCnt()) /  (totalCnt + 1);
+        float newAvgAge = ((prevBoard.getAvgAge() * prevBoard.getTotalPeopleCount()) + detectedFace.getAge()) / (prevBoard.getTotalPeopleCount() + 1);
+
+        List<Long> hourlyInterest = prevBoard.getHourlyInterestedCount();
+        List<Long> hourlyPassed = prevBoard.getHourlyPassedCount();
+
+//        시간별 관심 데이터
+        prevBoard.addTotalPeopleCount();
+        prevBoard.addHourlyPassedCount(dataHour);
+        prevBoard.addMaleCnt();
+
+//        관심이 있다면
+        if(detectedFace.getFaceCaptureCnt() > 0){
+            prevBoard.addHourlyInterestedCount(dataHour);
+            if(detectedFace.isMale()){
+                prevBoard.addMaleInterestCnt();
+            }else {
+                prevBoard.addFemaleInterestCnt();
+            }
+        }
+
+        Long maleInterestCnt = prevBoard.getMaleInterestCnt();
+        Long femaleInterestCnt = prevBoard.getFemaleInterestCnt();
+
+
+
+        Long totalCnt = prevBoard.getTotalPeopleCount();
+        totalCnt += 1;
+
+        DailyMediaBoard newBoard = DailyMediaBoard.builder()
+                .mediaDataId(prevBoard.getMediaDataId()).mediaApplication(prevBoard.getMediaApplication())
+                .hourlyInterestedCount(hourlyInterest).hourlyPassedCount(hourlyPassed)
+                .maleInterestCnt(maleInterestCnt).femaleInterestCnt(femaleInterestCnt).maleCnt(maleCnt)
+                .avgAge(newAvgAge).avgStaringTime(newAvgStaringTime).totalPeopleCount(totalCnt).build();
+
+        dailyMediaBoardRepository.save(newBoard);
+        String msg = "Daily Board Update ";
+        log.info(msg);
+    }
     private void validateDailyMediaBoard(DailyMediaBoard prevBoard) {
         if(prevBoard.getHourlyPassedCount() == null){
             throw new IllegalStateException("DAILY BOARD HOURLY PASSED LIST IS NULL");
@@ -110,10 +152,10 @@ public class DailyMediaBoardService {
         }
     }
 
-    public Optional<DailyMediaBoard> findDailyBoardByDateAndApplication(MediaApplication application, LocalDate date) {
+    public DailyMediaBoard findDailyBoardByDateAndApplication(MediaApplication application, LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX); // End of the day (23:59:59.999999999)
 
-        return dailyMediaBoardRepository.findByMediaApplicationAndCreateDateBetween(application, startOfDay, endOfDay);
+        return dailyMediaBoardRepository.findByMediaApplicationAndCreateDateBetween(application, startOfDay, endOfDay).orElseThrow(()-> new IllegalArgumentException("DailyMediaboard is Null"));
     }
 }
