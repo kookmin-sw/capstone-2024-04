@@ -12,15 +12,19 @@ import time
 # leaveTime -> 인물의 퇴장 시간 - time.localtime()
 # staringframeData -> 인물 등장 관련 0,1 표현 데이터 리스트 
 
-def kafkaSend(cameraId, interestPeopleCnt, passedPeopleCnt, arriveTime, leaveTime, staringframeData):
+def kafkaSend(cameraId, interestPeopleCnt, passedPeopleCnt, arriveTime, leaveTime, staringframeData, male, age, fps):
     producer = KafkaProducer(
     acks=0, 
     compression_type='gzip', 
-    bootstrap_servers=['localhost:9092'],
+    # bootstrap_servers=['localhost:9092'],
+    bootstrap_servers=['43.202.60.64:29092'],
     value_serializer=lambda x:dumps(x).encode('utf-8') 
     )
     
-    data = {'cameraId' : cameraId, 'startAt' : arriveTime, 'leaveAt' : leaveTime, 'passedPeopleCnt' : passedPeopleCnt, 'interestPeopleCnt' : interestPeopleCnt, "staringData" : staringframeData}
+    data = {'cameraId' : cameraId, 'startAt' : arriveTime, 'leaveAt' : leaveTime, 
+            'passedPeopleCnt' : passedPeopleCnt, 'interestPeopleCnt' : interestPeopleCnt, 
+            "staringData" : staringframeData,
+            "male": male, "age" : age, "fps" : fps}
     producer.send('drm-face-topic', value=data)
     producer.flush() 
     
@@ -28,4 +32,4 @@ def kafkaSend(cameraId, interestPeopleCnt, passedPeopleCnt, arriveTime, leaveTim
 
 if __name__ == '__main__':
     exampleTime =  time.localtime(time.time()) 
-    kafkaSend(0, 12, 30, exampleTime, exampleTime, [0,0,0,1,1,1,0])
+    kafkaSend(0, 12, 30, exampleTime, exampleTime, [0,0,0,1,1,1,0], True, 24, 1)
