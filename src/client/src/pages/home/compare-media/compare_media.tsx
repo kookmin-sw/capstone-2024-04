@@ -29,7 +29,24 @@ const CompareMediaScreen = () => {
   ];
 
   return (
-    <div className="flex flex-col divide-y px-[30px]">
+    <div className="h-full flex flex-col divide-y px-[30px] overflow-y-scroll">
+      <Content
+        label={<></>}
+        value={
+          <div className="grid grid-cols-3 gap-x-[30px]">
+            {infos.map(() => {
+              return (
+                <div className="flex flex-col gap-4">
+                  <div className="flex justify-center items-center aspect-video border-[1px] border-white_sub text-3xl text-white_sub rounded-md cursor-pointer">
+                    +
+                  </div>
+                  <div className="h-[80px]" />
+                </div>
+              );
+            })}
+          </div>
+        }
+      />
       {/* 하루 평균 유동인구수 */}
       <Content
         label={

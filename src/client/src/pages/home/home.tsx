@@ -120,7 +120,7 @@ const HomePage = () => {
       </div>
       {/* 스크린 영역 */}
       <div
-        className="flex flex-col flex-grow pr-[60px]"
+        className="flex flex-col flex-grow pr-[60px] h-screen min-h-[710px]"
         style={{
           background: `linear-gradient(to bottom, #4200ff ${divHeight}px, #f0f2f5 ${divHeight}px)`,
         }}
@@ -135,7 +135,7 @@ const HomePage = () => {
           </div>
           <img className="w-4 h-4 cursor-pointer" src={infoCircle} />
         </div>
-        <div className="h-full rounded-[10px] py-[50px] px-[30px] mt-6 mb-[60px] bg-white">
+        <div className="h-full rounded-[10px] py-[50px] px-[30px] mt-6 mb-[60px] bg-white overflow-hidden">
           {/* 스크린 내부 */}
           {menuButtons[currMenuIdx].component}
         </div>
