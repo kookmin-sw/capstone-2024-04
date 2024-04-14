@@ -32,48 +32,56 @@ const HomePage = () => {
       description: "",
       iconWhiteSrc: viewDashboardWhitesub,
       iconBlackSrc: viewDashboardBlacksub,
+      component: <>대시보드</>,
     },
     {
       title: "요약",
       description: "",
       iconWhiteSrc: chartTimelineWhitesub,
       iconBlackSrc: chartTimelineBlacksub,
+      component: <>요약</>,
     },
     {
       title: "비교",
       description: "각 광고의 분석 결과를 한데 모아 비교할 수 있어요.",
       iconWhiteSrc: fileCompareWhitesub,
       iconBlackSrc: fileCompareBlacksub,
+      component: <>비교</>,
     },
     {
       title: "히스토리",
       description: "전체 광고 히스토리 및 승인 대기중인 광고를 볼 수 있어요",
       iconWhiteSrc: clipboardTextClockWhitesub,
       iconBlackSrc: clipboardTextClockBlacksub,
+      component: <>히스토리</>,
     },
     {
       title: "광고 등록",
       description: "광고별 분석 세부사항을 확인할 수 있어요.",
       iconWhiteSrc: uploadWhitesub,
       iconBlackSrc: uploadBlacksub,
+      component: <PostMediaScreen />,
     },
     {
       title: "광고목록",
       description: "",
       iconWhiteSrc: listBoxWhitesub,
       iconBlackSrc: listBoxBlacksub,
+      component: <>광고 목록</>,
     },
     {
       title: "내 계정",
       description: "",
       iconWhiteSrc: accountWhitesub,
       iconBlackSrc: accountBlacksub,
+      component: <>내 계정</>,
     },
     {
       title: "설정",
       description: "",
       iconWhiteSrc: cogWhitesub,
       iconBlackSrc: cogBlacksub,
+      component: <>설정</>,
     },
   ];
 
@@ -128,7 +136,7 @@ const HomePage = () => {
         </div>
         <div className="h-full rounded-[10px] py-[50px] px-[30px] mt-6 mb-[60px] bg-white">
           {/* 스크린 내부 */}
-          <PostMediaScreen />
+          {menuButtons[currMenuIdx].component}
         </div>
       </div>
     </div>
