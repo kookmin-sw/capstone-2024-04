@@ -2,7 +2,9 @@ import { Carousel } from "antd";
 import carousel_1 from "../../assets/images/carousel_1.svg";
 import SignInPage from "./sign_in";
 import SignUpPage from "./sign_up";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import Cookies from "universal-cookie";
+import { useNavigate } from "react-router-dom";
 
 const carouselArray = [
   {
@@ -48,6 +50,20 @@ const CarouselContent = ({ title, text, imgSrc }: CarouselContentType) => {
 const MainPage = () => {
   // true - 로그인 화면 / false - 회원가입 화면
   const [signInScreen, setSignInScreen] = useState(true);
+  const navigate = useNavigate();
+  const cookies = new Cookies();
+
+  useEffect(() => {
+    if (cookies.get("autoLogin")) {
+      // 최근 로그인에서 자동 로그인을 체크한 경우
+      const refreshToken = cookies.get("refreshToken");
+      const accessToken = cookies.get("accessToken");
+
+      if (refreshToken !== null && accessToken !== null) {
+        navigate("/home");
+      }
+    }
+  }, []);
 
   return (
     <div className="flex flex-col-reverse lg:flex-row w-screen">
