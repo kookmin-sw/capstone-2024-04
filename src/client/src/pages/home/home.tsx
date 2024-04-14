@@ -18,6 +18,8 @@ import accountWhitesub from "../../assets/icons/account-whitesub.svg";
 import viewDashboardBlacksub from "../../assets/icons/view-dashboard-blacksub.svg";
 import viewDashboardWhitesub from "../../assets/icons/view-dashboard-whitesub.svg";
 import MenuButton from "../../components/menu_button";
+import PostMediaScreen from "./post-media/post_media";
+import { Body1, Headline1 } from "../../components/text";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -27,41 +29,49 @@ const HomePage = () => {
   const menuButtons = [
     {
       title: "대시보드",
+      description: "",
       iconWhiteSrc: viewDashboardWhitesub,
       iconBlackSrc: viewDashboardBlacksub,
     },
     {
       title: "요약",
+      description: "",
       iconWhiteSrc: chartTimelineWhitesub,
       iconBlackSrc: chartTimelineBlacksub,
     },
     {
       title: "비교",
+      description: "각 광고의 분석 결과를 한데 모아 비교할 수 있어요.",
       iconWhiteSrc: fileCompareWhitesub,
       iconBlackSrc: fileCompareBlacksub,
     },
     {
       title: "히스토리",
+      description: "전체 광고 히스토리 및 승인 대기중인 광고를 볼 수 있어요",
       iconWhiteSrc: clipboardTextClockWhitesub,
       iconBlackSrc: clipboardTextClockBlacksub,
     },
     {
-      title: "광고등록",
+      title: "광고 등록",
+      description: "광고별 분석 세부사항을 확인할 수 있어요.",
       iconWhiteSrc: uploadWhitesub,
       iconBlackSrc: uploadBlacksub,
     },
     {
       title: "광고목록",
+      description: "",
       iconWhiteSrc: listBoxWhitesub,
       iconBlackSrc: listBoxBlacksub,
     },
     {
       title: "내 계정",
+      description: "",
       iconWhiteSrc: accountWhitesub,
       iconBlackSrc: accountBlacksub,
     },
     {
       title: "설정",
+      description: "",
       iconWhiteSrc: cogWhitesub,
       iconBlackSrc: cogBlacksub,
     },
@@ -107,18 +117,18 @@ const HomePage = () => {
         }}
       >
         <div className="flex justify-between items-end">
-          <div className="flex gap-9 mt-[55px]">
-            <p className="whitespace-nowrap text-white text-lg font-medium">
-              타이틀
-            </p>
-            <p className="whitespace-nowrap text-white_sub">
-              설명이 들어가는 곳입니다.
-            </p>
+          <div className="flex gap-9 mt-[55px] items-end">
+            <Headline1 text={menuButtons[currMenuIdx].title} color="white" />
+            <Body1
+              text={menuButtons[currMenuIdx].description}
+              color="white_sub"
+            />
           </div>
           <img className="w-4 h-4 cursor-pointer" src={infoCircle} />
         </div>
         <div className="h-full rounded-[10px] py-[50px] px-[30px] mt-6 mb-[60px] bg-white">
           {/* 스크린 내부 */}
+          <PostMediaScreen />
         </div>
       </div>
     </div>
