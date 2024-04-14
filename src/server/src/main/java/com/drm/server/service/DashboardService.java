@@ -9,6 +9,7 @@ import com.drm.server.domain.location.Location;
 import com.drm.server.domain.media.Media;
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import com.drm.server.domain.user.User;
+import com.drm.server.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -62,11 +63,14 @@ public class DashboardService {
     // 특정 유저가 등록한 광고들(dashboard) 반환 로직
     public List<DashboardResponse.DashboardInfo> getDashboardsByUserId(Long userId) {
         User user  = userService.getUser(userId);
-        List<Dashboard> dashboards = dashboardRepository.findAllByUser(user);
+        Optional<List<Dashboard>> dashboards = dashboardRepository.findAllByUser(user);
+        if(dashboards.isEmpty()){
+            throw new NullValueException("USER DASHBOARD NOT EXISTS");
+        }
         List<DashboardResponse.DashboardInfo> dashboardInfos = new ArrayList<>();
-        for(Dashboard dashboard : dashboards){
-
-            DashboardResponse.DashboardInfo info = new DashboardResponse.DashboardInfo(dashboard.getTitle(), dashboard.getDescription());
+        for(Dashboard dashboard : dashboards.get()){
+            DashboardResponse.DashboardInfo info = new DashboardResponse.DashboardInfo(dashboard.getTitle(), dashboard.getDescription(),
+                    dashboard.getDashboardId(), dashboard.getMedia().getMediaLink());
             dashboardInfos.add(info);
         }
         String msg = "DASHBOARD SEARCHED MADE BY USER:" + Long.toString(userId);
@@ -77,7 +81,7 @@ public class DashboardService {
     // 특정 광고 - 대시보드에 들어가는 데이터 반환 로직
     public DashboardResponse.DashboardDataInfo getDashboardWithDataById(Long userId, Long dashboardId) {
         // 해당 광고(media) 를 집행한 광고 집행 이벤트들을 모두 조회
-        List<MediaApplication> mediaAppList = findMediaApplicationByDashboardId(dashboardId);
+        List<MediaApplication> mediaAppList = findMediaApplicationByDashboardId(userId, dashboardId);
         // 조회된 광고 집행 이벤트들에서 Daily 별 수집된 데이터를 합산하여 Dto Response 리턴
         DashboardResponse.DashboardDataInfo response = calculateDataPerDashboard(mediaAppList);
         String Message = "DASHBOARD SUCCESSFULLY RETURN : " + Long.toString(dashboardId);
@@ -85,14 +89,16 @@ public class DashboardService {
         return response;
     }
 
+
     // 특정 광고에 대해 광고 집행된 이벤트들 반환
     public List<DashboardResponse.RegisteredMediaAppInfo> getRegisteredBoardsById(Long userId, Long dashboardId) {
-        List<MediaApplication> mediaAppList = findMediaApplicationByDashboardId(dashboardId);
+        List<MediaApplication> mediaAppList = findMediaApplicationByDashboardId(userId, dashboardId);
         List<DashboardResponse.RegisteredMediaAppInfo> registeredMediaAppInfos = new ArrayList<>();
         for(MediaApplication app : mediaAppList){
             Location location = app.getLocation();
             String address = location.getAddress();
-            DashboardResponse.RegisteredMediaAppInfo info = DashboardResponse.RegisteredMediaAppInfo.builder().address(address).build();
+            DashboardResponse.RegisteredMediaAppInfo info = DashboardResponse.RegisteredMediaAppInfo.builder().address(address)
+                    .mediaApplicationId(app.getMediaApplicationId()).build();
             registeredMediaAppInfos.add(info);
         }
         return registeredMediaAppInfos;
@@ -100,17 +106,24 @@ public class DashboardService {
 
     // 특정 광고 + 특정 일에 대한 집행 결과 데이터 반환
     public DashboardResponse.DashboardDataInfo getDayBoards(Long userId, Long mediaAplicationId, LocalDate date) {
+        // 광고 집행 단위가 유저의 것인지 확인
+        User user = userService.getUser(userId);
         MediaApplication mediaApplication = mediaApplicationService.findById(mediaAplicationId);
+        mediaApplicationService.verifyApplication(mediaApplication, user);
+        // 일별 데이터 조회
         Optional<DailyMediaBoard> board = dailyMediaBoardService.findDailyBoardByDateAndApplication(mediaApplication, date);
         if(board.isEmpty()){
             throw new NullValueException("DAILY BOARD NOT EXISTS" + Long.toString(mediaAplicationId) + " DATE " + date);
         }
-        DashboardResponse.DashboardDataInfo response = DashboardResponse.DashboardDataInfo.builder().build();
+
+        // Board 로 Dashboard response dto 만들어서 반환
+        DashboardResponse.DashboardDataInfo response = new DashboardResponse.DashboardDataInfo(board.get());
         return response;
     }
 
     // 대시보드 -> 광고(media) -> 광고 집행(media Application) 이벤트 반환
-    public List<MediaApplication> findMediaApplicationByDashboardId(Long dashboardId){
+    public List<MediaApplication> findMediaApplicationByDashboardId(Long userId, Long dashboardId){
+        verifyUser(userId, dashboardId);
         Optional<Dashboard> dashboard = dashboardRepository.findById(dashboardId);
         if(dashboard.isEmpty()){
             throw new NullValueException("DASHBOARD NOT EXISTS" + Long.toString(dashboardId));
@@ -118,6 +131,14 @@ public class DashboardService {
         Media media = mediaService.findOneMediaByDashboard(dashboard.get());
         List<MediaApplication> mediaAppList = mediaApplicationService.findByMedia(media);
         return mediaAppList;
+    }
+
+    // 대시보드가 유저가 소유한 것인지 확인
+    private void verifyUser(Long userId, Long dashboardId) {
+        Dashboard board = dashboardRepository.findById(dashboardId).get();
+        if(board.getUser().getUserId() != userId){
+            throw new ForbiddenException("해당 조회에 접근 권한이 없습니다");
+        }
     }
     // 일별로 저장되어 있는 광고 결과 데이터를 합치기
     public DashboardResponse.DashboardDataInfo calculateDataPerDashboard(List<MediaApplication> mediaAppList){

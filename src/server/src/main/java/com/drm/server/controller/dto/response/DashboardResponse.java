@@ -1,5 +1,6 @@
 package com.drm.server.controller.dto.response;
 
+import com.drm.server.domain.dailyMediaBoard.DailyMediaBoard;
 import com.drm.server.domain.dashboard.Dashboard;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -18,15 +19,23 @@ public class DashboardResponse {
         @Schema(description = "가장 큰 단위의 대시보드 설명",example = "대시보드 설명")
         private String description;
 
+        @Schema(description = "dashboard Id 값", example = "0")
+        private Long dashboardId;
+
+        @Schema(description = "해당 대시보드에 대응하는 광고의 url", example = "dk.net.test1.png")
+        private String mediaUrl;
+
         @Builder
         public DashboardInfo(Dashboard dashboard){
             this.title = dashboard.getTitle();
             this.description = dashboard.getDescription();
         }
         @Builder
-        public DashboardInfo(String title, String description){
+        public DashboardInfo(String title, String description, Long dashboardId, String mediaUrl){
             this.title = title;
             this.description = description;
+            this.dashboardId = dashboardId;
+            this.mediaUrl = mediaUrl;
         }
     }
 
@@ -68,6 +77,17 @@ public class DashboardResponse {
             this.femaleInterestCnt = 0L;
             this.maleCnt = 0L;
         }
+
+        public DashboardDataInfo(DailyMediaBoard board){
+            this.hourlyInterestedCount = board.getHourlyInterestedCount();
+            this.hourlyPassedCount = board.getHourlyPassedCount();
+            this.femaleInterestCnt = board.getFemaleInterestCnt();
+            this.maleInterestCnt = board.getMaleInterestCnt();
+            this.totalPeopleCount = board.getTotalPeopleCount();
+            this.avgAge = board.getAvgAge();
+            this.avgStaringTime = board.getAvgStaringTime();
+            this.maleCnt = board.getMaleCnt();
+        }
     }
     @Getter
     @Setter
@@ -76,7 +96,10 @@ public class DashboardResponse {
         @Schema(description = "광고 집행 위치", example = "미래관 4층 디스플레이")
         private String address;
 
-        @Schema(description = "thanks ")
-        private Long str;
+        @Schema(description = "광고에 대한 설명")
+        private String description;
+
+        @Schema(description = "광고 집행 Id")
+        private Long mediaApplicationId;
     }
 }
