@@ -29,7 +29,7 @@ const CompareMediaScreen = () => {
   ];
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col divide-y px-[30px]">
       {/* 하루 평균 유동인구수 */}
       <Content
         label={
