@@ -47,7 +47,7 @@ const CompareMediaScreen = () => {
                   <Subtitle2 text={`${info.info1}명`} color="black" />
                 </div>
               ) : (
-                <></>
+                <div className="min-h-[120px]"></div>
               );
             })}
           </div>
@@ -70,7 +70,7 @@ const CompareMediaScreen = () => {
                   <Subtitle2 text={`${info.info2}%`} color="black" />
                 </div>
               ) : (
-                <></>
+                <div className="min-h-[120px]"></div>
               );
             })}
           </div>
@@ -93,7 +93,7 @@ const CompareMediaScreen = () => {
                   <Subtitle2 text={`${info.info3[0]}%`} color="black" />
                 </div>
               ) : (
-                <></>
+                <div className="min-h-[164px]"></div>
               );
             })}
           </div>
@@ -116,7 +116,7 @@ const CompareMediaScreen = () => {
                   <Subtitle2 text={`${info.info4}초`} color="black" />
                 </div>
               ) : (
-                <></>
+                <div className="min-h-[120px]"></div>
               );
             })}
           </div>
