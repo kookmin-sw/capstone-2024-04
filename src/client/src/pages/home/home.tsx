@@ -20,6 +20,7 @@ import viewDashboardWhitesub from "../../assets/icons/view-dashboard-whitesub.sv
 import MenuButton from "../../components/menu_button";
 import PostMediaScreen from "./post-media/post_media";
 import { Body1, Headline1 } from "../../components/text";
+import CompareMediaScreen from "./compare-media/compare_media";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -46,7 +47,7 @@ const HomePage = () => {
       description: "각 광고의 분석 결과를 한데 모아 비교할 수 있어요.",
       iconWhiteSrc: fileCompareWhitesub,
       iconBlackSrc: fileCompareBlacksub,
-      component: <>비교</>,
+      component: <CompareMediaScreen />,
     },
     {
       title: "히스토리",
