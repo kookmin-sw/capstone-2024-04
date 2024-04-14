@@ -80,7 +80,7 @@ const SignInPage = ({ goToSignUp }: SignInPageProps) => {
         ref={pwRef}
       />
       {/* 에러 텍스트 */}
-      <p className="h-7 text-error text-sm">{errorText}</p>
+      <p className="h-7 text-red text-sm">{errorText}</p>
       <div className="flex justify-between">
         <div className="flex gap-2">
           <input

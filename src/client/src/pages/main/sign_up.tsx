@@ -38,7 +38,7 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
 
     if (result.status === 201) {
       // Toast 메세지 출력 <- 계정 생성에 대한
-      
+
       goToSignIn(); // 로그인 화면으로 이동
     }
   };
@@ -78,7 +78,7 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
           if (e.target.value === "") setIdErr("이메일을 입력해주세요.");
         }}
       />
-      <p className="h-7 text-error text-sm">{idErr}</p>
+      <p className="h-7 text-red text-sm">{idErr}</p>
 
       <p className="text-placeholder">회사명</p>
       <input
@@ -90,7 +90,7 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
           if (e.target.value === "") setIncErr("회사명을 입력해주세요.");
         }}
       />
-      <p className="h-7 text-error text-sm">{incErr}</p>
+      <p className="h-7 text-red text-sm">{incErr}</p>
 
       <p className="text-placeholder">비밀번호</p>
       <input
@@ -114,7 +114,7 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
           if (e.target.value === "") setPwErr("비밀번호를 입력해주세요.");
         }}
       />
-      <p className="h-7 text-error text-sm">{pwErr}</p>
+      <p className="h-7 text-red text-sm">{pwErr}</p>
 
       <p className="text-placeholder">비밀번호 확인</p>
       <input
@@ -122,7 +122,7 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
         className="p-4 rounded-md ring-1 ring-inset ring-[#d9d9d9] outline-none"
         onChange={(e) => setPasswordCheck(e.target.value)}
       />
-      <p className="h-7 text-error text-sm">{pwCheckErr}</p>
+      <p className="h-7 text-red text-sm">{pwCheckErr}</p>
 
       <button
         className={`${

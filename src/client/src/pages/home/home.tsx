@@ -117,7 +117,7 @@ const HomePage = () => {
           </div>
           <img className="w-4 h-4 cursor-pointer" src={infoCircle} />
         </div>
-        <div className="h-full rounded-[10px] py-[50px] px-[60px] mt-6 mb-[60px] bg-white">
+        <div className="h-full rounded-[10px] py-[50px] px-[30px] mt-6 mb-[60px] bg-white">
           {/* 스크린 내부 */}
         </div>
       </div>
