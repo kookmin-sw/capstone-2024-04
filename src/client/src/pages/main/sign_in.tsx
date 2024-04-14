@@ -2,6 +2,7 @@ import { FormEvent, useRef, useState } from "react";
 import logo from "../../assets/images/logo.svg";
 import { signin } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 enum ErrorText {
   incorrect = "아이디 또는 비밀번호를 잘못 입력했습니다.",
@@ -15,9 +16,9 @@ interface SignInPageProps {
 
 const SignInPage = ({ goToSignUp }: SignInPageProps) => {
   const [errorText, setErrorText] = useState("");
+  const [autoLogin, setAutoLogin] = useState(false);
   const idRef = useRef<HTMLInputElement>(null);
   const pwRef = useRef<HTMLInputElement>(null);
-  const checkBoxRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const login = async (e: FormEvent) => {
@@ -36,13 +37,23 @@ const SignInPage = ({ goToSignUp }: SignInPageProps) => {
     }
 
     const body = { email: id, password: pw };
-
     const result = await signin(body);
-    console.log(result);
 
     if (result.status === 200) {
-      // 로그인 성공
-      // token 값 저장 방식이 확정되면 추후 관련 로직 추가 예정
+      const cookies = new Cookies();
+      const tokenData = result.data.data;
+
+      const refreshToken = tokenData.refreshToken;
+      const accessToken = tokenData.accessToken;
+      const expirationTime = tokenData.refreshTokenExpirationTime;
+
+      // 쿠키에 토큰 저장
+      cookies.set("accessToken", accessToken);
+      cookies.set("refreshToken", refreshToken, { maxAge: expirationTime });
+
+      // 자동 로그인 체크박스 체킹 여부에 따라 쿠키 설정
+      cookies.set("autoLogin", autoLogin);
+
       navigate("/home");
       return true;
     }
@@ -87,9 +98,9 @@ const SignInPage = ({ goToSignUp }: SignInPageProps) => {
             className="w-5 bg-main border-gray-300 rounded"
             type="checkbox"
             onChange={(e) => {
-              e.target.checked;
+              setAutoLogin(e.target.checked);
             }}
-            ref={checkBoxRef}
+            value="autoLogin"
           />
           <label className="text-black text-lg">자동 로그인</label>
         </div>
