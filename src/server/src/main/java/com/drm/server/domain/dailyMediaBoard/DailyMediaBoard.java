@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -79,6 +81,14 @@ public class DailyMediaBoard extends BaseTimeEntity {
 
     public void updateAvgAge(int age) {
         this.avgAge = ((this.avgAge * this.totalPeopleCount) + age)/(this.totalPeopleCount +1);
+    }
+    public static DailyMediaBoard toEntity(MediaApplication mediaApplication){
+        return DailyMediaBoard.builder().totalPeopleCount(0L)
+                .hourlyInterestedCount( new ArrayList<>(Collections.nCopies(24, 0L))).hourlyPassedCount( new ArrayList<>(Collections.nCopies(24, 0L)))
+                .mediaApplication(mediaApplication)
+                .maleInterestCnt(0L).femaleInterestCnt(0L).maleCnt(0L)
+                .avgStaringTime(0F).avgAge(0F)
+                .build();
     }
 
 }

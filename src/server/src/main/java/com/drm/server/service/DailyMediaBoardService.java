@@ -13,10 +13,7 @@ import software.amazon.ion.NullValueException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,16 +23,9 @@ public class DailyMediaBoardService {
 //    private final MediaApplicationService mediaApplicationService;
     private final DailyMediaBoardRepository dailyMediaBoardRepository;
     public void createDailyBoard(MediaApplication mediaApplication, LocalDate date) {
-        List<Long> hourlyInterestList = new ArrayList<>(Arrays.asList(0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L));
-        List<Long> hourlyPassedList = new ArrayList<>(Arrays.asList(0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L));
+        DailyMediaBoard initBoard = DailyMediaBoard.toEntity(mediaApplication);
 
-        DailyMediaBoard dailyData = DailyMediaBoard.builder().totalPeopleCount(0L)
-                .hourlyInterestedCount(hourlyInterestList).hourlyPassedCount(hourlyPassedList)
-                .mediaApplication(mediaApplication)
-                .maleInterestCnt(0L).femaleInterestCnt(0L).maleCnt(0L)
-                .avgStaringTime(0F).avgAge(0F)
-                .build();
-        dailyMediaBoardRepository.save(dailyData);
+        dailyMediaBoardRepository.save(initBoard);
         String msg = "CREATE DAILY DATA : " + date;
         log.info(msg);
     }
@@ -46,7 +36,7 @@ public class DailyMediaBoardService {
 
         log.info(dailyMediaBoard.getCreateDate().toString());
         // calculate new Board data
-        int dataHour = detectedFace.getArriveAt().getHour() % 12;
+        int dataHour = detectedFace.getArriveAt().getHour() % 24;
         validateDailyMediaBoard(dailyMediaBoard);
 //        평균 값 계산 (Total 값 넣기전)
         dailyMediaBoard.updateAvgAge(detectedFace.getAge());
@@ -79,10 +69,10 @@ public class DailyMediaBoardService {
         if(prevBoard.getHourlyInterestedCount() == null){
             throw new IllegalStateException("DAILY BOARD HOURLY INTERESTED LIST IS NULL");
         }
-        if(prevBoard.getHourlyPassedCount().size() != 12){
+        if(prevBoard.getHourlyPassedCount().size() != 24){
             throw new IllegalStateException("DAILY BOARD HOURLY PASSED LIST SIZE PROBLEM");
         }
-        if(prevBoard.getHourlyInterestedCount().size() != 12){
+        if(prevBoard.getHourlyInterestedCount().size() != 24){
             throw new IllegalStateException("DAILY BOARD HOURLY INTERESTED LIST SIZE PROBLEM");
         }
     }
