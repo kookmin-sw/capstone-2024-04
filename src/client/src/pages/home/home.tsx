@@ -20,6 +20,7 @@ import viewDashboardWhitesub from "../../assets/icons/view-dashboard-whitesub.sv
 import MenuButton from "../../components/menu_button";
 import PostMediaScreen from "./post-media/post_media";
 import { Body1, Headline1 } from "../../components/text";
+import SettingScreen from "./setting/setting";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -81,7 +82,7 @@ const HomePage = () => {
       description: "",
       iconWhiteSrc: cogWhitesub,
       iconBlackSrc: cogBlacksub,
-      component: <>설정</>,
+      component: <SettingScreen />,
     },
   ];
 
