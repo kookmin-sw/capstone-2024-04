@@ -5,6 +5,7 @@ import SignUpPage from "./sign_up";
 import { Fragment, useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
+import FindPasswordPage from "./find_password";
 
 const carouselArray = [
   {
@@ -48,8 +49,12 @@ const CarouselContent = ({ title, text, imgSrc }: CarouselContentType) => {
 };
 
 const MainPage = () => {
-  // true - 로그인 화면 / false - 회원가입 화면
-  const [signInScreen, setSignInScreen] = useState(true);
+  /**
+   * 0: SignInScreen
+   * 1: SignUpScreen
+   * 2: FindPasswordScreen
+   */
+  const [screenIndex, setScreenIndex] = useState(0);
   const navigate = useNavigate();
   const cookies = new Cookies();
 
@@ -64,6 +69,15 @@ const MainPage = () => {
       }
     }
   }, []);
+
+  const screenArray = [
+    <SignInPage
+      goToSignUp={() => setScreenIndex(1)}
+      goToFindPassword={() => setScreenIndex(2)}
+    />,
+    <SignUpPage goToSignIn={() => setScreenIndex(0)} />,
+    <FindPasswordPage goToSignIn={() => setScreenIndex(0)} />,
+  ];
 
   return (
     <div className="flex flex-col-reverse lg:flex-row w-screen">
@@ -84,11 +98,7 @@ const MainPage = () => {
       </div>
       {/* 우측 화면 */}
       <div className="flex items-center justify-center w-full h-screen lg:w-1/2 bg-white">
-        {signInScreen ? (
-          <SignInPage goToSignUp={() => setSignInScreen(false)} />
-        ) : (
-          <SignUpPage goToSignIn={() => setSignInScreen(true)} />
-        )}
+        {screenArray[screenIndex]}
       </div>
     </div>
   );

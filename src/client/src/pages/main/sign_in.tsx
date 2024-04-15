@@ -12,9 +12,10 @@ enum ErrorText {
 
 interface SignInPageProps {
   goToSignUp: any;
+  goToFindPassword: any;
 }
 
-const SignInPage = ({ goToSignUp }: SignInPageProps) => {
+const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
   const [errorText, setErrorText] = useState("");
   const [autoLogin, setAutoLogin] = useState(false);
   const idRef = useRef<HTMLInputElement>(null);
@@ -104,9 +105,9 @@ const SignInPage = ({ goToSignUp }: SignInPageProps) => {
           />
           <label className="text-black text-lg">자동 로그인</label>
         </div>
-        <a className="text-main" href="#">
+        <p className="text-main cursor-pointer" onClick={goToFindPassword}>
           비밀번호 찾기
-        </a>
+        </p>
       </div>
       <button
         onClick={(e) => login(e)}
