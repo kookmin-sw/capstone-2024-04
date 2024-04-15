@@ -58,7 +58,7 @@ public class DetectedFace extends BaseTimeEntity {
                 .arriveAt(arriveAt)
                 .leaveAt(leaveAt)
                 .age((Integer)modelRequest.get("age"))
-                .male((Boolean)modelRequest.get("male"))
+                .male((Integer)modelRequest.get("male")==1?true:false)
                 .fps((Integer) modelRequest.get("fps"))
                 .build();
         return detectedFace;

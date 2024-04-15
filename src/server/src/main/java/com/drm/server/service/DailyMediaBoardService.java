@@ -26,41 +26,34 @@ public class DailyMediaBoardService {
         DailyMediaBoard initBoard = DailyMediaBoard.toEntity(mediaApplication);
 
         dailyMediaBoardRepository.save(initBoard);
-        String msg = "CREATE DAILY DATA : " + date;
-        log.info(msg);
+        log.info("CREATE DAILY DATA : " + date);
     }
     public void updateDailyBoard(DetectedFace detectedFace) {
         // 광고의 집행 정보 application 이 Param 으로 들어온다.
         DailyMediaBoard dailyMediaBoard = findDailyBoardByDateAndApplication(detectedFace.getMediaApplication(), detectedFace.getArriveAt().toLocalDate());
-        log.info(dailyMediaBoard.getMediaDataId().toString());
 
-        log.info(dailyMediaBoard.getCreateDate().toString());
         // calculate new Board data
         int dataHour = detectedFace.getArriveAt().getHour() % 24;
         validateDailyMediaBoard(dailyMediaBoard);
 //        평균 값 계산 (Total 값 넣기전)
         dailyMediaBoard.updateAvgAge(detectedFace.getAge());
-        dailyMediaBoard.updateAvgStaringTime(detectedFace.getFaceCaptureCnt());
-
-
-//        갱신 데이터 추가
-        dailyMediaBoard.addTotalPeopleCount();
-        dailyMediaBoard.addMaleCnt();
-        dailyMediaBoard.addTotalPeopleCount();
-        dailyMediaBoard.addHourlyPassedCount(dataHour);
-
-//        관심이 있다면
+//        관심이 있다
         if(detectedFace.getFaceCaptureCnt() > 0){
+            dailyMediaBoard.updateAvgStaringTime(detectedFace.getFaceCaptureCnt());
             dailyMediaBoard.addHourlyInterestedCount(dataHour);
+
             if(detectedFace.isMale()){
                 dailyMediaBoard.addMaleInterestCnt();
-            }else {
-                dailyMediaBoard.addFemaleInterestCnt();
-            }
+            }else dailyMediaBoard.addFemaleInterestCnt();
+
         }
 
+        if (detectedFace.isMale()) dailyMediaBoard.addMaleCnt();
+        dailyMediaBoard.addHourlyPassedCount(dataHour);
+        dailyMediaBoard.addTotalPeopleCount();
+
         dailyMediaBoardRepository.save(dailyMediaBoard);
-        log.info("${} dailyboard 생성",dailyMediaBoard.getModifiedDate());
+        log.info("{} dailyboard 수정",dailyMediaBoard.getModifiedDate());
     }
     private void validateDailyMediaBoard(DailyMediaBoard prevBoard) {
         if(prevBoard.getHourlyPassedCount() == null){

@@ -74,9 +74,9 @@ public class DailyMediaBoard extends BaseTimeEntity {
     public void addTotalPeopleCount() {
         this.totalPeopleCount +=1;
     }
-
+//    평균응시시간은 전체 관심있는 인원으로 평균값설정
     public void updateAvgStaringTime(int faceCaptureCount) {
-        this.avgStaringTime = ((this.getAvgStaringTime() * this.getTotalPeopleCount())+faceCaptureCount) / (this.totalPeopleCount + 1);
+        this.avgStaringTime = ((this.getAvgStaringTime() * (this.maleInterestCnt + this.femaleInterestCnt))+faceCaptureCount) / ((this.maleInterestCnt + this.femaleInterestCnt)+ 1);
     }
 
     public void updateAvgAge(int age) {
