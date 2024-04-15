@@ -69,8 +69,9 @@ public class DashboardService {
         }
         List<DashboardResponse.DashboardInfo> dashboardInfos = new ArrayList<>();
         for(Dashboard dashboard : dashboards.get()){
+            Media media = mediaService.findOneMediaByDashboard(dashboard);
             DashboardResponse.DashboardInfo info = new DashboardResponse.DashboardInfo(dashboard.getTitle(), dashboard.getDescription(),
-                    dashboard.getDashboardId(), dashboard.getMedia().getMediaLink());
+                    dashboard.getDashboardId(), media.getMediaLink());
             dashboardInfos.add(info);
         }
         String msg = "DASHBOARD SEARCHED MADE BY USER:" + Long.toString(userId);

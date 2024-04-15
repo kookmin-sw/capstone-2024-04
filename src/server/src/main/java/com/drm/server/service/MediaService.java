@@ -14,8 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.ion.NullValueException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,7 +46,11 @@ public class MediaService {
         return mediaResponses;
     }
     public Media findOneMediaByDashboard(Dashboard dashboard){
-        return mediaRepository.findByDashboard(dashboard);
+        Optional<Media> media = mediaRepository.findByDashboard(dashboard);
+        if(media.isEmpty()){
+            throw new NullValueException("MEDIA NOT EXISTS ");
+        }
+        return media.get();
     }
     public Media findById(Long mediaId,User user){
         Media media =mediaRepository.findById(mediaId).orElseThrow(() -> new IllegalArgumentException("Invalid mediaId"));

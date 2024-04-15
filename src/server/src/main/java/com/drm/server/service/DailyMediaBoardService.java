@@ -114,7 +114,6 @@ public class DailyMediaBoardService {
     public Optional<DailyMediaBoard> findDailyBoardByDateAndApplication(MediaApplication application, LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX); // End of the day (23:59:59.999999999)
-        Optional<DailyMediaBoard> dailyBoard = dailyMediaBoardRepository.findByMediaApplicationAndCreateDateBetween(application, startOfDay, endOfDay);
         return dailyMediaBoardRepository.findByMediaApplicationAndCreateDateBetween(application, startOfDay, endOfDay);
     }
     public List<DailyMediaBoard> findDailyBoardByMediaApplication(MediaApplication application){
