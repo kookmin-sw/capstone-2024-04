@@ -54,7 +54,7 @@ public class DailyMediaBoard extends BaseTimeEntity {
     }
 //   시간별 관심 인원 추가
     public void addHourlyInterestedCount(int hour) {
-        this.hourlyInterestedCount.set(hour, this.hourlyPassedCount.get(hour) + 1);
+        this.hourlyInterestedCount.set(hour, this.hourlyInterestedCount.get(hour) + 1);
     }
 
     public void addMaleCnt() {
@@ -72,4 +72,13 @@ public class DailyMediaBoard extends BaseTimeEntity {
     public void addTotalPeopleCount() {
         this.totalPeopleCount +=1;
     }
+
+    public void updateAvgStaringTime(int faceCaptureCount) {
+        this.avgStaringTime = ((this.getAvgStaringTime() * this.getTotalPeopleCount())+faceCaptureCount) / (this.totalPeopleCount + 1);
+    }
+
+    public void updateAvgAge(int age) {
+        this.avgAge = ((this.avgAge * this.totalPeopleCount) + age)/(this.totalPeopleCount +1);
+    }
+
 }
