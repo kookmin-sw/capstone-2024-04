@@ -29,7 +29,7 @@ const PostMediaScreen = () => {
   };
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full min-w-[920px]">
       <div className="flex-1 flex flex-col px-[30px] h-full justify-between">
         <div>
           <Subtitle1 text="등록 타입" color="black" />
