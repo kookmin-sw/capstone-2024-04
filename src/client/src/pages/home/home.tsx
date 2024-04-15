@@ -20,6 +20,7 @@ import viewDashboardWhitesub from "../../assets/icons/view-dashboard-whitesub.sv
 import MenuButton from "../../components/menu_button";
 import PostMediaScreen from "./post-media/post_media";
 import { Body1, Headline1 } from "../../components/text";
+import CompareMediaScreen from "./compare-media/compare_media";
 import SettingScreen from "./setting/setting";
 
 const HomePage = () => {
@@ -47,7 +48,7 @@ const HomePage = () => {
       description: "각 광고의 분석 결과를 한데 모아 비교할 수 있어요.",
       iconWhiteSrc: fileCompareWhitesub,
       iconBlackSrc: fileCompareBlacksub,
-      component: <>비교</>,
+      component: <CompareMediaScreen />,
     },
     {
       title: "히스토리",
@@ -120,7 +121,7 @@ const HomePage = () => {
       </div>
       {/* 스크린 영역 */}
       <div
-        className="flex flex-col flex-grow pr-[60px]"
+        className="flex flex-col flex-grow pr-[60px] h-screen min-h-[710px]"
         style={{
           background: `linear-gradient(to bottom, #4200ff ${divHeight}px, #f0f2f5 ${divHeight}px)`,
         }}
@@ -135,7 +136,7 @@ const HomePage = () => {
           </div>
           <img className="w-4 h-4 cursor-pointer" src={infoCircle} />
         </div>
-        <div className="h-full rounded-[10px] py-[50px] px-[30px] mt-6 mb-[60px] bg-white">
+        <div className="h-full rounded-[10px] py-[50px] px-[30px] mt-6 mb-[60px] bg-white overflow-hidden">
           {/* 스크린 내부 */}
           {menuButtons[currMenuIdx].component}
         </div>
