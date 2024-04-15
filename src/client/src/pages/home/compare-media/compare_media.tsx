@@ -6,6 +6,8 @@ import eye from "../../../assets/icons/eye-outline.svg";
 import focus from "../../../assets/icons/bullseye-arrow.svg";
 import attentionPeople from "../../../assets/icons/Vector.svg";
 import { Body1, Subtitle2 } from "../../../components/text";
+import { useState } from "react";
+import { Cascader, Modal } from "antd";
 
 interface ContentProps {
   label: JSX.Element;
@@ -27,6 +29,38 @@ const CompareMediaScreen = () => {
     { info1: 22304, info2: 16, info3: [18, 82], info4: 3.2 },
     { info1: 2121 },
   ];
+  // 광고 선택 관련
+  interface Option {
+    value: string | number;
+    label: string;
+    children?: Option[];
+  }
+
+  /** 삭제 예정의 더미 데이터입니다 */
+  const options: Option[] = [
+    {
+      value: "치킨만 포함된 광고",
+      label: "치킨만 포함된 광고",
+      children: [
+        {
+          value: "국민대학교 정문 정류장",
+          label: "국민대학교 정문 정류장\n24.03.28~24.03.31",
+        },
+        {
+          value: "국민대학교 미래관 4층",
+          label: "국민대학교 미래관 4층\n24.03.29~24.03.30",
+        },
+      ],
+    },
+    {
+      value: "연예인이 포함된 광고",
+      label: "연예인이 포함된 광고",
+    },
+    {
+      value: "다른 타이틀이 있는 광고",
+      label: "다른 타이틀이 있는 광고",
+    },
+  ];
 
   return (
     <div className="h-full flex flex-col divide-y px-[30px] overflow-y-scroll">
@@ -37,10 +71,12 @@ const CompareMediaScreen = () => {
             {infos.map(() => {
               return (
                 <div className="flex flex-col gap-4">
-                  <div className="flex justify-center items-center aspect-video border-[1px] border-white_sub text-3xl text-white_sub rounded-md cursor-pointer">
-                    +
-                  </div>
-                  <div className="h-[80px]" />
+                  <div className="flex justify-center items-center aspect-video border-[1px] border-white_sub rounded-md" />
+                  <Cascader
+                    className="w-full mb-10"
+                    options={options}
+                    placeholder="선택된 광고"
+                  />
                 </div>
               );
             })}
