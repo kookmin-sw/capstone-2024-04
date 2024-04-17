@@ -112,13 +112,10 @@ public class DashboardService {
         MediaApplication mediaApplication = mediaApplicationService.findById(mediaAplicationId);
         mediaApplicationService.verifyApplication(mediaApplication, user);
         // 일별 데이터 조회
-        Optional<DailyMediaBoard> board = dailyMediaBoardService.findDailyBoardByDateAndApplication(mediaApplication, date);
-        if(board.isEmpty()){
-            throw new NullValueException("DAILY BOARD NOT EXISTS" + Long.toString(mediaAplicationId) + " DATE " + date);
-        }
+        DailyMediaBoard board = dailyMediaBoardService.findDailyBoardByDateAndApplication(mediaApplication, date);
 
         // Board 로 Dashboard response dto 만들어서 반환
-        DashboardResponse.DashboardDataInfo response = new DashboardResponse.DashboardDataInfo(board.get());
+        DashboardResponse.DashboardDataInfo response = new DashboardResponse.DashboardDataInfo(board);
         return response;
     }
 
@@ -149,11 +146,12 @@ public class DashboardService {
             List<DailyMediaBoard> boards = dailyMediaBoardService.findDailyBoardByMediaApplication(mediaApp);
             for(DailyMediaBoard board : boards){
                 // 시간별 관심 데이터 합치기
-                boardInfo.getHourlyPassedCount().addAll(board.getHourlyPassedCount());
-                boardInfo.setHourlyPassedCount(boardInfo.getHourlyPassedCount());
+                log.info("board get hour passedCnt " + board.getHourlyPassedCount().size() + "  " + board.getHourlyPassedCount().toString());
+                log.info("boardInfo data " + boardInfo.getHourlyPassedCount().size() + "  " + boardInfo.getHourlyPassedCount().toString());
+
                 // 시간별 유동인구 데이터 합치기
-                boardInfo.getHourlyInterestedCount().addAll(board.getHourlyInterestedCount());
-                boardInfo.setHourlyInterestedCount(boardInfo.getHourlyInterestedCount());
+                boardInfo.addHourlyPassedCount(board.getHourlyPassedCount());
+                boardInfo.addHourlyInterestedCount(board.getHourlyInterestedCount());
                 // 수치 합치기
                 boardInfo.setFemaleInterestCnt(boardInfo.getFemaleInterestCnt() + board.getFemaleInterestCnt());
                 boardInfo.setMaleCnt(boardInfo.getMaleCnt()+ board.getMaleCnt());

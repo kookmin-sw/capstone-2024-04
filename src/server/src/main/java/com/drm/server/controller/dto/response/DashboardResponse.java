@@ -7,8 +7,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.google.common.primitives.Longs.asList;
 
 public class DashboardResponse {
     @Getter
@@ -42,10 +45,10 @@ public class DashboardResponse {
     @Getter
     @Setter
     public static class DashboardDataInfo {
-        @Schema(description = "시간당 관심을 표현한 사람 수 (0시 - 12시 까지)", example = "[20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6]")
+        @Schema(description = "시간당 관심을 표현한 사람 수 (0시 - 23시 까지)", example = "[20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6]")
         private List<Long> hourlyInterestedCount;
 
-        @Schema(description = "시간당 포착된 사람 수 (0시 - 12시 까지)", example = "[15, 28, 45, 20, 25, 7, 19, 30, 48, 18, 27, 5]")
+        @Schema(description = "시간당 포착된 사람 수 (0시 - 23시 까지)", example = "[15, 28, 45, 20, 25, 7, 19, 30, 48, 18, 27, 5, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6]")
         private List<Long> hourlyPassedCount;
 
         @Schema(description = "전체 포착된 사람 수", example = "254")
@@ -54,7 +57,7 @@ public class DashboardResponse {
         @Schema(description = "해당 광고 평균 시청 시간", example = "3.1")
         private float avgStaringTime;
 
-        @Schema(description = "해당 광고 평균 시청 나이 (0.0 ~ F )", example = "27")
+        @Schema(description = "해당 광고 평균 시청 나이 (0.0 ~ F )", example = "27.2")
         private float avgAge;
 
         @Schema(description = "관심을 표현한 남자의 인원 수", example = "150")
@@ -68,11 +71,11 @@ public class DashboardResponse {
 
         @Builder
         public DashboardDataInfo() {
-            this.hourlyInterestedCount = Collections.emptyList();
-            this.hourlyPassedCount = Collections.emptyList();
+            this.hourlyInterestedCount = new ArrayList<>(asList(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0));
+            this.hourlyPassedCount =  new ArrayList<>(asList(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0));
             this.totalPeopleCount = 0L;
-            this.avgStaringTime = 0.0f;
-            this.avgAge = 0.0f;
+            this.avgStaringTime = 0F;
+            this.avgAge = 0F;
             this.maleInterestCnt = 0L;
             this.femaleInterestCnt = 0L;
             this.maleCnt = 0L;
@@ -87,6 +90,19 @@ public class DashboardResponse {
             this.avgAge = board.getAvgAge();
             this.avgStaringTime = board.getAvgStaringTime();
             this.maleCnt = board.getMaleCnt();
+        }
+
+        public void addHourlyPassedCount(List<Long> boardList){
+            if(boardList.size() != this.hourlyPassedCount.size()) throw new IllegalStateException("HOUR PASSED DATA LIST SIZE IS DIFFERENT");
+            for(int i=0; i<boardList.size(); i++){
+                this.hourlyPassedCount.set(i, this.hourlyPassedCount.get(i) + boardList.get(i));
+            }
+        }
+        public void addHourlyInterestedCount(List<Long> boardList){
+            if(boardList.size() != this.hourlyInterestedCount.size()) throw new IllegalStateException("HOUR INTERESTED DATA LIST SIZE IS DIFFERENT");
+            for(int i=0; i<boardList.size(); i++){
+                this.hourlyInterestedCount.set(i, this.hourlyInterestedCount.get(i) + boardList.get(i));
+            }
         }
     }
     @Getter

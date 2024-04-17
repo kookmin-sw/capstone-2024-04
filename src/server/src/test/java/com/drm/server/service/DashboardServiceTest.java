@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -117,7 +118,8 @@ public class DashboardServiceTest {
     @Test
     @Transactional
     // 특정 광고에 대한 요약 데이터 조회하는 테스트
-    // 작성 필요
+    // 로직 자체는 동작
+    // 카프카 데이터 넣어서 잘 계산, 조회하는지만 검증 필요
     public void getBoardPerAdSummaryTest() throws IOException {
         // given
         // 회원 가입 세팅
@@ -141,17 +143,25 @@ public class DashboardServiceTest {
         Location location2 = locationService.findById(2L);
         Location location3 = locationService.findById(3L);
 //        String title = LocalDateTime.now() + " maxmax chicken board";
-        String title = "maxmax chicken num1 board";
+        String title = "maxmax bb chicken num1 board";
 
-        // 미디어 / 대시보드  -> 1,2,3번 세팅 및 생성
+        // 미디어 / 대시보드  -> 세팅 및 생성
         MediaRequest.Create mediaRequest = MediaRequest.Create.builder().dashboardTitle(title).dashboardDescription("this is awesome")
                 .startDate("2024-04-07").endDate("2024-04-20").locationId(1L).build();
 
         Dashboard ds = dashboardService.createDashboard(mediaRequest, user);
         Media media =  mediaService.createMockMedia(mediaRequest, ds, file);
 
+        // 여러개의 광고 집행 단위가 존재 가정
         MediaApplication mediaApplication = mediaApplicationService.createMediaApplication(media, location ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
+        MediaApplication mediaApplication2 = mediaApplicationService.createMediaApplication(media, location2 ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
+        MediaApplication mediaApplication3 = mediaApplicationService.createMediaApplication(media, location3 ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
+        // 광고 승락
+        List<MediaApplication> mediaApps = mediaApplicationService.findByMedia(media);
+        List<Long> mediaAppIds = mediaApps.stream().map(mediaApplication1 -> mediaApplication1.getMediaApplicationId()).collect(Collectors.toList());
+        mediaApplicationService.updateStatus(mediaAppIds, Status.ACCEPT);
 
+        playListService.testUpdatePlayList();
         // 해당 광고에 대한 daily_media_board 테이블 데이터가 요구됨.
         // CLI 쿼리로 직접 집어넣어서 테스트 하는 방식으로.
 
@@ -164,7 +174,8 @@ public class DashboardServiceTest {
         // then
         // 조회된 대시보드 값 확인
         assertEquals(info.getMaleCnt(), 0L);
-        assertEquals(info.getAvgAge(), 0F);
+        assertEquals(info.getAvgAge(), 0.0);
+
     }
 
     @Test
@@ -255,9 +266,11 @@ public class DashboardServiceTest {
                 "translate.png",
                 "image/png",
                 new FileInputStream("/Users/dongguk/Desktop/동국자료/해외여행/CES/translate.png"));
+
         Location location = locationService.findById(1L);
         Location location2 = locationService.findById(2L);
         Location location3 = locationService.findById(3L);
+
 //        String title = LocalDateTime.now() + " maxmax chicken board";
         String title = "maxmax chicken num1 board";
 
@@ -331,17 +344,22 @@ public class DashboardServiceTest {
 
         MediaApplication mediaApplication = mediaApplicationService.createMediaApplication(media, location ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
         MediaApplication testApp = mediaApplicationService.findById(1L);
-//        playListService.testUpdatePlayList();
+
+        List<MediaApplication> mediaApps = mediaApplicationService.findByMedia(media);
+        List<Long> mediaAppIds = mediaApps.stream().map(mediaApplication1 -> mediaApplication1.getMediaApplicationId()).collect(Collectors.toList());
+        mediaApplicationService.updateStatus(mediaAppIds, Status.ACCEPT);
+
+        playListService.testUpdatePlayList();
 
         // when
         // 해당 유저가 생성한 대시보드 조회
         LocalDate date = LocalDate.now();
-        DailyMediaBoard board = dailyMediaBoardService.findDailyBoardByDateAndApplication(testApp, date).get();
+        DailyMediaBoard board = dailyMediaBoardService.findDailyBoardByDateAndApplication(testApp, date);
 
         // then
         // 조회된 대시보드 값 확인
-//        assertEquals(0L, board.getMaleCnt());
-//        assertEquals(0F, board.getAvgAge());
+        assertEquals(0L, board.getMaleCnt());
+        assertEquals(0F, board.getAvgAge());
 
 
     }
