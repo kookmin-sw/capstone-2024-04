@@ -3,6 +3,7 @@ package com.drm.server.messageq;
 import com.drm.server.domain.detectedface.DetectedFace;
 import com.drm.server.domain.detectedface.DetectedFaceRepository;
 import com.drm.server.domain.mediaApplication.MediaApplication;
+import com.drm.server.service.DailyMediaBoardService;
 import com.drm.server.service.MediaApplicationService;
 import com.drm.server.service.PlayListService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.parser.Entity;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,7 @@ public class DetectedFaceConsumer {
     @Autowired
     private final DetectedFaceRepository detectedFaceRepository;
     private final MediaApplicationService mediaApplicationService;
+    private final DailyMediaBoardService dailyMediaBoardService;
 
 
     //컨슈머가 캐치하는 구간
@@ -41,28 +44,14 @@ public class DetectedFaceConsumer {
             ex.printStackTrace();
         }
 
-        List<Integer> dateTimeList = (List<Integer>) map.get("startAt");
-        int year = dateTimeList.get(0);
-        int month = dateTimeList.get(1);
-        int day = dateTimeList.get(2);
-        int hour = dateTimeList.get(3);
-        int minute = dateTimeList.get(4);
-        int second = dateTimeList.get(5);
-        LocalDateTime localDateTime = LocalDateTime.of(year, month, day, hour, minute, second);
+        List<Integer> startTimeList = (List<Integer>) map.get("startAt");
+        List<Integer> arriveTimeList = (List<Integer>) map.get("leaveAt");
 
-        DetectedFace detectedFace = DetectedFace.builder()
-                .faceCaptureCnt((Integer) map.get("interestPeopleCnt"))
-                .entireCaptureCnt((Integer) map.get("passedPeopleCnt"))
-                .staring((List<Boolean>) map.get("staringData"))
-                .arriveAt(localDateTime)
-                .leaveAt(localDateTime)
-                .age((Integer)map.get("age"))
-                .male((Boolean)map.get("male"))
-                .fps((Integer) map.get("fps"))
-                .build();
+        DetectedFace detectedFace = DetectedFace.toEntity(map, startTimeList, arriveTimeList);
 
         MediaApplication mediaApplication = mediaApplicationService.findByCameraIdAndDate((Integer) map.get("cameraId"), detectedFace.getArriveAt());
         detectedFace.updateMediaApplication(mediaApplication);
         DetectedFace savedDetectedFace = detectedFaceRepository.save(detectedFace);
+        dailyMediaBoardService.updateDailyBoard(savedDetectedFace);
     }
 }

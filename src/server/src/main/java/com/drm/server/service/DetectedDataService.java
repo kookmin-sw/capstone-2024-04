@@ -43,7 +43,7 @@ public class DetectedDataService {
             // mediaRepository 여러번 쿼리 던지는 것 리팩토링 해야됨.
             LocalDateTime time = modelRequest.getArriveTime();
             MediaApplication currentMedia = playListService.getMediaAplicationFromPlaylist(modelRequest.getCameraId(), time);
-            dailyMediaBoardService.updateMediaData(currentMedia, modelRequest, interestBool);
+//            dailyMediaBoardService.updateMediaData(currentMedia, modelRequest, interestBool);
             useThisData = true;
         }
         // 데이터 문제 여부와 상관 없이 DetectedFace에 사람별 데이터 그대로 저장

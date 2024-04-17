@@ -4,6 +4,7 @@ import com.drm.server.controller.dto.request.ModelRequest;
 import com.drm.server.domain.dailyMediaBoard.DailyMediaBoard;
 import com.drm.server.domain.dailyMediaBoard.DailyMediaBoardRepository;
 import com.drm.server.domain.dashboard.Dashboard;
+import com.drm.server.domain.detectedface.DetectedFace;
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +14,7 @@ import software.amazon.ion.NullValueException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,77 +23,39 @@ public class DailyMediaBoardService {
 
 //    private final MediaApplicationService mediaApplicationService;
     private final DailyMediaBoardRepository dailyMediaBoardRepository;
-    public void createDailyBoard(MediaApplication mediaApplication, LocalDate date){
-        List<Long> hourlyInterestList = new ArrayList<>(Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
-        List<Long> hourlyPassedList = new ArrayList<>(Arrays.asList(0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L,0L));
+    public void createDailyBoard(MediaApplication mediaApplication, LocalDate date) {
+        DailyMediaBoard initBoard = DailyMediaBoard.toEntity(mediaApplication);
 
-        DailyMediaBoard dailyData = DailyMediaBoard.builder().totalPeopleCount(0L)
-                .hourlyInterestedCount(hourlyInterestList).hourlyPassedCount(hourlyPassedList)
-                .mediaApplication(mediaApplication)
-                .maleInterestCnt(0L).femaleInterestCnt(0L).maleCnt(0L)
-                .avgStaringTime(0F).avgAge(0F)
-                .build();
-        dailyMediaBoardRepository.save(dailyData);
-        String msg = "CREATE DAILY DATA : " + date;
-        log.info(msg);
+        dailyMediaBoardRepository.save(initBoard);
+        log.info("CREATE DAILY DATA : " + date);
     }
-
-    public void updateMediaData(MediaApplication application, ModelRequest modelRequest, boolean interestBool) {
+    public void updateDailyBoard(DetectedFace detectedFace) {
         // 광고의 집행 정보 application 이 Param 으로 들어온다.
-        LocalDate date = modelRequest.getArriveTime().toLocalDate();
-        Optional<DailyMediaBoard> dailyBoard = findDailyBoardByDateAndApplication(application, date);
-
-
-        if(dailyBoard.isEmpty()){
-            throw new NullValueException("DAILY BOARD NOT EXISTS : " + date);
-        }
+        DailyMediaBoard dailyMediaBoard = findDailyBoardByDateAndApplication(detectedFace.getMediaApplication(), detectedFace.getArriveAt().toLocalDate());
 
         // calculate new Board data
-        DailyMediaBoard prevBoard = dailyBoard.get();
-        int dataHour = modelRequest.getArriveTime().getHour() % 12;
-        validateDailyMediaBoard(prevBoard);
+        int dataHour = detectedFace.getArriveAt().getHour() % 24;
+        validateDailyMediaBoard(dailyMediaBoard);
+//        평균 값 계산 (Total 값 넣기전)
+        dailyMediaBoard.updateAvgAge(detectedFace.getAge());
+//        관심이 있다
+        if(detectedFace.getFaceCaptureCnt() > 0){
+            dailyMediaBoard.updateAvgStaringTime(detectedFace.getFaceCaptureCnt());
+            dailyMediaBoard.addHourlyInterestedCount(dataHour);
 
-        List<Long> hourlyInterest = prevBoard.getHourlyInterestedCount();
-        List<Long> hourlyPassed = prevBoard.getHourlyPassedCount();
-        if(interestBool){
-            hourlyInterest = prevBoard.getHourlyInterestedCount();
-            Long value = hourlyInterest.get(dataHour);
-            hourlyInterest.set(dataHour, value + 1);
+            if(detectedFace.isMale()){
+                dailyMediaBoard.addMaleInterestCnt();
+            }else dailyMediaBoard.addFemaleInterestCnt();
+
         }
-        hourlyPassed = prevBoard.getHourlyPassedCount();
-        Long value = hourlyPassed.get(dataHour);
-        hourlyPassed.set(dataHour, value + 1);
 
-        Long maleInterestCnt = prevBoard.getMaleInterestCnt();
-        Long femaleInterestCnt = prevBoard.getFemaleInterestCnt();
-        if(interestBool){
-            if(modelRequest.isMale()){
-                maleInterestCnt = prevBoard.getMaleInterestCnt() + 1;
-            }
-            else {
-                femaleInterestCnt = prevBoard.getFemaleInterestCnt() + 1;
-            }
-        }
-        Long maleCnt = prevBoard.getMaleCnt();
-        if(modelRequest.isMale()) {maleCnt += 1;}
+        if (detectedFace.isMale()) dailyMediaBoard.addMaleCnt();
+        dailyMediaBoard.addHourlyPassedCount(dataHour);
+        dailyMediaBoard.addTotalPeopleCount();
 
-
-        Long totalCnt = prevBoard.getTotalPeopleCount();
-        float newAvgStaringTime = ((prevBoard.getAvgStaringTime() * totalCnt ) + modelRequest.getInterestFrameCnt()) /  (totalCnt + 1);
-        float newAvgAge = ((prevBoard.getAvgAge() * totalCnt) + modelRequest.getAge()) / (totalCnt + 1);
-        totalCnt += 1;
-
-        DailyMediaBoard newBoard = DailyMediaBoard.builder()
-                .mediaDataId(prevBoard.getMediaDataId()).mediaApplication(prevBoard.getMediaApplication())
-                .hourlyInterestedCount(hourlyInterest).hourlyPassedCount(hourlyPassed)
-                .maleInterestCnt(maleInterestCnt).femaleInterestCnt(femaleInterestCnt).maleCnt(maleCnt)
-                .avgAge(newAvgAge).avgStaringTime(newAvgStaringTime).totalPeopleCount(totalCnt).build();
-
-        dailyMediaBoardRepository.save(newBoard);
-        String msg = "Daily Board Update ";
-        log.info(msg);
+        dailyMediaBoardRepository.save(dailyMediaBoard);
+        log.info("{} dailyboard 수정",dailyMediaBoard.getModifiedDate());
     }
-
     private void validateDailyMediaBoard(DailyMediaBoard prevBoard) {
         if(prevBoard.getHourlyPassedCount() == null){
             throw new IllegalStateException("DAILY BOARD HOURLY PASSED LIST IS NULL");
@@ -103,18 +63,19 @@ public class DailyMediaBoardService {
         if(prevBoard.getHourlyInterestedCount() == null){
             throw new IllegalStateException("DAILY BOARD HOURLY INTERESTED LIST IS NULL");
         }
-        if(prevBoard.getHourlyPassedCount().size() != 12){
+        if(prevBoard.getHourlyPassedCount().size() != 24){
             throw new IllegalStateException("DAILY BOARD HOURLY PASSED LIST SIZE PROBLEM");
         }
-        if(prevBoard.getHourlyInterestedCount().size() != 12){
+        if(prevBoard.getHourlyInterestedCount().size() != 24){
             throw new IllegalStateException("DAILY BOARD HOURLY INTERESTED LIST SIZE PROBLEM");
         }
     }
 
-    public Optional<DailyMediaBoard> findDailyBoardByDateAndApplication(MediaApplication application, LocalDate date) {
+    public DailyMediaBoard findDailyBoardByDateAndApplication(MediaApplication application, LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX); // End of the day (23:59:59.999999999)
-        return dailyMediaBoardRepository.findByMediaApplicationAndCreateDateBetween(application, startOfDay, endOfDay);
+
+        return dailyMediaBoardRepository.findByMediaApplicationAndCreateDateBetween(application, startOfDay, endOfDay).orElseThrow(()-> new IllegalArgumentException("DailyMediaboard is Null"));
     }
     public List<DailyMediaBoard> findDailyBoardByMediaApplication(MediaApplication application){
         List<DailyMediaBoard> dailyBoards = dailyMediaBoardRepository.findByMediaApplication(application);
