@@ -4,11 +4,7 @@ import upload from "../../../assets/icons/Upload.svg";
 import { DatePicker, Select, Input, SelectProps } from "antd";
 import { Body1, Subtitle1 } from "../../../components/text";
 import { getLocation } from "../../../api/location";
-
-interface LocationInfo {
-  locationId: number;
-  address: string;
-}
+import { LocationInfo } from "../../../interfaces/interface";
 
 const PostMediaScreen = () => {
   const enum PostMode {

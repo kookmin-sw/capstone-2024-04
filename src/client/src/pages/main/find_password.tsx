@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { Headline1 } from "../../components/text";
-
-interface FindPasswordPageProps {
-  goToSignIn: any;
-}
+import { FindPasswordPageProps } from "../../interfaces/interface";
 
 const FindPasswordPage = ({ goToSignIn }: FindPasswordPageProps) => {
   const [email, setEmail] = useState("");

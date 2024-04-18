@@ -6,13 +6,8 @@ import eye from "../../../assets/icons/eye-outline.svg";
 import focus from "../../../assets/icons/bullseye-arrow.svg";
 import attentionPeople from "../../../assets/icons/Vector.svg";
 import { Body1, Subtitle2 } from "../../../components/text";
-import { useState } from "react";
-import { Cascader, Modal } from "antd";
-
-interface ContentProps {
-  label: JSX.Element;
-  value: JSX.Element;
-}
+import { Cascader } from "antd";
+import { ContentProps, Option } from "../../../interfaces/interface";
 
 const Content = ({ label, value }: ContentProps) => {
   return (
@@ -29,13 +24,8 @@ const CompareMediaScreen = () => {
     { info1: 22304, info2: 16, info3: [18, 82], info4: 3.2 },
     { info1: 2121 },
   ];
-  // 광고 선택 관련
-  interface Option {
-    value: string | number;
-    label: string;
-    children?: Option[];
-  }
 
+  // 광고 선택 관련
   /** 삭제 예정의 더미 데이터입니다 */
   const options: Option[] = [
     {
