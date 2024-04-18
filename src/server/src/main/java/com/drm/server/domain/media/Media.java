@@ -41,4 +41,5 @@ public class Media extends BaseTimeEntity {
         return Media.builder().fileName(fileName).mediaLink(mediaLink).title(mediaRequest.getAdvertisementTitle()).description(mediaRequest.getAdvertisementDescription()).dashboard(dashboard).build();
     }
 
+
 }

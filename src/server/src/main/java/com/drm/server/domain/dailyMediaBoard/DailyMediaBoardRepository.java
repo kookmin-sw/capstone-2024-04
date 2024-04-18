@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,5 +15,6 @@ public interface DailyMediaBoardRepository extends JpaRepository<DailyMediaBoard
 
     Optional<DailyMediaBoard> findByMediaApplicationAndCreateDateBetween(MediaApplication application, LocalDateTime startOfDay, LocalDateTime endOfDay);
 
+    List<DailyMediaBoard> findByMediaApplication(MediaApplication mediaApplication);
 
 }

@@ -3,6 +3,7 @@ package com.drm.server.service;
 import com.drm.server.controller.dto.request.ModelRequest;
 import com.drm.server.domain.dailyMediaBoard.DailyMediaBoard;
 import com.drm.server.domain.dailyMediaBoard.DailyMediaBoardRepository;
+import com.drm.server.domain.dashboard.Dashboard;
 import com.drm.server.domain.detectedface.DetectedFace;
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import lombok.RequiredArgsConstructor;
@@ -75,5 +76,9 @@ public class DailyMediaBoardService {
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX); // End of the day (23:59:59.999999999)
 
         return dailyMediaBoardRepository.findByMediaApplicationAndCreateDateBetween(application, startOfDay, endOfDay).orElseThrow(()-> new IllegalArgumentException("DailyMediaboard is Null"));
+    }
+    public List<DailyMediaBoard> findDailyBoardByMediaApplication(MediaApplication application){
+        List<DailyMediaBoard> dailyBoards = dailyMediaBoardRepository.findByMediaApplication(application);
+        return dailyBoards;
     }
 }

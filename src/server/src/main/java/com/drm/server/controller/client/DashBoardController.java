@@ -4,13 +4,9 @@ import com.drm.server.common.APIResponse;
 import com.drm.server.common.ErrorResponse;
 import com.drm.server.common.enums.SuccessCode;
 import com.drm.server.controller.dto.response.DashboardResponse;
-import com.drm.server.controller.dto.response.MediaResponse;
-import com.drm.server.domain.dashboard.Dashboard;
 import com.drm.server.domain.user.CustomUserDetails;
-import com.drm.server.domain.user.User;
 import com.drm.server.service.DashboardService;
 import com.drm.server.service.UserService;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -34,6 +32,7 @@ import java.util.List;
 public class DashBoardController {
     @Autowired
     UserService userService;
+    @Autowired
     DashboardService dashboardService;
 
     @GetMapping()
@@ -48,7 +47,7 @@ public class DashBoardController {
     })
     ResponseEntity<APIResponse<List<DashboardResponse.DashboardInfo>>> getDashboards(@AuthenticationPrincipal CustomUserDetails userDetails){
         Long userId = userDetails.getCustomUserInfo().getUserId();
-        List<DashboardResponse.DashboardInfo> dashboards = dashboardService.findDashboardsByUser(userId);
+        List<DashboardResponse.DashboardInfo> dashboards = dashboardService.getDashboardsByUserId(userId);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, dashboards);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -62,9 +61,9 @@ public class DashBoardController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    ResponseEntity<APIResponse<List<DashboardResponse.DashboardInfo>>> getDashboardsById(@RequestParam Long dashboardId, @AuthenticationPrincipal CustomUserDetails userDetails){
+    ResponseEntity<APIResponse<List<DashboardResponse.DashboardDataInfo>>> getDashboardsById(@PathVariable Long dashboardId, @AuthenticationPrincipal CustomUserDetails userDetails){
         Long userId = userDetails.getCustomUserInfo().getUserId();
-        DashboardResponse.DashboardInfo board = dashboardService.findDashboardById(userId, dashboardId);
+        DashboardResponse.DashboardDataInfo board = dashboardService.getDashboardWithDataById(userId, dashboardId);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, board);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -79,13 +78,13 @@ public class DashBoardController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    ResponseEntity<APIResponse<List<DashboardResponse.DashboardInfo>>> getBoards(@RequestParam Long dashboardId, @AuthenticationPrincipal CustomUserDetails userDetails){
+    ResponseEntity<APIResponse<List<DashboardResponse.RegisteredMediaAppInfo>>> getBoards(@PathVariable Long dashboardId, @AuthenticationPrincipal CustomUserDetails userDetails){
         Long userId = userDetails.getCustomUserInfo().getUserId();
-        List<DashboardResponse.DashboardInfo> boards = dashboardService.findRegisteredBoardsById(userId, dashboardId);
+        List<DashboardResponse.RegisteredMediaAppInfo> boards = dashboardService.getRegisteredBoardsById(userId, dashboardId);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, boards);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    @GetMapping("{dashboardId}/board/{boardId}")
+    @GetMapping("{dashboardId}/board/{boardId}/data")
     @Operation(summary = "날짜 별(광고 + 집행기간 + 일(day)) 단위 대시보드")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
@@ -95,9 +94,13 @@ public class DashBoardController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    ResponseEntity<APIResponse<List<DashboardResponse.DashboardInfo>>> getBoardPerDay(@RequestParam Long dashboardId, @RequestParam Long boardId, @AuthenticationPrincipal CustomUserDetails userDetails){
+    ResponseEntity<APIResponse<List<DashboardResponse.DashboardDataInfo>>> getBoardPerDay(@PathVariable Long dashboardId, @PathVariable Long boardId, @RequestParam String date, @AuthenticationPrincipal CustomUserDetails userDetails){
         Long userId = userDetails.getCustomUserInfo().getUserId();
-        List<DashboardResponse.DashboardInfo> boards = dashboardService.getDayBoards(userId, dashboardId, boardId);
+        // Define the date format  & Parse the string to LocalDate
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(date, formatter);
+
+        DashboardResponse.DashboardDataInfo boards = dashboardService.getDayBoards(userId, dashboardId, localDate);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, boards);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -34,5 +34,10 @@ public class Dashboard extends BaseTimeEntity {
         return Dashboard.builder().title(title).description(description).user(user).build();
     }
 
+    public void setMedia(Media media) {
+        this.media = media;
+    }
+
+
 
 }
