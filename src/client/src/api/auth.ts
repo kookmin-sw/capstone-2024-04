@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const API_ENDPOINT = import.meta.env.VITE_APP_API_ENDPOINT;
+import publicApi from "./public_api";
 
 export interface SignUpAPIProps {
     email: string;
@@ -14,21 +12,21 @@ export interface SignInAPIProps {
 }
 
 export const signup = async ({email, password, company}: SignUpAPIProps) => {
-    const response = await axios.post(`${API_ENDPOINT}/api/v1/auth/signup`, {
+    const response = await publicApi.post('/api/v1/auth/signup', {
         email,
         password,
         company,
-    }, {withCredentials: true}).catch((err) => {
+    }).catch((err) => {
         return err.response;
     });
     return response;
 }
 
 export const signin = async ({email, password}: SignInAPIProps) => {
-    const response = await axios.post(`${API_ENDPOINT}/api/v1/auth/signin`, {
+    const response = await publicApi.post('/api/v1/auth/signin', {
         email,
         password,
-    }, {withCredentials: true}).catch((err) => {
+    }).catch((err) => {
         return err.response;
     });
     return response;
