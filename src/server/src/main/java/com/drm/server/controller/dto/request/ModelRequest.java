@@ -19,5 +19,8 @@ public class ModelRequest {
     private int presentFrameCnt;
     private int interestFrameCnt;
 
-    private List<Integer> frameData;
+    private int age;
+    private boolean male;
+
+    private List<Boolean> frameData;
 }
