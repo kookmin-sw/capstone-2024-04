@@ -74,8 +74,8 @@ public class DashboardResponse {
             this.hourlyInterestedCount = new ArrayList<>(asList(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0));
             this.hourlyPassedCount =  new ArrayList<>(asList(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0));
             this.totalPeopleCount = 0L;
-            this.avgStaringTime = 0F;
-            this.avgAge = 0F;
+            this.avgStaringTime = 0;
+            this.avgAge = 0;
             this.maleInterestCnt = 0L;
             this.femaleInterestCnt = 0L;
             this.maleCnt = 0L;

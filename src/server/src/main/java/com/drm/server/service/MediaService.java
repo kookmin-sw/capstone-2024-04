@@ -46,11 +46,9 @@ public class MediaService {
         return mediaResponses;
     }
     public Media findOneMediaByDashboard(Dashboard dashboard){
-        Optional<Media> media = mediaRepository.findByDashboard(dashboard);
-        if(media.isEmpty()){
-            throw new NullValueException("MEDIA NOT EXISTS ");
-        }
-        return media.get();
+        Media media = mediaRepository.findByDashboard(dashboard).orElseThrow(() ->
+                new NullValueException("MEDIA NOT EXISTS (SEARCHED BY DASHBOARD " + dashboard.getDashboardId() + ")"));
+        return media;
     }
     public Media findById(Long mediaId,User user){
         Media media =mediaRepository.findById(mediaId).orElseThrow(() -> new IllegalArgumentException("Invalid mediaId"));

@@ -61,6 +61,9 @@ public class MediaApplicationService {
     public void verifyApplication (MediaApplication mediaApplication,User user){
         if(mediaApplication.getMedia().getDashboard().getUser()!=user)
             throw new ForbiddenException("해당 신청에 접근 권한이 없습니다");
+        // media_application user 권한 검증 메소드의 재사용을 위해 아래의 라인 수정함
+        // ACCEPT 인 경우에 아래의 throw acception 을 뱉지 않도록 수정하는 것이 verify 의 목적에 맞다고 판단함.
+        if(mediaApplication.getStatus() == Status.ACCEPT) return;
         if(mediaApplication.getStatus() != Status.WAITING) throw new ForbiddenException("신청 대기일때만 삭제 가능합니다");
     }
     public List<MediaApplication> findAllApplications(){

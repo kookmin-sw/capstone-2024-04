@@ -147,10 +147,12 @@ public class DashboardService {
                 boardInfo.setMaleInterestCnt(boardInfo.getMaleInterestCnt() + board.getMaleInterestCnt());
                 // 평균값 계산 및 합치기
                 Long newTotalPeopleCnt = boardInfo.getTotalPeopleCount() + board.getTotalPeopleCount();
-                boardInfo.setAvgAge((boardInfo.getAvgAge() * boardInfo.getTotalPeopleCount() + board.getAvgAge() * board.getTotalPeopleCount()) /
-                        (newTotalPeopleCnt));
-                boardInfo.setAvgStaringTime((boardInfo.getAvgStaringTime() * boardInfo.getTotalPeopleCount() + board.getAvgStaringTime() * board.getTotalPeopleCount()
-                        / (newTotalPeopleCnt)));
+                if(newTotalPeopleCnt > 0) {
+                    boardInfo.setAvgAge((boardInfo.getAvgAge() * boardInfo.getTotalPeopleCount() + board.getAvgAge() * board.getTotalPeopleCount()) /
+                            newTotalPeopleCnt);
+                    boardInfo.setAvgStaringTime((boardInfo.getAvgStaringTime() * boardInfo.getTotalPeopleCount() + board.getAvgStaringTime() * board.getTotalPeopleCount())
+                            / newTotalPeopleCnt);
+                }
                 boardInfo.setTotalPeopleCount(newTotalPeopleCnt);
             }
         }
