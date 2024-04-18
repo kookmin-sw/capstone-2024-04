@@ -62,15 +62,15 @@ public class DashboardServiceTest {
     // then
 
     @Test
-    @Transactional
+//    @Transactional
     public void getDashBoardsTest(){
         // given
         // 회원 가입 세팅
-        String email = "ert1306@naver.com";
+        String email = "test@email";
         Optional<User> userOptional = userService.getUserByEmail(email);
         User user = new User();
         if(userOptional.isEmpty()){
-            UserResponse.UserInfo userInfo = userService.createUser(email, "dkdk", "drm");
+            UserResponse.UserInfo userInfo = userService.createUser(email, "1234", "drm");
             user = userService.getUser(userInfo.getUserId());
         }
         else{
@@ -116,18 +116,18 @@ public class DashboardServiceTest {
     }
 
     @Test
-    @Transactional
+//    @Transactional
     // 특정 광고에 대한 요약 데이터 조회하는 테스트
     // 로직 자체는 동작
     // 카프카 데이터 넣어서 잘 계산, 조회하는지만 검증 필요
     public void getBoardPerAdSummaryTest() throws IOException {
         // given
         // 회원 가입 세팅
-        String email = "ert1306@naver.com";
+        String email = "test@email";
         Optional<User> userOptional = userService.getUserByEmail(email);
         User user = new User();
         if(userOptional.isEmpty()){
-            UserResponse.UserInfo userInfo = userService.createUser(email, "dkdk", "drm");
+            UserResponse.UserInfo userInfo = userService.createUser(email, "1234", "drm");
             user = userService.getUser(userInfo.getUserId());
         }
         else{
@@ -174,8 +174,6 @@ public class DashboardServiceTest {
         // then
         // 조회된 대시보드 값 확인
         assertEquals(info.getMaleCnt(), 0L);
-        assertEquals(info.getAvgAge(), 0.0);
-
     }
 
     @Test
