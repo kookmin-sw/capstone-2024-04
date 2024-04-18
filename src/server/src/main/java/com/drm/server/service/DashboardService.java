@@ -33,9 +33,6 @@ public class DashboardService {
     private final LocationService locationService;
 
     public Dashboard createDashboard(MediaRequest.Create create, User user){
-        if(dashboardRepository.existsByTitle(create.getDashboardTitle())){
-            throw new IllegalArgumentException("FAILED : TITLE ALREADY EXISTS");
-        }
         Dashboard dashboard = Dashboard.toEntity(create.getDashboardTitle(), create.getDashboardDescription(), user);
         dashboardRepository.save(dashboard);
         String msg = "DASHBOARD CREATED :" + Long.toString(dashboard.getDashboardId());
@@ -63,12 +60,10 @@ public class DashboardService {
     // 특정 유저가 등록한 광고들(dashboard) 반환 로직
     public List<DashboardResponse.DashboardInfo> getDashboardsByUserId(Long userId) {
         User user  = userService.getUser(userId);
-        Optional<List<Dashboard>> dashboards = dashboardRepository.findAllByUser(user);
-        if(dashboards.isEmpty()){
-            throw new NullValueException("USER DASHBOARD NOT EXISTS");
-        }
+        List<Dashboard> dashboards = dashboardRepository.findAllByUser(user).orElseThrow(() -> new NullValueException("DASHBOARD NOT EXISTS"));
         List<DashboardResponse.DashboardInfo> dashboardInfos = new ArrayList<>();
-        for(Dashboard dashboard : dashboards.get()){
+
+        for(Dashboard dashboard : dashboards){
             Media media = mediaService.findOneMediaByDashboard(dashboard);
             DashboardResponse.DashboardInfo info = new DashboardResponse.DashboardInfo(dashboard.getTitle(), dashboard.getDescription(),
                     dashboard.getDashboardId(), media.getMediaLink());
@@ -122,11 +117,8 @@ public class DashboardService {
     // 대시보드 -> 광고(media) -> 광고 집행(media Application) 이벤트 반환
     public List<MediaApplication> findMediaApplicationByDashboardId(Long userId, Long dashboardId){
         verifyUser(userId, dashboardId);
-        Optional<Dashboard> dashboard = dashboardRepository.findById(dashboardId);
-        if(dashboard.isEmpty()){
-            throw new NullValueException("DASHBOARD NOT EXISTS" + Long.toString(dashboardId));
-        }
-        Media media = mediaService.findOneMediaByDashboard(dashboard.get());
+        Dashboard dashboard = dashboardRepository.findById(dashboardId).orElseThrow(() -> new NullValueException("DASHBOARD NOT EXISTS"));
+        Media media = mediaService.findOneMediaByDashboard(dashboard);
         List<MediaApplication> mediaAppList = mediaApplicationService.findByMedia(media);
         return mediaAppList;
     }
@@ -146,9 +138,6 @@ public class DashboardService {
             List<DailyMediaBoard> boards = dailyMediaBoardService.findDailyBoardByMediaApplication(mediaApp);
             for(DailyMediaBoard board : boards){
                 // 시간별 관심 데이터 합치기
-                log.info("board get hour passedCnt " + board.getHourlyPassedCount().size() + "  " + board.getHourlyPassedCount().toString());
-                log.info("boardInfo data " + boardInfo.getHourlyPassedCount().size() + "  " + boardInfo.getHourlyPassedCount().toString());
-
                 // 시간별 유동인구 데이터 합치기
                 boardInfo.addHourlyPassedCount(board.getHourlyPassedCount());
                 boardInfo.addHourlyInterestedCount(board.getHourlyInterestedCount());
