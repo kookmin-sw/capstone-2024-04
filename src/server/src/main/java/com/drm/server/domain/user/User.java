@@ -34,7 +34,7 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user",orphanRemoval = true)
     private List<Dashboard> dashboards = new ArrayList<>();
     public static User toEntity(String email,String password,String company){
-        return User.builder().email(email).password(password).company(company).deleted(false).build();
+        return User.builder().email(email).password(password).company(company).deleted(false).authority(Authority.USER).build();
     }
 
 }
