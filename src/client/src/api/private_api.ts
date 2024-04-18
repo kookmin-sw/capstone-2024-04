@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 import Cookies from "universal-cookie";
 import { ErrorResponse } from "../interfaces/interface";
 
@@ -22,7 +22,7 @@ privateApi.interceptors.request.use((config: InternalAxiosRequestConfig) => {
         config.headers.Authorization = `Bearer ${accessToken}`;
     } else {
         // token 모두 제거 후, 초기 페이지로 redirect 할 예정
-        window.alert('로그인 시간 제한이 만료되었습니다.')
+        toast.error('로그인 시간 제한이 만료되었습니다.');
     }
 
     return config;
@@ -65,7 +65,7 @@ privateApi.interceptors.response.use((response: AxiosResponse) => {
 
         } else {
             // token 모두 제거 후, 초기 페이지로 redirect 할 예정
-            window.alert('로그인 시간 제한이 만료되었습니다.')
+            toast.error('로그인 시간 제한이 만료되었습니다.');
         }
     }
 });
