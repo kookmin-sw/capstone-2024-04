@@ -14,7 +14,7 @@ export interface ErrorResponse {
     status: number,
     divisionCode: string,
     resultMsg: string,
-    errors: Record<string, unknown>,
+    errors: {},
     reason: string,
 }
 
