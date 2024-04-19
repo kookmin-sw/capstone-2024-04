@@ -105,6 +105,26 @@ public class DashboardResponse {
             }
         }
     }
+
+    @Getter
+    @Setter
+    @Builder
+    // Location 에 대한 유동인구 정보 DTO
+    public static class LocationDataInfo {
+        @Schema(description = "평균 유동인구 수(일별)", example = "26024")
+        private Long passedPeopleCntPerDay;
+
+        @Schema(description = "시간당 유동인구 수(리스트 형태)", example = "[1500, 280, 452, 204, 255, 72, 19, 30, 48, 185, 271, 54, 203, 314, 505, 204, 310, 62, 204, 351, 503, 20, 30, 6]")
+        private List<Long> passedPeopleListPerHour;
+
+        @Schema(description = "시간대별 평균 나이대", example = "[15, 28, 45, 20, 25, 7, 19, 30, 48, 18, 27, 5, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6]")
+        private List<Long> avgAgeListPerHour;
+
+        @Schema(description = "유동 인구 남자의 비율(성비) 0 ~ 100 사이의 숫자", example = "64")
+        private Long avgMaleRatio;
+    }
+
+
     @Getter
     @Setter
     @Builder
