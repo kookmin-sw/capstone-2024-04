@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 
-enum Status {
+export enum Status {
   등록거절,
   집행예정,
   집행종료,
   집행중,
 }
 
-const StatusBadge = (status: Status) => {
+const StatusBadge = ({ status: Status }: any) => {
   const [color, setColor] = useState<string>("");
   const [text, setText] = useState<string>("");
 
