@@ -58,9 +58,9 @@ const CompareMediaScreen = () => {
         label={<></>}
         value={
           <div className="grid grid-cols-3 gap-x-[30px]">
-            {infos.map(() => {
+            {infos.map((_, index) => {
               return (
-                <div className="flex flex-col gap-4">
+                <div key={`content-${index}`} className="flex flex-col gap-4">
                   <div className="flex justify-center items-center aspect-video border-[1px] border-white_sub rounded-md" />
                   <Cascader
                     className="w-full mb-10"
@@ -83,9 +83,12 @@ const CompareMediaScreen = () => {
         }
         value={
           <div className="grid grid-cols-3 gap-x-[30px]">
-            {infos.map((info) => {
+            {infos.map((info, index) => {
               return info.info1 !== undefined ? (
-                <div className="flex flex-col gap-2 py-6 items-center justify-center min-w-[240px]">
+                <div
+                  key={`info1-${index}`}
+                  className="flex flex-col gap-2 py-6 items-center justify-center min-w-[240px]"
+                >
                   <img className="w-[30px] h-[30px]" src={walk} />
                   <Subtitle2 text={`${info.info1}명`} color="black" />
                 </div>
@@ -106,9 +109,12 @@ const CompareMediaScreen = () => {
         }
         value={
           <div className="grid grid-cols-3 gap-x-[30px]">
-            {infos.map((info) => {
+            {infos.map((info, index) => {
               return info.info2 !== undefined ? (
-                <div className="flex flex-col gap-2 py-6 items-center justify-center min-w-[240px]">
+                <div
+                  key={`info2-${index}`}
+                  className="flex flex-col gap-2 py-6 items-center justify-center min-w-[240px]"
+                >
                   <img className="w-[32px] h-[25px]" src={attentionPeople} />
                   <Subtitle2 text={`${info.info2}%`} color="black" />
                 </div>
@@ -129,9 +135,12 @@ const CompareMediaScreen = () => {
         }
         value={
           <div className="grid grid-cols-3 gap-x-[30px]">
-            {infos.map((info) => {
+            {infos.map((info, index) => {
               return info.info3 !== undefined ? (
-                <div className="flex flex-col gap-2 py-6 items-center justify-center min-w-[240px]">
+                <div
+                  key={`info3-${index}`}
+                  className="flex flex-col gap-2 py-6 items-center justify-center min-w-[240px]"
+                >
                   <img className="w-[30px] h-[30px]" src={walk} />
                   <Subtitle2 text={`${info.info3[0]}%`} color="black" />
                 </div>
@@ -152,9 +161,12 @@ const CompareMediaScreen = () => {
         }
         value={
           <div className="grid grid-cols-3 gap-x-[30px]">
-            {infos.map((info) => {
+            {infos.map((info, index) => {
               return info.info4 !== undefined ? (
-                <div className="flex flex-col gap-2 py-6 items-center justify-center min-w-[240px]">
+                <div
+                  key={`info4-${index}`}
+                  className="flex flex-col gap-2 py-6 items-center justify-center min-w-[240px]"
+                >
                   <img className="w-6 h-6" src={focus} />
                   <Subtitle2 text={`${info.info4}초`} color="black" />
                 </div>
