@@ -32,6 +32,7 @@ public class DashboardResponse {
         public DashboardInfo(Dashboard dashboard){
             this.title = dashboard.getTitle();
             this.description = dashboard.getDescription();
+            this.dashboardId = dashboard.getDashboardId();
         }
         @Builder
         public DashboardInfo(String title, String description, Long dashboardId, String mediaUrl){

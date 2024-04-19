@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -105,7 +104,7 @@ public class DashboardService {
         // 광고 집행 단위가 유저의 것인지 확인
         User user = userService.getUser(userId);
         MediaApplication mediaApplication = mediaApplicationService.findById(mediaAplicationId);
-        mediaApplicationService.verifyApplication(mediaApplication, user);
+        mediaApplicationService.deleteVerify(mediaApplication, user);
         // 일별 데이터 조회
         DailyMediaBoard board = dailyMediaBoardService.findDailyBoardByDateAndApplication(mediaApplication, date);
 
