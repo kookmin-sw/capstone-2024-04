@@ -17,7 +17,7 @@ const GridViewMedia = ({
   return (
     <div className="flex flex-col gap-7 min-w-[920px] h-full">
       <Subtitle2 text="광고 목록" color="black" />
-      <div className="grid grid-cols-4 gap-x-2 gap-y-7">
+      <div className="grid grid-cols-4 gap-x-2 gap-y-7 overflow-y-scroll">
         {mediaList.map((media, index) => {
           return (
             <MediaCard
