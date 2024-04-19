@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import inbox from "../../../assets/icons/Inbox.svg";
 import upload from "../../../assets/icons/Upload.svg";
-import { DatePicker, Select, Input } from "antd";
+import { DatePicker, Select, Input, SelectProps } from "antd";
 import { Body1, Subtitle1 } from "../../../components/text";
+import { getLocation } from "../../../api/location";
+import { LocationInfo } from "../../../interfaces/interface";
 
 const PostMediaScreen = () => {
   const enum PostMode {
@@ -12,7 +14,9 @@ const PostMediaScreen = () => {
 
   const [postMode, setPostMode] = useState<PostMode>(PostMode.UPLOAD);
   const [video, setVideo] = useState<File | null>(null);
+  const [options, setOptions] = useState<SelectProps["options"]>([]);
   const { RangePicker } = DatePicker;
+
   const uploadVideo = () => {
     const inputElement = document.createElement("input");
     inputElement.type = "file";
@@ -27,6 +31,26 @@ const PostMediaScreen = () => {
       setVideo(video);
     }
   };
+
+  const loadLocationList = async () => {
+    try {
+      const result = await getLocation();
+
+      if (result.status === 200) {
+        const newOptions = result.data.data.map((location: LocationInfo) => ({
+          label: location.address,
+          value: location.locationId,
+        }));
+        setOptions(newOptions);
+      }
+    } catch (error) {
+      console.error("Error loading location list:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadLocationList();
+  }, []);
 
   return (
     <div className="flex h-full min-w-[920px]">
@@ -102,6 +126,7 @@ const PostMediaScreen = () => {
           className="mt-2 mb-7"
           style={{ width: "100%" }}
           placeholder="디스플레이를 선택해주세요"
+          options={options}
         />
 
         {postMode === PostMode.UPLOAD ? (

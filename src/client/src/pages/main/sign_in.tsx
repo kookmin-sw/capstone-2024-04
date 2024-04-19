@@ -3,6 +3,7 @@ import logo from "../../assets/images/logo.svg";
 import { signin } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
+import { SignInPageProps } from "../../interfaces/interface";
 
 enum ErrorText {
   incorrect = "아이디 또는 비밀번호를 잘못 입력했습니다.",
@@ -10,10 +11,6 @@ enum ErrorText {
   notEnterPw = "비밀번호를 입력해주세요.",
 }
 
-interface SignInPageProps {
-  goToSignUp: any;
-  goToFindPassword: any;
-}
 
 const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
   const [errorText, setErrorText] = useState("");
