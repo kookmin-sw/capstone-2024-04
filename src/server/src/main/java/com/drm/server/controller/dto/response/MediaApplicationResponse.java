@@ -12,7 +12,7 @@ public class MediaApplicationResponse {
     public static class MediaApplicationInfo{
         @Schema(description = "신청 id")
         private Long applicationId;
-        @Schema(description = "마감날짜",example = "2024-04-05")
+        @Schema(description = "등록 날짜",example = "2024-04-05")
         private String startDate;
         @Schema(description = "마감날짜",example = "2024-04-15")
         private String endDate;

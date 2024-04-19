@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface MediaApplicationRepository extends JpaRepository<MediaApplication,Long> {
@@ -29,4 +30,6 @@ public interface MediaApplicationRepository extends JpaRepository<MediaApplicati
     Optional<List<MediaApplication>> findAcceptedApplicationsForToday(
             @Param("today") LocalDate today
     );
+
+    MediaApplication findFirstByOrderByCreateDateDesc();
 }
