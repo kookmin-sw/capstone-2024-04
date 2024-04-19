@@ -5,15 +5,13 @@ import com.drm.server.common.ErrorResponse;
 import com.drm.server.common.enums.SuccessCode;
 import com.drm.server.controller.dto.request.ApplyRequest;
 import com.drm.server.controller.dto.response.MediaApplicationResponse;
+import com.drm.server.domain.dashboard.Dashboard;
 import com.drm.server.domain.location.Location;
 import com.drm.server.domain.media.Media;
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import com.drm.server.domain.user.CustomUserDetails;
 import com.drm.server.domain.user.User;
-import com.drm.server.service.LocationService;
-import com.drm.server.service.MediaApplicationService;
-import com.drm.server.service.MediaService;
-import com.drm.server.service.UserService;
+import com.drm.server.service.*;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,6 +40,7 @@ public class ApplyController {
     private final UserService userService;
     private final LocationService locationService;
     private final MediaApplicationService mediaApplicationService;
+    private final DashboardService dashboardService;
     @PostMapping("{mediaId}/apply")
     @Operation(summary = "광고 신청")
     @ApiResponses(value = {
@@ -118,6 +117,25 @@ public class ApplyController {
         User getUser = userService.getUser(userDetails.getUsername());
 
     }
+//    @GetMapping("applies")
+//    @Operation(summary = "신청 리스트 조회")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "성공"),
+//            @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//            @ApiResponse(responseCode = "401", description = "토큰 시간 만료, 형식 오류,로그아웃한 유저 접근,헤더에 값이 없을때",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//            @ApiResponse(responseCode = "403", description = "권한이 없는 경우",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//            @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//            @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//    })
+//    public ResponseEntity<APIResponse<List<MediaApplicationResponse.MediaApplicationInfo>>> getAllApplications( @AuthenticationPrincipal CustomUserDetails userDetails){
+//        User getUser = userService.getUser(userDetails.getUsername());
+//        List<Dashboard> dashboards = dashboardService.findByUser(getUser);
+//        List<MediaApplication> mediaApplications = mediaApplicationService.findByDashBoad(dashboards);
+//        List<MediaApplicationResponse.MediaApplicationInfo> totalApplicationInfos = mediaApplications.stream().map(MediaApplicationResponse.MediaApplicationInfo::new).collect(Collectors.toList());
+//        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, totalApplicationInfos);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
+
     @GetMapping("{mediaId}/apply")
     @Operation(summary = "신청 리스트 조회")
     @ApiResponses(value = {
@@ -136,20 +154,8 @@ public class ApplyController {
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, totalApplicationInfos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    @PostMapping("/compare")
-    @Operation(summary = "비교하기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "401", description = "토큰 시간 만료, 형식 오류,로그아웃한 유저 접근,헤더에 값이 없을때",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "권한이 없는 경우",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-    })
-    public void compareApplication(@RequestBody ApplyRequest.MediaApplicationList mediaApplicationList ,@AuthenticationPrincipal CustomUserDetails userDetails ){
-        User getUser = userService.getUser(userDetails.getUsername());
 
-    }
+
 
 
 }

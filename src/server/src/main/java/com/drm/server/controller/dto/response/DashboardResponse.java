@@ -29,13 +29,7 @@ public class DashboardResponse {
         private String mediaUrl;
 
         @Builder
-        public DashboardInfo(Dashboard dashboard){
-            this.title = dashboard.getTitle();
-            this.description = dashboard.getDescription();
-            this.dashboardId = dashboard.getDashboardId();
-        }
-        @Builder
-        public DashboardInfo(String title, String description, Long dashboardId, String mediaUrl){
+        public DashboardInfo(Dashboard dashboard, String mediaUrl){
             this.title = title;
             this.description = description;
             this.dashboardId = dashboardId;

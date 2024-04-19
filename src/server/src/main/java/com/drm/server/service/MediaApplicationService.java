@@ -1,6 +1,7 @@
 package com.drm.server.service;
 
 import com.drm.server.controller.dto.response.MediaApplicationResponse;
+import com.drm.server.domain.dashboard.Dashboard;
 import com.drm.server.domain.location.Location;
 import com.drm.server.domain.location.LocationRepository;
 import com.drm.server.domain.media.Media;
@@ -96,4 +97,5 @@ public class MediaApplicationService {
         // > accept의 경우 삭제되면 안되기때문에 해당 verify는 삭제방지용으로 했던것 , accept가 된 상태에서 Return해버리면 accept가 된 신청목록 삭제됨
         if(!mediaApplication.getStatus().equals(WAITING)) throw new ForbiddenException("신청 대기일때만 삭제 가능합니다");
     }
+
 }

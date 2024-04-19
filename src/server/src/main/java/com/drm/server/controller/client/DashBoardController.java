@@ -3,8 +3,10 @@ package com.drm.server.controller.client;
 import com.drm.server.common.APIResponse;
 import com.drm.server.common.ErrorResponse;
 import com.drm.server.common.enums.SuccessCode;
+import com.drm.server.controller.dto.request.ApplyRequest;
 import com.drm.server.controller.dto.response.DashboardResponse;
 import com.drm.server.domain.user.CustomUserDetails;
+import com.drm.server.domain.user.User;
 import com.drm.server.service.DashboardService;
 import com.drm.server.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +30,7 @@ import java.util.List;
 @RequestMapping("api/v1/dashboard")
 @RequiredArgsConstructor
 @Tag(name = "Dashboard",description = "대시보드 API")
-//@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173")
 public class DashBoardController {
     @Autowired
     UserService userService;
@@ -104,6 +106,18 @@ public class DashBoardController {
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, boards);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @PostMapping("/compare")
+    @Operation(summary = "비교하기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "토큰 시간 만료, 형식 오류,로그아웃한 유저 접근,헤더에 값이 없을때",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "권한이 없는 경우",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+    })
+    public void compareApplication(@RequestBody ApplyRequest.MediaApplicationList mediaApplicationList , @AuthenticationPrincipal CustomUserDetails userDetails ){
 
+    }
 
-}
+} bn    b

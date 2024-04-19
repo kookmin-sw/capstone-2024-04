@@ -58,7 +58,7 @@ public class MediaController {
         User getUser =userService.getUser(userDetails.getUsername());
         Location location = locationService.findById(create.getLocationId());
 
-        Dashboard dashboard = dashboardService.createDashboard(create, getUser);
+        Dashboard dashboard = dashboardService.createDashboard( getUser);
         Media media=  mediaService.createMedia(create, dashboard,multipartFile);
         MediaApplication mediaApplication = mediaApplicationService.createMediaApplication(media,location,create.getStartDate(),create.getEndDate());
 

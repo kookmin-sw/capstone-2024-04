@@ -14,10 +14,6 @@ public class MediaRequest {
     @Setter
     @Builder
     public static class Create{
-        @Schema(description = "대시보드 제목",example = "이거슨 대시보드 제목")
-        private String dashboardTitle;
-        @Schema(description = "대시보드 설명",example = "이거슨 대시보드 설명")
-        private String dashboardDescription;
         @Schema(description = "광고 제목",example = "이거슨 광고 제목")
         private String advertisementTitle;
         @Schema(description = "광고 설명",example = "이거슨 광고 설명")
