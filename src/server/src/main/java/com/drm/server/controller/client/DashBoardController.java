@@ -4,6 +4,7 @@ import com.drm.server.common.APIResponse;
 import com.drm.server.common.ErrorResponse;
 import com.drm.server.common.enums.SuccessCode;
 import com.drm.server.controller.dto.request.ApplyRequest;
+import com.drm.server.controller.dto.request.DashboardRequest;
 import com.drm.server.controller.dto.response.DashboardResponse;
 import com.drm.server.domain.user.CustomUserDetails;
 import com.drm.server.domain.user.User;
@@ -97,7 +98,7 @@ public class DashBoardController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    ResponseEntity<APIResponse<List<DashboardResponse.DashboardDataInfo>>> getBoardPerDay(@PathVariable Long dashboardId, @PathVariable Long boardId,@Valid @RequestBody DashboardRequest.dataPerDay dayData, @AuthenticationPrincipal CustomUserDetails userDetails){
+    ResponseEntity<APIResponse<List<DashboardResponse.DashboardDataInfo>>> getBoardPerDay(@PathVariable Long dashboardId, @PathVariable Long boardId, @Valid @RequestBody DashboardRequest.dataPerDay dayData, @AuthenticationPrincipal CustomUserDetails userDetails){
         Long userId = userDetails.getCustomUserInfo().getUserId();
         // Define the date format  & Parse the string to LocalDate
         LocalDate localDate = LocalDate.parse(dayData.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
