@@ -12,7 +12,5 @@ public interface DashboardRepository extends JpaRepository<Dashboard, Long> {
     Optional<List<Dashboard>> findByUser(User user);
     Optional<List<Dashboard>> findAllByUser(User user);
 
-    boolean existsByTitle(String title);
 
-    void deleteByTitle(String title);
 }

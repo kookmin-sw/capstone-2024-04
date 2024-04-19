@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +31,8 @@ public class DashboardService {
     private final MediaApplicationService mediaApplicationService;
     private final LocationService locationService;
 
-    public Dashboard createDashboard(MediaRequest.Create create, User user){
-        Dashboard dashboard = Dashboard.toEntity(create.getDashboardTitle(), create.getDashboardDescription(), user);
+    public Dashboard createDashboard( User user){
+        Dashboard dashboard = Dashboard.toEntity(user);
         dashboardRepository.save(dashboard);
         String msg = "DASHBOARD CREATED :" + Long.toString(dashboard.getDashboardId());
         log.info(msg);
@@ -46,11 +45,6 @@ public class DashboardService {
         log.info(msg);
     }
 
-    public void deleteDashboardByTitle(String title){
-        dashboardRepository.deleteByTitle(title);
-        String msg = "DASHBOARD DELETED :" + title;
-        log.info(msg);
-    }
 
     public List<Dashboard> findByUser(User user){
         List<Dashboard> dashboards = dashboardRepository.findByUser(user).orElse(Collections.emptyList());
@@ -65,8 +59,7 @@ public class DashboardService {
 
         for(Dashboard dashboard : dashboards){
             Media media = mediaService.findOneMediaByDashboard(dashboard);
-            DashboardResponse.DashboardInfo info = new DashboardResponse.DashboardInfo(dashboard.getTitle(), dashboard.getDescription(),
-                    dashboard.getDashboardId(), media.getMediaLink());
+            DashboardResponse.DashboardInfo info = new DashboardResponse.DashboardInfo(dashboard,media.getMediaLink());
             dashboardInfos.add(info);
         }
         String msg = "DASHBOARD SEARCHED MADE BY USER:" + Long.toString(userId);
@@ -105,7 +98,7 @@ public class DashboardService {
         // 광고 집행 단위가 유저의 것인지 확인
         User user = userService.getUser(userId);
         MediaApplication mediaApplication = mediaApplicationService.findById(mediaAplicationId);
-        mediaApplicationService.verifyApplication(mediaApplication, user);
+        mediaApplicationService.deleteVerify(mediaApplication, user);
         // 일별 데이터 조회
         DailyMediaBoard board = dailyMediaBoardService.findDailyBoardByDateAndApplication(mediaApplication, date);
 

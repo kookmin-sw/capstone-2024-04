@@ -26,10 +26,17 @@ public class ApplyRequest {
     @Getter
     @Setter
     public static class UpdateStatus{
+        @Schema(description = "광고 신청 Id 리스트", example = "[1,4,5]")
         private List<Long> applyId;
         @Schema(description = "신청 상태",example = "ACCEPT")
         private Status status;
+    }
 
+    @Getter
+    @Setter
+    public static class MediaApplicationList{
+        @Schema(description = "광고 신청 Id 리스트", example = "[1,4,5]")
+        private List<Long> applyId;
     }
 
 }

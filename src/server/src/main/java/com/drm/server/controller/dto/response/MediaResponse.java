@@ -18,14 +18,15 @@ public class MediaResponse {
         private String title;
         @Schema(description = "광고 설명",example = "이것은 광고 설명")
         private String description;
-        private DashboardResponse.DashboardInfo dashboard;
+        @Schema(description = "광고 id",example = "1")
+        private Long dashboardId;
 
         public MediaInfo(Dashboard dashboard) {
             this.mediaId = dashboard.getMedia().getMediaId();
             this.mediaLink = dashboard.getMedia().getMediaLink();
             this.title = dashboard.getMedia().getTitle();
             this.description = dashboard.getMedia().getDescription();
-            this.dashboard = new DashboardResponse.DashboardInfo(dashboard);
+            this.dashboardId = dashboard.getDashboardId();
         }
 
         public MediaInfo(Media media) {
@@ -33,7 +34,7 @@ public class MediaResponse {
             this.mediaLink = media.getMediaLink();
             this.title = media.getTitle();
             this.description = media.getDescription();
-            this.dashboard = new DashboardResponse.DashboardInfo(media.getDashboard());
+            this.dashboardId = media.getDashboard().getDashboardId();
         }
     }
 
