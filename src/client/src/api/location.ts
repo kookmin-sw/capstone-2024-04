@@ -1,3 +1,10 @@
-import axios from "axios";
+import privateApi from "./private_api";
 
-const API_ENDPOINT = import.meta.env.VITE_APP_API_ENDPOINT;
+export const getLocation = async() => {
+    const response = await privateApi.get('/api/v1/location').catch((err) => {
+        return err.response;
+    });
+    console.log(response.data);
+    return response;
+
+}
