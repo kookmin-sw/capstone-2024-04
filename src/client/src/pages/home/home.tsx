@@ -22,6 +22,7 @@ import DashBoard from "./dashboard/dashboard";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import Insight from "./insight/insight";
+import HistoryScreen from "./history/history";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -76,7 +77,7 @@ const HomePage = () => {
       description: "전체 광고 히스토리를 확인할 수 있어요.",
       iconWhiteSrc: clipboardTextClockWhitesub,
       iconBlackSrc: clipboardTextClockBlacksub,
-      component: <>히스토리</>,
+      component: <HistoryScreen />,
     },
     {
       title: "설정",
