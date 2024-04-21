@@ -9,12 +9,8 @@ import cogBlacksub from "../../assets/icons/cog-blacksub.svg";
 import cogWhitesub from "../../assets/icons/cog-whitesub.svg";
 import fileCompareBlacksub from "../../assets/icons/file-compare-blacksub.svg";
 import fileCompareWhitesub from "../../assets/icons/file-compare-whitesub.svg";
-import listBoxBlacksub from "../../assets/icons/list-box-blacksub.svg";
-import listBoxWhitesub from "../../assets/icons/list-box-whitesub.svg";
 import uploadBlacksub from "../../assets/icons/upload-blacksub.svg";
 import uploadWhitesub from "../../assets/icons/upload-whitesub.svg";
-import accountBlacksub from "../../assets/icons/account-blacksub.svg";
-import accountWhitesub from "../../assets/icons/account-whitesub.svg";
 import viewDashboardBlacksub from "../../assets/icons/view-dashboard-blacksub.svg";
 import viewDashboardWhitesub from "../../assets/icons/view-dashboard-whitesub.svg";
 import MenuButton from "../../components/menu_button";
@@ -32,52 +28,40 @@ const HomePage = () => {
   const menuButtons = [
     {
       title: "대시보드",
-      description: "",
+      description: "해당 기간에 집행한 광고에 대한 통계를 확인할 수 있어요.",
       iconWhiteSrc: viewDashboardWhitesub,
       iconBlackSrc: viewDashboardBlacksub,
       component: <DashBoard />,
     },
     {
-      title: "요약",
-      description: "",
+      title: "인사이트",
+      description:
+        "하나의 광고에 대해 전체 기간의 통계를 한눈에 확인할 수 있어요.",
       iconWhiteSrc: chartTimelineWhitesub,
       iconBlackSrc: chartTimelineBlacksub,
-      component: <>요약</>,
+      component: <>인사이트</>,
     },
     {
-      title: "비교",
-      description: "각 광고의 분석 결과를 한데 모아 비교할 수 있어요.",
+      title: "위치정보비교",
+      description:
+        "각 위치별로 유동인구 정보를 비교할 수 있어요. 집행할 디스플레이 선택시 참고하면 좋아요.",
       iconWhiteSrc: fileCompareWhitesub,
       iconBlackSrc: fileCompareBlacksub,
       component: <CompareMediaScreen />,
     },
     {
-      title: "히스토리",
-      description: "전체 광고 히스토리 및 승인 대기중인 광고를 볼 수 있어요",
-      iconWhiteSrc: clipboardTextClockWhitesub,
-      iconBlackSrc: clipboardTextClockBlacksub,
-      component: <>히스토리</>,
-    },
-    {
       title: "광고 등록",
-      description: "광고별 분석 세부사항을 확인할 수 있어요.",
+      description: "집행할 광고를 등록하세요.",
       iconWhiteSrc: uploadWhitesub,
       iconBlackSrc: uploadBlacksub,
       component: <PostMediaScreen />,
     },
     {
-      title: "광고목록",
-      description: "",
-      iconWhiteSrc: listBoxWhitesub,
-      iconBlackSrc: listBoxBlacksub,
-      component: <>광고 목록</>,
-    },
-    {
-      title: "내 계정",
-      description: "",
-      iconWhiteSrc: accountWhitesub,
-      iconBlackSrc: accountBlacksub,
-      component: <>내 계정</>,
+      title: "히스토리",
+      description: "전체 광고 히스토리를 확인할 수 있어요.",
+      iconWhiteSrc: clipboardTextClockWhitesub,
+      iconBlackSrc: clipboardTextClockBlacksub,
+      component: <>히스토리</>,
     },
     {
       title: "설정",
