@@ -6,6 +6,7 @@ import { Fragment, useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 import FindPasswordPage from "./find_password";
+import logoWhite from "../../assets/images/LogoWhite.svg";
 
 const carouselArray = [
   {
@@ -84,6 +85,7 @@ const MainPage = () => {
       {/* 좌측 화면 - Carousel */}
       <div className="hidden lg:flex w-full lg:w-1/2 bg-main items-center">
         <div className="w-full">
+          <img className="fixed top-[55px] left-[55px] z-50" src={logoWhite} />
           <Carousel autoplay={true}>
             {carouselArray.map((content, index) => (
               <CarouselContent

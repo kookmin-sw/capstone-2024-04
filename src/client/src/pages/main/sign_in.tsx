@@ -11,7 +11,6 @@ enum ErrorText {
   notEnterPw = "비밀번호를 입력해주세요.",
 }
 
-
 const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
   const [errorText, setErrorText] = useState("");
   const [autoLogin, setAutoLogin] = useState(false);
@@ -69,10 +68,7 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
 
   return (
     <div className="flex flex-col w-[360px]">
-      <div className="flex gap-2 mb-4">
-        <img className="w-10 mb-4" src={logo} />
-        <h1 className="text-black font-black text-4xl">DO YOU READ ME</h1>
-      </div>
+      <h1 className="text-black text-xl mb-4">로그인</h1>
       <p className="text-placeholder">아이디</p>
       <input
         type="text"
