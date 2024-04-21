@@ -27,7 +27,7 @@ const SettingScreen = () => {
           비밀번호 변경
         </button>
       </div>
-      <p className="cursor-pointer underline text-red">회원 탈퇴</p>
+      <p className="cursor-pointer underline text-red">계정 탈퇴</p>
     </div>
   ) : (
     <div className="flex flex-col h-full justify-between px-[30px] min-w-[920px]">
