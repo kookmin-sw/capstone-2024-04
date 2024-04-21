@@ -105,7 +105,7 @@ const HomePage = () => {
             <p className="text-white">kmofficial@gmail.com</p>
           </div>
         </div>
-        <div className="flex-grow bg-[#F0F2F5]">
+        <div className="flex-grow bg-[#F0F2F5] flex flex-col justify-between">
           <div className="grid grid-cols-2 gap-y-3 gap-x-4 p-[60px]">
             {menuButtons.map((button, index) => (
               <MenuButton
@@ -118,7 +118,7 @@ const HomePage = () => {
               />
             ))}
           </div>
-          <footer className="flex flex-col justify-center items-center gap-1">
+          <footer className="flex flex-col items-center gap-1 pb-[60px]">
             <p className="text-[#7e94b1] text-xs">
               @DOYOUREADME 2024 All rights reserved.
             </p>
