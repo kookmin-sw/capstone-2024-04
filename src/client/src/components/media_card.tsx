@@ -1,15 +1,19 @@
 import StatusBadge, { Status } from "./status_badge";
 import { Subtitle2 } from "./text";
 
-interface MediaCardProps {
+export interface MediaCardProps {
   img: string;
   title: string;
   description: string;
+  onClick: any;
 }
 
-const MediaCard = ({ img, title, description }: MediaCardProps) => {
+const MediaCard = ({ img, title, description, onClick }: MediaCardProps) => {
   return (
-    <div className="flex flex-col w-full border-[1px] border-gray2 divide-x">
+    <div
+      onClick={onClick}
+      className="flex flex-col w-full border-[1px] border-gray2 divide-x cursor-pointer"
+    >
       <img className="w-full aspect-video" src={img} />
       <div className="flex flex-col p-5 gap-3">
         <h3 className="text-base font-medium text-black">{title}</h3>

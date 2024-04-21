@@ -22,6 +22,7 @@ import PostMediaScreen from "./post-media/post_media";
 import { Body1, Headline1 } from "../../components/text";
 import CompareMediaScreen from "./compare-media/compare_media";
 import SettingScreen from "./setting/setting";
+import DashBoard from "./dashboard/dashboard";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -34,7 +35,7 @@ const HomePage = () => {
       description: "",
       iconWhiteSrc: viewDashboardWhitesub,
       iconBlackSrc: viewDashboardBlacksub,
-      component: <>대시보드</>,
+      component: <DashBoard />,
     },
     {
       title: "요약",
