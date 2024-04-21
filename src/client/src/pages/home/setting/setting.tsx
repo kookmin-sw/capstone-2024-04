@@ -6,7 +6,7 @@ const SettingScreen = () => {
   const updateProfile = () => {};
 
   return !isShowChangePassword ? (
-    <div className="flex flex-col h-full justify-between px-[30px] min-w-[920px]">
+    <div className="flex flex-col h-full justify-between px-[30px] min-w-[920px] overflow-y-scroll">
       <div className="flex flex-col items-start gap-5">
         <Subtitle2 text="프로필 사진" color="black" />
         <img className="w-[93px] h-[93px] rounded-full border-[1px] border-gray2" />
@@ -27,7 +27,7 @@ const SettingScreen = () => {
           비밀번호 변경
         </button>
       </div>
-      <p className="cursor-pointer underline text-red">계정 탈퇴</p>
+      <p className="cursor-pointer underline text-red pt-14">계정 탈퇴</p>
     </div>
   ) : (
     <div className="flex flex-col h-full justify-between px-[30px] min-w-[920px]">
