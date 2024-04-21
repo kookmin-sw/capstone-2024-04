@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 
 export enum Status {
   등록대기,
@@ -9,39 +8,39 @@ export enum Status {
   집행중,
 }
 
-const StatusBadge = ({ status: Status }: any) => {
-  const params = useParams();
+const StatusBadge = ({ status }: any) => {
   const [color, setColor] = useState<string>("");
   const [text, setText] = useState<string>("");
 
   useEffect(() => {
-    switch (params.status) {
+    switch (status) {
       case Status.등록거절:
-        setColor("#808080");
+        setColor("bg-[#808080]");
         setText("등록거절");
         break;
       case Status.집행예정:
-        setColor("#30B6A7");
+        setColor("bg-[#30B6A7]");
         setText("집행예정");
         break;
       case Status.집행종료:
-        setColor("#EF816A");
+        setColor("bg-[#EF816A]");
         setText("집행종료");
         break;
       case Status.집행중:
-        setColor("#406EE5");
-        setText("집햅중");
+        setColor("bg-[#406EE5]");
+        setText("집행중");
         break;
       case Status.등록대기:
-        setColor("#B3B3B3");
+        setColor("bg-[#B3B3B3]");
         setText("등록대기");
         break;
     }
-  }, [params.status]);
+    console.log(text);
+  }, [status]);
 
   return (
     <div
-      className={`w-[70px] py-2 flex justify-center items-center bg-[${color}]`}
+      className={`w-[70px] py-2 flex justify-center items-center ${color} text-white text-xs rounded-[30px]`}
     >
       {text}
     </div>
