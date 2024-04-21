@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 export enum Status {
+  등록대기,
   등록거절,
   집행예정,
   집행종료,
@@ -8,11 +10,12 @@ export enum Status {
 }
 
 const StatusBadge = ({ status: Status }: any) => {
+  const params = useParams();
   const [color, setColor] = useState<string>("");
   const [text, setText] = useState<string>("");
 
   useEffect(() => {
-    switch (status) {
+    switch (params.status) {
       case Status.등록거절:
         setColor("#808080");
         setText("등록거절");
@@ -29,8 +32,12 @@ const StatusBadge = ({ status: Status }: any) => {
         setColor("#406EE5");
         setText("집햅중");
         break;
+      case Status.등록대기:
+        setColor("#B3B3B3");
+        setText("등록대기");
+        break;
     }
-  }, [status]);
+  }, [params.status]);
 
   return (
     <div
