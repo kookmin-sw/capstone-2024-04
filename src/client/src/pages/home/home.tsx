@@ -19,11 +19,25 @@ import { Body1, Headline1 } from "../../components/text";
 import CompareMediaScreen from "./compare-media/compare_media";
 import SettingScreen from "./setting/setting";
 import DashBoard from "./dashboard/dashboard";
+import { useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const [divHeight, setDivHeight] = useState(0);
   const [currMenuIdx, setCurrMenuIdx] = useState(0);
+
+  const logout = () => {
+    const cookies = new Cookies();
+    // 인증 관련 토큰 제거
+    cookies.remove("accessToken");
+    cookies.remove("refreshToken");
+    // 자동 로그인 설정 제거
+    cookies.remove("autoLogin");
+
+    navigate("/");
+  };
 
   const menuButtons = [
     {
@@ -81,7 +95,7 @@ const HomePage = () => {
     <div className="flex">
       {/* 좌측 영역 */}
       <div className="flex flex-col h-screen">
-        <div ref={mainDivRef} className="bg-main pt-[55px] pb-[66px] px-[60px]">
+        <div ref={mainDivRef} className="bg-main pt-9 pb-[66px] px-[60px]">
           <img className="h-5" src={logoWhite} />
           <div className="flex flex-col w-[180px] mt-12 items-center">
             <img className="w-20 h-20 rounded-full bg-white" src="" />
@@ -91,17 +105,40 @@ const HomePage = () => {
             <p className="text-white">kmofficial@gmail.com</p>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-y-3 gap-x-4 flex-grow bg-[#F0F2F5] p-[60px]">
-          {menuButtons.map((button, index) => (
-            <MenuButton
-              key={`menu-button-${index}`}
-              title={button.title}
-              iconBlackSrc={button.iconBlackSrc}
-              iconWhiteSrc={button.iconWhiteSrc}
-              isActive={index === currMenuIdx}
-              onClick={() => setCurrMenuIdx(index)}
-            />
-          ))}
+        <div className="flex-grow bg-[#F0F2F5]">
+          <div className="grid grid-cols-2 gap-y-3 gap-x-4 p-[60px]">
+            {menuButtons.map((button, index) => (
+              <MenuButton
+                key={`menu-button-${index}`}
+                title={button.title}
+                iconBlackSrc={button.iconBlackSrc}
+                iconWhiteSrc={button.iconWhiteSrc}
+                isActive={index === currMenuIdx}
+                onClick={() => setCurrMenuIdx(index)}
+              />
+            ))}
+          </div>
+          <footer className="flex flex-col justify-center items-center gap-1">
+            <p className="text-[#7e94b1] text-xs">
+              @DOYOUREADME 2024 All rights reserved.
+            </p>
+            <div className="flex gap-4">
+              <a className="text-[#7e94b1] text-xs">About us</a>
+              <a
+                href="https://github.com/kookmin-sw/capstone-2024-04"
+                target="_blank"
+                className="text-[#7e94b1] text-xs"
+              >
+                Github
+              </a>
+              <p
+                onClick={logout}
+                className="text-black_sub text-xs cursor-pointer font-medium"
+              >
+                LOGOUT
+              </p>
+            </div>
+          </footer>
         </div>
       </div>
       {/* 스크린 영역 */}

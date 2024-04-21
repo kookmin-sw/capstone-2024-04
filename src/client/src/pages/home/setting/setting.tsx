@@ -1,22 +1,9 @@
-import Cookies from "universal-cookie";
 import { Subtitle1, Subtitle2 } from "../../../components/text";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const SettingScreen = () => {
   const [isShowChangePassword, setIsShowChangePassword] = useState(false);
   const updateProfile = () => {};
-  const navigate = useNavigate();
-  const logout = () => {
-    const cookies = new Cookies();
-    // 인증 관련 토큰 제거
-    cookies.remove("accessToken");
-    cookies.remove("refreshToken");
-    // 자동 로그인 설정 제거
-    cookies.remove("autoLogin");
-
-    navigate("/");
-  };
 
   return !isShowChangePassword ? (
     <div className="flex flex-col h-full justify-between px-[30px] min-w-[920px]">
@@ -40,12 +27,7 @@ const SettingScreen = () => {
           비밀번호 변경
         </button>
       </div>
-      <div className="flex gap-4 pt-4">
-        <p className="cursor-pointer underline text-red">회원 탈퇴</p>
-        <p className="cursor-pointer underline" onClick={logout}>
-          로그아웃
-        </p>
-      </div>
+      <p className="cursor-pointer underline text-red">회원 탈퇴</p>
     </div>
   ) : (
     <div className="flex flex-col h-full justify-between px-[30px] min-w-[920px]">
