@@ -60,7 +60,7 @@ export interface MediaInfo {
     mediaLink: string,
     title: string,
     description: string,
-    dashboard: DashBoardInfo,
+    dashboard: DashBoardInfo[],
 }
 
 export interface DashBoardInfo {

@@ -1,5 +1,4 @@
 import StatusBadge, { Status } from "./status_badge";
-import { Subtitle2 } from "./text";
 
 export interface MediaCardProps {
   img: string;

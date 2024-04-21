@@ -21,6 +21,7 @@ import SettingScreen from "./setting/setting";
 import DashBoard from "./dashboard/dashboard";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
+import Insight from "./insight/insight";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -53,7 +54,7 @@ const HomePage = () => {
         "하나의 광고에 대해 전체 기간의 통계를 한눈에 확인할 수 있어요.",
       iconWhiteSrc: chartTimelineWhitesub,
       iconBlackSrc: chartTimelineBlacksub,
-      component: <>인사이트</>,
+      component: <Insight />,
     },
     {
       title: "위치정보비교",
