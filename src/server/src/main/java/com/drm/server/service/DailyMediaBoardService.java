@@ -81,4 +81,8 @@ public class DailyMediaBoardService {
         List<DailyMediaBoard> dailyBoards = dailyMediaBoardRepository.findByMediaApplication(application);
         return dailyBoards;
     }
+
+    public void deleteAll() {
+        dailyMediaBoardRepository.deleteAll();
+    }
 }

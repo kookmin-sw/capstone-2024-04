@@ -55,4 +55,8 @@ public class MediaService {
         if(media.getDashboard().getUser()!=user) throw new ForbiddenException("해당 유저가 등록한 광고가 아닙니다");
         return media;
     }
+
+    public void deleteAll() {
+        mediaRepository.deleteAll();
+    }
 }
