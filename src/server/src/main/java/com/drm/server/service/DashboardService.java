@@ -153,12 +153,23 @@ public class DashboardService {
     }
 
     public DashboardResponse.LocationDataInfo getDashboardPerLocation(Long locationId) {
-        // 구현 가능한 방법
-        // 1. media_daily_board 를 조회해서, 일별 데이터로 가공한다.
-        // 2. detected_face 로우 데이터에서 used = true 인 것들의 locationId 로 식별, 조회해서 가공한다.
-        // 시간별 나이대를 제공하려면, detected_face 로우 데이터를 참고해야 한다.
-        // 하지만 로우 데이터를 가공하는데는 더 많은 반환 시간이 소요된다.
-        DashboardResponse.LocationDataInfo info = null;
+        // Location -> 집행된 광고 리스트(mediaApplication) 을 조회한다.
+        DashboardResponse.LocationDataInfo info = new DashboardResponse.LocationDataInfo();
+        Location location = locationService.findById(locationId);
+        List<MediaApplication> mediaApps = mediaApplicationService.findMediaAppsByLocation(location);
+        // media Application 과 대응되는 데이터를 media_daily_board 에서 조회해서 dto 에 반영
+        for(MediaApplication app : mediaApps){
+                List<DailyMediaBoard> boards = dailyMediaBoardService.findDailyBoardByMediaApplication(app);
+                // board (전체 집계 인원 수, 시간대별 집계 사람 수, 전체 남성 수) -> dto 에 반영
+                for(DailyMediaBoard board : boards){
+                    info.updateDtoWithBoardData(board.getTotalPeopleCount(), board.getHourlyInterestedCount(), board.getMaleCnt());
+                }
+        }
+        log.info("DASHBOARD PER LOCATION SUCCESSFULLY SEARCHED : " + locationId);
         return info;
+    }
+
+    public void deleteAll() {
+        dashboardRepository.deleteAll();
     }
 }
