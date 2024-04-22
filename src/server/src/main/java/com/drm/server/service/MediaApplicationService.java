@@ -13,6 +13,7 @@ import com.drm.server.domain.user.User;
 import com.drm.server.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import software.amazon.ion.NullValueException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -98,4 +99,11 @@ public class MediaApplicationService {
         if(!mediaApplication.getStatus().equals(WAITING)) throw new ForbiddenException("신청 대기일때만 삭제 가능합니다");
     }
 
+    public List<MediaApplication> findMediaAppsByLocation(Location location) {
+       return mediaApplicationRepository.findAllByLocation(location).orElseThrow(() -> new NullValueException());
+    }
+
+    public void deleteAll() {
+        mediaApplicationRepository.deleteAll();
+    }
 }

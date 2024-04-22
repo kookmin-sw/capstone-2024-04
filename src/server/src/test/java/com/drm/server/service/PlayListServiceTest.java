@@ -23,4 +23,9 @@ public class PlayListServiceTest {
         MediaApplication mediaApp = playListService.getMediaAplicationFromPlaylist(id, time);
 
     }
+
+    @Test
+    public void updateTest(){
+        playListService.testUpdatePlayList();
+    }
 }
