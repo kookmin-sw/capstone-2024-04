@@ -53,8 +53,8 @@ public class DetectedFace extends BaseTimeEntity {
         LocalDateTime leaveAt = KoreaLocalDateTime.datTimeListToLocalDateTime(arriveTimeList);
 
         DetectedFace detectedFace = DetectedFace.builder()
-                .faceCaptureCnt((Integer) modelRequest.get("interestPeopleCnt"))
-                .entireCaptureCnt((Integer) modelRequest.get("passedPeopleCnt"))
+                .faceCaptureCnt((Integer) modelRequest.get("interestFrameCnt"))
+                .entireCaptureCnt((Integer) modelRequest.get("passedFrameCnt"))
                 .staring((List<Boolean>) modelRequest.get("staringData"))
                 .arriveAt(arriveAt)
                 .leaveAt(leaveAt)
