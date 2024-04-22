@@ -18,6 +18,10 @@ import accountWhitesub from "../../assets/icons/account-whitesub.svg";
 import viewDashboardBlacksub from "../../assets/icons/view-dashboard-blacksub.svg";
 import viewDashboardWhitesub from "../../assets/icons/view-dashboard-whitesub.svg";
 import MenuButton from "../../components/menu_button";
+import PostMediaScreen from "./post-media/post_media";
+import { Body1, Headline1 } from "../../components/text";
+import CompareMediaScreen from "./compare-media/compare_media";
+import SettingScreen from "./setting/setting";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -27,43 +31,59 @@ const HomePage = () => {
   const menuButtons = [
     {
       title: "대시보드",
+      description: "",
       iconWhiteSrc: viewDashboardWhitesub,
       iconBlackSrc: viewDashboardBlacksub,
+      component: <>대시보드</>,
     },
     {
       title: "요약",
+      description: "",
       iconWhiteSrc: chartTimelineWhitesub,
       iconBlackSrc: chartTimelineBlacksub,
+      component: <>요약</>,
     },
     {
       title: "비교",
+      description: "각 광고의 분석 결과를 한데 모아 비교할 수 있어요.",
       iconWhiteSrc: fileCompareWhitesub,
       iconBlackSrc: fileCompareBlacksub,
+      component: <CompareMediaScreen />,
     },
     {
       title: "히스토리",
+      description: "전체 광고 히스토리 및 승인 대기중인 광고를 볼 수 있어요",
       iconWhiteSrc: clipboardTextClockWhitesub,
       iconBlackSrc: clipboardTextClockBlacksub,
+      component: <>히스토리</>,
     },
     {
-      title: "광고등록",
+      title: "광고 등록",
+      description: "광고별 분석 세부사항을 확인할 수 있어요.",
       iconWhiteSrc: uploadWhitesub,
       iconBlackSrc: uploadBlacksub,
+      component: <PostMediaScreen />,
     },
     {
       title: "광고목록",
+      description: "",
       iconWhiteSrc: listBoxWhitesub,
       iconBlackSrc: listBoxBlacksub,
+      component: <>광고 목록</>,
     },
     {
       title: "내 계정",
+      description: "",
       iconWhiteSrc: accountWhitesub,
       iconBlackSrc: accountBlacksub,
+      component: <>내 계정</>,
     },
     {
       title: "설정",
+      description: "",
       iconWhiteSrc: cogWhitesub,
       iconBlackSrc: cogBlacksub,
+      component: <SettingScreen />,
     },
   ];
 
@@ -101,24 +121,24 @@ const HomePage = () => {
       </div>
       {/* 스크린 영역 */}
       <div
-        className="flex flex-col flex-grow pr-[60px]"
+        className="flex flex-col flex-grow pr-[60px] h-screen min-h-[710px]"
         style={{
           background: `linear-gradient(to bottom, #4200ff ${divHeight}px, #f0f2f5 ${divHeight}px)`,
         }}
       >
         <div className="flex justify-between items-end">
-          <div className="flex gap-9 mt-[55px]">
-            <p className="whitespace-nowrap text-white text-lg font-medium">
-              타이틀
-            </p>
-            <p className="whitespace-nowrap text-white_sub">
-              설명이 들어가는 곳입니다.
-            </p>
+          <div className="flex gap-9 mt-[55px] items-end">
+            <Headline1 text={menuButtons[currMenuIdx].title} color="white" />
+            <Body1
+              text={menuButtons[currMenuIdx].description}
+              color="white_sub"
+            />
           </div>
           <img className="w-4 h-4 cursor-pointer" src={infoCircle} />
         </div>
-        <div className="h-full rounded-[10px] py-[50px] px-[60px] mt-6 mb-[60px] bg-white">
+        <div className="h-full rounded-[10px] py-[50px] px-[30px] mt-6 mb-[60px] bg-white overflow-hidden">
           {/* 스크린 내부 */}
+          {menuButtons[currMenuIdx].component}
         </div>
       </div>
     </div>

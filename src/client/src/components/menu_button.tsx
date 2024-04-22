@@ -1,10 +1,4 @@
-export interface MenuButtonProps {
-  title: string;
-  iconWhiteSrc: string;
-  iconBlackSrc: string;
-  isActive: boolean;
-  onClick: React.MouseEventHandler<HTMLDivElement>;
-}
+import { MenuButtonProps } from "../interfaces/interface";
 
 const MenuButton = ({
   title,
