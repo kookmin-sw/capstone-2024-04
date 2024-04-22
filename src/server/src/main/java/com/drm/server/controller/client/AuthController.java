@@ -23,7 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Tag(name = "auth",description ="token 관련")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -39,7 +39,7 @@ public class AuthController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    @PostMapping("auth/email/verification-request")
+    @PostMapping("email/verification-request")
     public ResponseEntity<APIResponse> sendAuthNumByEmail(@Valid @RequestBody UserRequest.EmailRequest emailRequest)  {
 
         userService.sendCodeToEmail(emailRequest.getEmail());
@@ -55,7 +55,7 @@ public class AuthController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    @PostMapping("auth/email/verification/auth")
+    @PostMapping("email/verification/auth")
     public ResponseEntity<APIResponse> verificationEmail( @Valid @RequestBody UserRequest.EmailAuth emailAuth){
         String detailMsg =  userService.verifiedCode(emailAuth.getEmail(), emailAuth.getAuthCode());
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, detailMsg);
@@ -68,7 +68,7 @@ public class AuthController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    @PostMapping("auth/signup")
+    @PostMapping("signup")
     public ResponseEntity<APIResponse<UserResponse.UserInfo>> signUp(@Valid @RequestBody UserRequest.SignUp signUp){
 //        userService.verifiedCode(signUp.getEmail(), signUp.getAuthCode());
         userService.checkDuplicatedEmail(signUp.getEmail());
@@ -77,14 +77,14 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @Operation(summary = "로그인")
-    @PostMapping("auth/signin")
+    @PostMapping("signin")
     public ResponseEntity<APIResponse<UserResponse.TokenInfo>> sigIn(@Valid @RequestBody UserRequest.SignIn signIn){
         UserResponse.TokenInfo tokenInfo = tokenService.createToken(signIn);
         APIResponse response = APIResponse.of(SuccessCode.INSERT_SUCCESS, tokenInfo);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @Operation(summary = "토큰 갱신")
-    @PostMapping("auth/reissue")
+    @PostMapping("reissue")
     public ResponseEntity<APIResponse<UserResponse.TokenInfo>> reissue(@RequestBody @Validated UserRequest.Reissue reissue){
         UserResponse.TokenInfo tokenInfo = tokenService.reissue(reissue);
         APIResponse response = APIResponse.of(SuccessCode.UPDATE_SUCCESS, tokenInfo);
