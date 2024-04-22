@@ -14,8 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.ion.NullValueException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,26 +25,38 @@ import java.util.stream.Collectors;
 public class MediaService {
     private final MediaRepository mediaRepository;
     private final FileService fileService;
-    public void updateMediaData(Long mediaId, boolean interest){
 
-    }
 
-    public Long getMediaIdFromPlaylist(Long cameraId){
-        return 0L;
-    }
     @Transactional
     public Media createMedia(MediaRequest.Create create, Dashboard dashboard, MultipartFile multipartFile) {
         FileDto fileDto = fileService.uploadFile(multipartFile);
         Media media = Media.toEntity(create, fileDto.getUploadFileName(),fileDto.getUploadFileUrl(), dashboard);
        return mediaRepository.save(media);
     }
+
+    @Transactional
+    public Media createMockMedia(MediaRequest.Create create, Dashboard dashboard, MultipartFile multipartFile){
+        FileDto fileDto = null;
+        Media media = Media.toEntity(create, "fakefile.png", "C://fake_d", dashboard);
+        return mediaRepository.save(media);
+    }
+
     public List<MediaResponse.MediaInfo> findByDashboard(List<Dashboard> dashboards){
         List<MediaResponse.MediaInfo> mediaResponses = dashboards.stream().map(MediaResponse.MediaInfo::new).collect(Collectors.toList());
         return mediaResponses;
+    }
+    public Media findOneMediaByDashboard(Dashboard dashboard){
+        Media media = mediaRepository.findByDashboard(dashboard).orElseThrow(() ->
+                new NullValueException("MEDIA NOT EXISTS (SEARCHED BY DASHBOARD " + dashboard.getDashboardId() + ")"));
+        return media;
     }
     public Media findById(Long mediaId,User user){
         Media media =mediaRepository.findById(mediaId).orElseThrow(() -> new IllegalArgumentException("Invalid mediaId"));
         if(media.getDashboard().getUser()!=user) throw new ForbiddenException("해당 유저가 등록한 광고가 아닙니다");
         return media;
+    }
+
+    public void deleteAll() {
+        mediaRepository.deleteAll();
     }
 }

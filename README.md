@@ -9,6 +9,8 @@ The "Do you read me?" project is a web service designed to optimize the effectiv
 
 ### 3. 소개 영상
 
+[![Video Label](http://img.youtube.com/vi/Qv744Msoz18/0.jpg)](https://youtu.be/Qv744Msoz18)
+
 
 ### 4. 팀 소개
 
@@ -50,7 +52,9 @@ git clone https://github.com/kookmin-sw/capstone-2024-04.git
 <summary>Model</summary>
 <div markdown="1">
 
-    실행 방법을 작성해주세요.
+    cd src/model
+    pip install -r requirements.txt
+    python fastapi/main.py
 
 </div>
 </details>

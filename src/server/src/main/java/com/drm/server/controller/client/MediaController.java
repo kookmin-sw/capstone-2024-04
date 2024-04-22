@@ -58,7 +58,7 @@ public class MediaController {
         User getUser =userService.getUser(userDetails.getUsername());
         Location location = locationService.findById(create.getLocationId());
 
-        Dashboard dashboard = dashboardService.createDashboard(create, getUser);
+        Dashboard dashboard = dashboardService.createDashboard( getUser);
         Media media=  mediaService.createMedia(create, dashboard,multipartFile);
         MediaApplication mediaApplication = mediaApplicationService.createMediaApplication(media,location,create.getStartDate(),create.getEndDate());
 
@@ -121,7 +121,6 @@ public class MediaController {
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     @GetMapping("{mediaId}")
-    public void findByMediaId(){
-
+    public void findByMediaId() {
     }
 }

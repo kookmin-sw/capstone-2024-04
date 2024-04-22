@@ -37,8 +37,13 @@ public class Media extends BaseTimeEntity {
     @OneToMany(mappedBy = "media")
     private List<MediaApplication> mediaApplicationList = new ArrayList<>();
 
+    public Media(Dashboard dashboard) {
+        dashboard.getMedia();
+    }
+
     public static Media toEntity(MediaRequest.Create mediaRequest,String fileName, String mediaLink,Dashboard dashboard){
         return Media.builder().fileName(fileName).mediaLink(mediaLink).title(mediaRequest.getAdvertisementTitle()).description(mediaRequest.getAdvertisementDescription()).dashboard(dashboard).build();
     }
+
 
 }

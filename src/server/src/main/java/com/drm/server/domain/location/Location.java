@@ -25,7 +25,7 @@ public class Location extends BaseTimeEntity {
 
     @Column
     private String address;
-    private Long cameraId;
+    private int cameraId;
 
     @ManyToOne
     @JoinColumn(name = "admin_id")

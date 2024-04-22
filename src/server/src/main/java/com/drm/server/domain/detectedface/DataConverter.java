@@ -7,14 +7,16 @@ import jakarta.persistence.Converter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 @Converter
-public class DetectedDataConverter implements AttributeConverter<List<Integer>, String> {
+public class DataConverter implements AttributeConverter<List<Long>, String> {
 
     @Override
-    public String convertToDatabaseColumn(List<Integer> list) {
+    public String convertToDatabaseColumn(List<Long> list) {
         if(CollectionUtils.isEmpty(list)) {
             return new String();
         }
@@ -34,7 +36,17 @@ public class DetectedDataConverter implements AttributeConverter<List<Integer>, 
     }
 
     @Override
-    public List<Integer> convertToEntityAttribute(String dbData) {
-        return null;
+    public List<Long> convertToEntityAttribute(String dbData) {
+        if (dbData == null || dbData.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // 문자열을 파싱하여 리스트에 추가
+        List<Long> list = new ArrayList<>();
+        String[] tokens = dbData.substring(1, dbData.length() - 1).split(",");
+        for (String token : tokens) {
+            list.add(Long.parseLong(token.trim()));
+        }
+        return list;
     }
 }

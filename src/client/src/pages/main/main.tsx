@@ -2,7 +2,10 @@ import { Carousel } from "antd";
 import carousel_1 from "../../assets/images/carousel_1.svg";
 import SignInPage from "./sign_in";
 import SignUpPage from "./sign_up";
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import Cookies from "universal-cookie";
+import { useNavigate } from "react-router-dom";
+import FindPasswordPage from "./find_password";
 
 const carouselArray = [
   {
@@ -34,11 +37,11 @@ const CarouselContent = ({ title, text, imgSrc }: CarouselContentType) => {
         {title}
       </h1>
       <p className="text-center text-xl text-white mb-5">
-        {text.split("\n").map((line) => (
-          <>
+        {text.split("\n").map((line, index) => (
+          <Fragment key={index}>
             {line}
             <br />
-          </>
+          </Fragment>
         ))}
       </p>
     </div>
@@ -46,8 +49,35 @@ const CarouselContent = ({ title, text, imgSrc }: CarouselContentType) => {
 };
 
 const MainPage = () => {
-  // true - 로그인 화면 / false - 회원가입 화면
-  const [signInScreen, setSignInScreen] = useState(true);
+  /**
+   * 0: SignInScreen
+   * 1: SignUpScreen
+   * 2: FindPasswordScreen
+   */
+  const [screenIndex, setScreenIndex] = useState(0);
+  const navigate = useNavigate();
+  const cookies = new Cookies();
+
+  useEffect(() => {
+    if (cookies.get("autoLogin")) {
+      // 최근 로그인에서 자동 로그인을 체크한 경우
+      const refreshToken = cookies.get("refreshToken");
+      const accessToken = cookies.get("accessToken");
+
+      if (refreshToken !== null && accessToken !== null) {
+        navigate("/home");
+      }
+    }
+  }, []);
+
+  const screenArray = [
+    <SignInPage
+      goToSignUp={() => setScreenIndex(1)}
+      goToFindPassword={() => setScreenIndex(2)}
+    />,
+    <SignUpPage goToSignIn={() => setScreenIndex(0)} />,
+    <FindPasswordPage goToSignIn={() => setScreenIndex(0)} />,
+  ];
 
   return (
     <div className="flex flex-col-reverse lg:flex-row w-screen">
@@ -68,11 +98,7 @@ const MainPage = () => {
       </div>
       {/* 우측 화면 */}
       <div className="flex items-center justify-center w-full h-screen lg:w-1/2 bg-white">
-        {signInScreen ? (
-          <SignInPage goToSignUp={() => setSignInScreen(false)} />
-        ) : (
-          <SignUpPage goToSignIn={() => setSignInScreen(true)} />
-        )}
+        {screenArray[screenIndex]}
       </div>
     </div>
   );
