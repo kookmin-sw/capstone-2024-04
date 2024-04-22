@@ -3,6 +3,7 @@ package com.drm.server.config.jwt;
 import com.drm.server.common.enums.Authority;
 import com.drm.server.controller.dto.response.UserResponse;
 import com.drm.server.domain.user.CustomUserInfoDto;
+import com.drm.server.domain.user.User;
 import com.drm.server.domain.user.UserRepository;
 import com.drm.server.exception.TokenException;
 import com.drm.server.service.CustomUserDetailsService;
@@ -49,32 +50,14 @@ public class JwtTokenProvider {
 
     public UserResponse.TokenInfo generateToken(Authentication authentication) {
         // 권한 가져오기
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+        User user = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
 
-        long now = (new Date()).getTime();
-        // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
-                .setExpiration(accessTokenExpiresIn)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+        Claims claims = Jwts.claims();
+        claims.put(USER_ID, user.getUserId());
+        claims.put(AUTHORITY, user.getAuthority());
 
-        // Refresh Token 생성
-        String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
-
-        return UserResponse.TokenInfo.builder()
-                .grantType(BEARER_TYPE)
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
-                .build();
+        UserResponse.TokenInfo tokenInfo = generateToken(user.getUserId(),user.getAuthority(), claims);
+        return tokenInfo;
     }
     public UserResponse.TokenInfo generateToken(CustomUserInfoDto user) {
         Claims claims = Jwts.claims();
@@ -99,37 +82,17 @@ public class JwtTokenProvider {
                     .compact();
 
             return UserResponse.TokenInfo.builder()
+                    .userId(user.getUserId())
                     .grantType(BEARER_TYPE)
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
+                    .authority(user.getAuthority())
                     .build();
         } else {
 //            // Generate the access and refresh tokens normally for non-TEST users
-            ZonedDateTime now = ZonedDateTime.now();
-            ZonedDateTime accessTokenExpiresIn = now.plusSeconds( ACCESS_TOKEN_EXPIRE_TIME);
-            ZonedDateTime refreshTokenExpiresIn = now.plusSeconds( REFRESH_TOKEN_EXPIRE_TIME);
-
-            // Generate the access token
-            String accessToken = Jwts.builder()
-                    .setClaims(claims)
-                    .setIssuedAt(Date.from(now.toInstant()))
-                    .setExpiration(Date.from(accessTokenExpiresIn.toInstant()))
-                    .signWith(key, SignatureAlgorithm.HS256)
-                    .compact();
-
-            // Generate the refresh token
-            String refreshToken = Jwts.builder()
-                    .setExpiration(Date.from(refreshTokenExpiresIn.toInstant()))
-                    .signWith(key, SignatureAlgorithm.HS256)
-                    .compact();
-
-            return UserResponse.TokenInfo.builder()
-                    .grantType(BEARER_TYPE)
-                    .accessToken(accessToken)
-                    .refreshToken(refreshToken)
-                    .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
-                    .build();
+            UserResponse.TokenInfo tokenInfo = generateToken(user.getUserId(),user.getAuthority(), claims);
+            return tokenInfo;
         }
     }
 
@@ -184,6 +147,26 @@ public class JwtTokenProvider {
         // 현재 시간
         Long now = new Date().getTime();
         return (expiration.getTime() - now);
+    }
+    private UserResponse.TokenInfo generateToken(Long userId, Authority authority,Claims claims){
+        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime accessTokenExpiresIn = now.plusSeconds( ACCESS_TOKEN_EXPIRE_TIME);
+        ZonedDateTime refreshTokenExpiresIn = now.plusSeconds( REFRESH_TOKEN_EXPIRE_TIME);
+
+        String accessToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(Date.from(now.toInstant()))
+                .setExpiration(Date.from(accessTokenExpiresIn.toInstant()))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        // Generate the refresh token
+        String refreshToken = Jwts.builder()
+                .setExpiration(Date.from(refreshTokenExpiresIn.toInstant()))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+        return UserResponse.toTokenInfo(BEARER_TYPE, userId, accessToken, refreshToken, REFRESH_TOKEN_EXPIRE_TIME, authority);
+
     }
 
 }
