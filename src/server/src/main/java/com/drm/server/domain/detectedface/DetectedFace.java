@@ -29,6 +29,7 @@ public class DetectedFace extends BaseTimeEntity {
 
 
     @Convert(converter = DataConverter.class)
+    @Column(length = 4000)
     private List<Boolean> staring;
 
     private int faceCaptureCnt;

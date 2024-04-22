@@ -62,4 +62,13 @@ public class UserRequest {
         @Schema(description = "비밀번호",example = "drmdrm1234")
         private String password;
     }
+    @Getter
+    @Setter
+    public static class Reissue {
+        @NotEmpty(message = "accessToken 을 입력해주세요.")
+        private String accessToken;
+
+        @NotEmpty(message = "refreshToken 을 입력해주세요.")
+        private String refreshToken;
+    }
 }

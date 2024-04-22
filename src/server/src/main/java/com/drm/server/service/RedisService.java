@@ -23,4 +23,7 @@ public class RedisService {
     public void setValuesWithTimeUnit(String key, String value, Long expirationTime, TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key, value,expirationTime ,timeUnit);
     }
+    public String getRefrestToken(String userId){
+        return  (String)redisTemplate.opsForValue().get("RT:" + userId);
+    }
 }
