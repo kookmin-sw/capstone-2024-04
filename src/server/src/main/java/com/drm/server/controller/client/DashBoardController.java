@@ -10,6 +10,7 @@ import com.drm.server.domain.user.CustomUserDetails;
 import com.drm.server.domain.user.User;
 import com.drm.server.service.DashboardService;
 import com.drm.server.service.UserService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -55,7 +56,7 @@ public class DashBoardController {
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, board);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
+    @Hidden
     @GetMapping("{dashboardId}/board")
     @Operation(summary = "신청 단위(광고 + 집행 시간) 별 대시보드 리스트")
     @ApiResponses(value = {
