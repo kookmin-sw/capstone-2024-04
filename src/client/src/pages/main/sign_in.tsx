@@ -36,7 +36,7 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
     const body = { email: id, password: pw };
     const result = await signin(body);
 
-    if (result.status === 200) {
+    if (result.status === 200 || result.status === 201) {
       const cookies = new Cookies();
       const tokenData = result.data.data;
 
