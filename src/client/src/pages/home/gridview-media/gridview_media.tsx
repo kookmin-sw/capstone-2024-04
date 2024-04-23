@@ -16,22 +16,28 @@ const GridViewMedia = ({
 }: GridViewMedia) => {
   return (
     <div className="flex flex-col gap-7 min-w-[920px] h-full">
-      <div className="grid grid-cols-4 gap-x-2 gap-y-7 overflow-y-scroll">
-        {mediaList.map((media, index) => {
-          return (
-            <MediaCard
-              onClick={() => {
-                setDetailInfo(media);
-                setMode(InsightMode.DETAIL);
-              }}
-              key={`card-${index}`}
-              img={media.mediaLink}
-              title={media.title}
-              description={media.description}
-            />
-          );
-        })}
-      </div>
+      {mediaList.length !== 0 ? (
+        <div className="grid grid-cols-4 gap-x-2 gap-y-7 overflow-y-scroll">
+          {mediaList.map((media, index) => {
+            return (
+              <MediaCard
+                onClick={() => {
+                  setDetailInfo(media);
+                  setMode(InsightMode.DETAIL);
+                }}
+                key={`card-${index}`}
+                img={media.mediaLink}
+                title={media.title}
+                description={media.description}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        <div className="w-full h-full flex justify-center items-center text-base font-medium">
+          아직 집행한 광고가 없습니다.
+        </div>
+      )}
     </div>
   );
 };
