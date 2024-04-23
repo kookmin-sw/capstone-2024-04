@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "ax
 import toast from 'react-hot-toast';
 import Cookies from "universal-cookie";
 import { ErrorResponse } from "../interfaces/interface";
+import { tokenRefresh } from "./auth";
 
 
 const API_ENDPOINT = import.meta.env.VITE_APP_API_ENDPOINT;
@@ -39,24 +40,16 @@ privateApi.interceptors.response.use((response: AxiosResponse) => {
 
     const errorResponse = error.response?.data as ErrorResponse;
 
+    const accessToken = cookies.get('accessToken');
     const refreshToken = cookies.get('refreshToken');    
 
     if (errorResponse.status === 400 && errorResponse.divisionCode === 'G12')
     {
         if (refreshToken) {
-            /**
-             * refreshToken을 사용하여 accessToken을 갱신할 end-point를 호출
-             * ex)
-             * const response = await privateApi.post('/refresh', { refreshToken });
-             * const accessToken = response.data.accessToken;
-             * cookies.set('accessToken', accessToken);
-             *  */ 
-            
-            const accessToken = cookies.get('accessToken');
+            const tokens =  await tokenRefresh({accessToken, refreshToken});
 
             if (config) {
-                config.headers.Authorization = `Bearer ${accessToken}`;
-                
+                config.headers.Authorization = `Bearer ${tokens[0]}`;
                 // 새로운 accessToken을 할당하여 이전 요청을 재시도
                 return privateApi(config);
             } else { // config가 undefined 일때 -> 발생하면 안됨

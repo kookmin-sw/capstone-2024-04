@@ -1,4 +1,6 @@
+import Cookies from "universal-cookie";
 import { SignInAPIProps, SignUpAPIProps } from "../interfaces/interface";
+import privateApi from "./private_api";
 import publicApi from "./public_api";
 
 
@@ -23,3 +25,20 @@ export const signin = async ({email, password}: SignInAPIProps) => {
     return response;
 }
 
+export const tokenRefresh = async ({accessToken, refreshToken}: any) => {
+    const cookies = new Cookies();
+    const response = await publicApi.post('/api/v1/auth/reissue', { accessToken,refreshToken });
+
+    const newAccessToken = response.data.data.accessToken;
+    const newRefreshToken = response.data.data.refreshToken;
+    
+    // AccessToken, RefreshToken 업데이트
+    cookies.set('accessToken', newAccessToken);
+    cookies.set('refreshToken', newRefreshToken);
+
+    // 토큰 갱신 테스트용 코드
+    console.log(accessToken, '->', newAccessToken);
+    console.log(refreshToken, '->', newRefreshToken);
+
+    return [newAccessToken, newRefreshToken];
+}
