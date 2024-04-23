@@ -1,3 +1,21 @@
-import axios from "axios";
+import privateApi from "./private_api"
 
-const API_ENDPOINT = import.meta.env.VITE_APP_API_ENDPOINT;
+
+export interface PostMediaRequest {
+    advertisementTitle: string,
+    advertisementDescription: string,
+    locationId: number,
+    startDate: string,
+    endDate: string,
+}
+interface PostMediaProps {
+    request: PostMediaRequest,
+    file: string,
+}
+
+export const postMedia = async ({request, file}: PostMediaProps) => {
+    const response = await privateApi.post('/api/v1/media', {
+        request, file
+    });
+    return response;
+}

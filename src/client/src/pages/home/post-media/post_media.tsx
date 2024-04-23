@@ -5,6 +5,7 @@ import { DatePicker, Select, Input, SelectProps } from "antd";
 import { Body1, Subtitle1 } from "../../../components/text";
 import { getLocation } from "../../../api/location";
 import { LocationInfo } from "../../../interfaces/interface";
+import { PostMediaRequest, postMedia } from "../../../api/media";
 
 const PostMediaScreen = () => {
   const enum PostMode {
@@ -15,7 +16,21 @@ const PostMediaScreen = () => {
   const [postMode, setPostMode] = useState<PostMode>(PostMode.UPLOAD);
   const [video, setVideo] = useState<File | null>(null);
   const [options, setOptions] = useState<SelectProps["options"]>([]);
+  const [locationId, setLocationId] = useState<number>(-1);
+  const [date, setDate] = useState<string[]>([]);
   const { RangePicker } = DatePicker;
+
+  const requestPostMedia = async () => {
+    const request: PostMediaRequest = {
+      advertisementTitle: "",
+      advertisementDescription: "",
+      locationId,
+      startDate: date[0],
+      endDate: date[1],
+    };
+    const file = ""; // 파일 객체를 string으로 변환하는 방법이 필요
+    const result = await postMedia({ request, file });
+  };
 
   const uploadVideo = () => {
     const inputElement = document.createElement("input");
@@ -114,19 +129,30 @@ const PostMediaScreen = () => {
           )}
         </div>
 
-        <button className="w-[120px] py-3 text-white bg-main text-sm rounded-[3px]">
+        <button
+          className="w-[120px] py-3 text-white bg-main text-sm rounded-[3px]"
+          onClick={requestPostMedia}
+        >
           광고 등록하기
         </button>
       </div>
       <div className="flex-1 flex-col px-[30px]">
         <Subtitle1 text="광고 등록일" color="text-black" />
-        <RangePicker className="mt-2 mb-7" style={{ width: "100%" }} />
+        <RangePicker
+          format="YYYY-MM-DD"
+          onChange={(dates, dateStrings) => setDate(dateStrings)}
+          className="mt-2 mb-7"
+          style={{ width: "100%" }}
+        />
         <Subtitle1 text="디스플레이 선택" color="text-black" />
         <Select
           className="mt-2 mb-7"
           style={{ width: "100%" }}
           placeholder="디스플레이를 선택해주세요"
           options={options}
+          onSelect={(value) => {
+            setLocationId(value);
+          }}
         />
 
         {postMode === PostMode.UPLOAD ? (
