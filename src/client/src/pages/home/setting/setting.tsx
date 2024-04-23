@@ -35,18 +35,18 @@ const SettingScreen = () => {
   return !isShowChangePassword ? (
     <div className="flex flex-col h-full justify-between px-[30px] min-w-[920px] overflow-y-scroll">
       <div className="flex flex-col items-start gap-5">
-        <Subtitle2 text="프로필 사진" color="black" />
+        <Subtitle2 text="프로필 사진" color="text-black" />
         <img className="w-[93px] h-[93px] rounded-full border-[1px] border-gray2" />
         <button className="p-4 bg-gray1 rounded-[3px]">프로필 변경</button>
-        <Subtitle1 text="아이디" color="placeholder" />
+        <Subtitle1 text="아이디" color="text-placeholder" />
         <div className="flex items-center w-[320px] h-12 rounded-md border-[1px] border-gray2 px-6">
           qwerty_02@kookmin.ac.kr
         </div>
-        <Subtitle1 text="회사명" color="placeholder" />
+        <Subtitle1 text="회사명" color="text-placeholder" />
         <div className="flex items-center w-[320px] h-12 rounded-md border-[1px] border-gray2 px-6">
           (주)KMU컴퍼니
         </div>
-        <Subtitle1 text="비밀번호" color="placeholder" />
+        <Subtitle1 text="비밀번호" color="text-placeholder" />
         <button
           className="p-4 bg-gray1 rounded-[3px]"
           onClick={() => setIsShowChangePassword(true)}
@@ -60,7 +60,7 @@ const SettingScreen = () => {
     <div className="flex flex-col h-full justify-between px-[30px] min-w-[920px]">
       <div className="flex flex-col items-start">
         <div className="flex flex-col gap-4">
-          <Subtitle1 text="현재 비밀번호" color="placeholder" />
+          <Subtitle1 text="현재 비밀번호" color="text-placeholder" />
           <input
             className="p-4 border-[1px] border-gray2 rounded-[3px] w-[360px]"
             type="password"
@@ -74,7 +74,7 @@ const SettingScreen = () => {
         </div>
         <p className="h-7 text-red text-sm">{pwErr}</p>
         <div className="flex flex-col gap-4">
-          <Subtitle1 text="새로운 비밀번호" color="placeholder" />
+          <Subtitle1 text="새로운 비밀번호" color="text-placeholder" />
           <input
             className="p-4 border-[1px] border-gray2 rounded-[3px] w-[360px]"
             type="password"
@@ -103,7 +103,7 @@ const SettingScreen = () => {
         </div>
         <p className="h-7 text-red text-sm">{newPwErr}</p>
         <div className="flex flex-col gap-4">
-          <Subtitle1 text="새로운 비밀번호 확인" color="placeholder" />
+          <Subtitle1 text="새로운 비밀번호 확인" color="text-placeholder" />
           <input
             className="p-4 border-[1px] border-gray2 rounded-[3px] w-[360px]"
             type="password"

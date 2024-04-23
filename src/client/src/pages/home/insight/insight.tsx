@@ -33,7 +33,7 @@ const Insight = () => {
 
   return mode === InsightMode.LIST ? (
     <div className="flex flex-col h-full min-w-[920px] px-[30px] gap-7 overflow-y-scroll">
-      <Subtitle2 text="광고 목록" color="black" />
+      <Subtitle2 text="광고 목록" color="text-black" />
       <GridViewMedia
         mediaList={data}
         setMode={setMode}

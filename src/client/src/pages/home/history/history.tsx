@@ -71,7 +71,7 @@ const HistoryScreen = () => {
   return (
     <>
       <div className="flex flex-col h-full min-w-[920px] px-[30px] gap-7 overflow-y-scroll">
-        <Subtitle2 text="광고 목록" color="black" />
+        <Subtitle2 text="광고 목록" color="text-black" />
         <Table
           size="small"
           columns={columns}
@@ -92,7 +92,7 @@ const HistoryScreen = () => {
         onCancel={() => setOpenModal(false)}
       >
         <div className="w-full p-12 flex flex-col">
-          <Subtitle1 text="광고 타이틀" color="black" />
+          <Subtitle1 text="광고 타이틀" color="text-black" />
           <h3 className="px-2 py-3 border-2 mt-[10px] mb-4 border-[#d9d9d9] rounded-[2px]">
             {selectedMedia?.title}
           </h3>
@@ -101,7 +101,7 @@ const HistoryScreen = () => {
             src={selectedMedia?.mediaLink}
             alt="광고 썸네일"
           />
-          <Subtitle1 text="광고 등록일" color="black" />
+          <Subtitle1 text="광고 등록일" color="text-black" />
           <DatePicker.RangePicker
             disabled
             defaultValue={[
@@ -110,13 +110,13 @@ const HistoryScreen = () => {
             ]} // TODO: interface 수정 필요
             className="mt-[10px] mb-4"
           />
-          <Subtitle1 text="디스플레이" color="black" />
+          <Subtitle1 text="디스플레이" color="text-black" />
           <Select
             disabled
             defaultValue={"선택된 디스플레이"} // TODO: interface 수정 필요
             className="mt-[10px] mb-4"
           />
-          <Subtitle1 text="광고 상태" color="black" />
+          <Subtitle1 text="광고 상태" color="text-black" />
           <div className="mb-5 mt-2">
             <StatusBadge status={selectedMedia?.status} />
           </div>

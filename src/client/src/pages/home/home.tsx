@@ -152,10 +152,10 @@ const HomePage = () => {
       >
         <div className="flex justify-between items-end">
           <div className="flex gap-9 mt-[55px] items-end">
-            <Headline1 text={menuButtons[currMenuIdx].title} color="white" />
+            <Headline1 text={menuButtons[currMenuIdx].title} color="text-white" />
             <Body1
               text={menuButtons[currMenuIdx].description}
-              color="white_sub"
+              color="text-white_sub"
             />
           </div>
           <img className="w-4 h-4 cursor-pointer" src={infoCircle} />
