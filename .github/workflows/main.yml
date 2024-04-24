@@ -14,4 +14,4 @@ jobs:
       - name: Change Directory and Docker compose
         run: |
           cd /home/capstone-2024-04/src/server                                                                                              
-          docker compose up -d --build
+          sudo docker compose up -d --build
