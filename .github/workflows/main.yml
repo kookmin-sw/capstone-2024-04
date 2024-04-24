@@ -1,7 +1,7 @@
 on:
   push:
     branches: 
-      - server/deploy
+      - 'server/deploy'
   workflow_dispatch:
 
 jobs:
