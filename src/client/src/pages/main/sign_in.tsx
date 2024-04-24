@@ -51,7 +51,8 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
       // 자동 로그인 체크박스 체킹 여부에 따라 쿠키 설정
       cookies.set("autoLogin", autoLogin);
 
-      navigate("/home");
+      setInterval(() => navigate("/home"), 500);
+
       return true;
     }
 
