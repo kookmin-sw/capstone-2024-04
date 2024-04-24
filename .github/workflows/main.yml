@@ -1,0 +1,18 @@
+on:
+  push:
+    branches: ['server/deploy']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Change Directory and Docker compose
+        run: |
+          // root 하단에 있어서 github actions runner 가 접근할 수 있을지 모르겠음.
+          cd /root/capstone-2024-04/src/server                                                                                              
+          docker compose up -d --build
