@@ -2,11 +2,13 @@ import { DatePicker, Modal, Select, Table, TableColumnsType } from "antd";
 import { Subtitle1, Subtitle2 } from "../../../components/text";
 import { MediaInfo } from "../../../interfaces/interface";
 import StatusBadge, { Status } from "../../../components/status_badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dashboardIconWhite from "../../../assets/icons/view-dashboard-whitesub.svg";
 import chartIconMain from "../../../assets/icons/chart-timeline-main.svg";
+import { getMedia } from "../../../api/media";
+import { toast } from "react-hot-toast";
 
 dayjs.extend(customParseFormat);
 const dateFormat = "YYYY-MM-DD";
@@ -39,34 +41,34 @@ const HistoryScreen = () => {
     },
   ];
 
-  const mediaData: MediaInfoWithStatus[] = [
-    {
-      mediaId: 1,
-      mediaLink:
-        "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
-      title: "광고 타이틀 1",
-      description: "광고 1에 대한 설명이에요",
-      dashboard: [],
-      status: Status.집행중,
-    },
-    {
-      mediaId: 2,
-      mediaLink:
-        "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
-      title: "광고 타이틀 2",
-      description: "광고 2에 대한 설명이에요",
-      dashboard: [],
-      status: Status.등록대기,
-    },
-  ];
-
+  const [mediaData, setMediaData] = useState<MediaInfoWithStatus[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedMedia, setSelectedMedia] =
     useState<MediaInfoWithStatus | null>(null);
-
   interface MediaInfoWithStatus extends MediaInfo {
     status: Status;
   }
+
+  const loadHistory = async () => {
+    try {
+      const result = await getMedia();
+
+      if (result.status === 200) {
+        const newHistory: MediaInfoWithStatus[] = result.data.data.map(
+          (media: MediaInfo) => {
+            return { ...media, status: Status.집행중 } as MediaInfoWithStatus;
+          }
+        );
+        setMediaData(newHistory);
+      }
+    } catch (error) {
+      toast.error("히스토리 조회에 실패하였습니다.");
+    }
+  };
+
+  useEffect(() => {
+    loadHistory();
+  }, []);
 
   return (
     <>

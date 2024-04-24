@@ -13,6 +13,13 @@ interface PostMediaProps {
     file: string,
 }
 
+export const getMedia = async () => {
+    const response = await privateApi.get('/api/v1/media').catch((err) => {
+        return err.response;
+    });
+    return response;
+}
+
 export const postMedia = async ({request, file}: PostMediaProps) => {
     const response = await privateApi.post('/api/v1/media', {
         request, file
