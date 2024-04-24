@@ -6,6 +6,7 @@ import { Body1, Subtitle1 } from "../../../components/text";
 import { getLocation } from "../../../api/location";
 import { LocationInfo } from "../../../interfaces/interface";
 import { PostMediaRequest, postMedia } from "../../../api/media";
+import { toast } from "react-hot-toast";
 
 const PostMediaScreen = () => {
   const enum PostMode {
@@ -13,23 +14,48 @@ const PostMediaScreen = () => {
     "HISTORY", // 히스토리에서 광고 선택
   }
 
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [postMode, setPostMode] = useState<PostMode>(PostMode.UPLOAD);
   const [video, setVideo] = useState<File | null>(null);
+  const [fileStr, setFileStr] = useState("");
   const [options, setOptions] = useState<SelectProps["options"]>([]);
   const [locationId, setLocationId] = useState<number>(-1);
   const [date, setDate] = useState<string[]>([]);
   const { RangePicker } = DatePicker;
 
+  const fileToBase64 = (file: File) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setFileStr(reader.result?.toString() || "");
+    };
+  };
+
   const requestPostMedia = async () => {
     const request: PostMediaRequest = {
-      advertisementTitle: "",
-      advertisementDescription: "",
-      locationId,
+      advertisementTitle: title,
+      advertisementDescription: description,
+      locationId: locationId,
       startDate: date[0],
       endDate: date[1],
     };
-    const file = ""; // 파일 객체를 string으로 변환하는 방법이 필요
+    const file = fileStr;
     const result = await postMedia({ request, file });
+
+    if (result && result.status === 200) {
+      // 사용자 입력 정보 초기화
+      toast.success("성공적으로 광고가 등록되었습니다.");
+
+      setTitle("");
+      setDescription("");
+      setVideo(null);
+      setFileStr("");
+      setLocationId(-1);
+      setDate([]);
+    } else {
+      toast.error("광고 등록에 실패하였습니다.");
+    }
   };
 
   const uploadVideo = () => {
@@ -44,6 +70,7 @@ const PostMediaScreen = () => {
     const video = e.target.files?.[0];
     if (video) {
       setVideo(video);
+      fileToBase64(video);
     }
   };
 
@@ -66,6 +93,8 @@ const PostMediaScreen = () => {
   useEffect(() => {
     loadLocationList();
   }, []);
+
+  useEffect(() => {});
 
   return (
     <div className="flex h-full min-w-[920px]">
@@ -161,6 +190,7 @@ const PostMediaScreen = () => {
             <Input
               className="mt-2 mb-10"
               placeholder="해당 광고의 대시보드 타이틀을 입력해주세요"
+              onChange={(e) => setTitle(e.target.value)}
             />
             <Subtitle1 text="광고 설명" color="text-black" />
             <Input.TextArea
@@ -168,6 +198,7 @@ const PostMediaScreen = () => {
               style={{ resize: "none" }}
               rows={5}
               placeholder="해당 광고의 대시보드 설명을 입력해주세요"
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
         ) : (

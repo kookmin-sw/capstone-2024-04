@@ -16,6 +16,8 @@ interface PostMediaProps {
 export const postMedia = async ({request, file}: PostMediaProps) => {
     const response = await privateApi.post('/api/v1/media', {
         request, file
+    }).catch((err) => {
+        return err.response;
     });
     return response;
 }
