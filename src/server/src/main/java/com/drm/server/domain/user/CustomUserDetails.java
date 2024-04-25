@@ -1,5 +1,6 @@
 package com.drm.server.domain.user;
 
+import com.drm.server.common.enums.Authority;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,10 +17,13 @@ import java.util.stream.Collectors;
 public class CustomUserDetails implements UserDetails {
     private final CustomUserInfoDto customUserInfo;
 
+    public Authority getAuthority(){
+        return customUserInfo.getAuthority();}
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<String> roles = new ArrayList<>();
-        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        List<String> authorities = new ArrayList<>();
+        authorities.add(customUserInfo.getAuthority().toString());
+        return authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override

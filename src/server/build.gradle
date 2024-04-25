@@ -41,6 +41,15 @@ dependencies {
 //mail certification
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+//	firebase
+	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '9.1.1'
+
+	//object storage
+	implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.529')
+	implementation 'com.amazonaws:aws-java-sdk-s3'
+
+	implementation 'org.springframework.kafka:spring-kafka:3.1.0'
+
 }
 
 tasks.named('test') {

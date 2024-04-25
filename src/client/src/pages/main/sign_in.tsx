@@ -1,5 +1,9 @@
 import { FormEvent, useRef, useState } from "react";
 import logo from "../../assets/images/logo.svg";
+import { signin } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
+import { SignInPageProps } from "../../interfaces/interface";
 
 enum ErrorText {
   incorrect = "아이디 또는 비밀번호를 잘못 입력했습니다.",
@@ -7,29 +11,58 @@ enum ErrorText {
   notEnterPw = "비밀번호를 입력해주세요.",
 }
 
-interface SignInPageProps {
-  goToSignUp: any;
-}
 
-const SignInPage = ({ goToSignUp }: SignInPageProps) => {
+const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
   const [errorText, setErrorText] = useState("");
+  const [autoLogin, setAutoLogin] = useState(false);
   const idRef = useRef<HTMLInputElement>(null);
   const pwRef = useRef<HTMLInputElement>(null);
-  const checkBoxRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
-  const login = (e: FormEvent) => {
+  const login = async (e: FormEvent) => {
     e.preventDefault();
+    let id = idRef.current?.value || "";
+    let pw = pwRef.current?.value || "";
     // 아이디를 미입력한 경우
-    if (idRef.current?.value === "") {
+    if (id === "") {
       setErrorText(ErrorText.notEnterId);
       return false;
     }
     // 비밀번호를 미입력한 경우
-    if (pwRef.current?.value === "") {
+    if (pw === "") {
       setErrorText(ErrorText.notEnterPw);
       return false;
     }
-    // 로그인에 실패한 경우(가입되지 않은 아이디 입력 및 비밀번호 틀림)
+
+    const body = { email: id, password: pw };
+    const result = await signin(body);
+
+    if (result.status === 200) {
+      const cookies = new Cookies();
+      const tokenData = result.data.data;
+
+      const refreshToken = tokenData.refreshToken;
+      const accessToken = tokenData.accessToken;
+      const expirationTime = tokenData.refreshTokenExpirationTime;
+
+      // 쿠키에 토큰 저장
+      cookies.set("accessToken", accessToken);
+      cookies.set("refreshToken", refreshToken, { maxAge: expirationTime });
+
+      // 자동 로그인 체크박스 체킹 여부에 따라 쿠키 설정
+      cookies.set("autoLogin", autoLogin);
+
+      navigate("/home");
+      return true;
+    }
+
+    if (result.status === 400) {
+      if (result.data.divisionCode === "G014") {
+        // 이메일 정보가 없음 or 잘못된 비밀번호 입력
+        setErrorText("아이디 또는 비밀번호를 잘못 입력하였습니다.");
+      }
+      return false;
+    }
 
     return true;
   };
@@ -56,22 +89,22 @@ const SignInPage = ({ goToSignUp }: SignInPageProps) => {
         ref={pwRef}
       />
       {/* 에러 텍스트 */}
-      <p className="h-7 text-error text-sm">{errorText}</p>
+      <p className="h-7 text-red text-sm">{errorText}</p>
       <div className="flex justify-between">
         <div className="flex gap-2">
           <input
             className="w-5 bg-main border-gray-300 rounded"
             type="checkbox"
             onChange={(e) => {
-              e.target.checked;
+              setAutoLogin(e.target.checked);
             }}
-            ref={checkBoxRef}
+            value="autoLogin"
           />
           <label className="text-black text-lg">자동 로그인</label>
         </div>
-        <a className="text-main" href="#">
+        <p className="text-main cursor-pointer" onClick={goToFindPassword}>
           비밀번호 찾기
-        </a>
+        </p>
       </div>
       <button
         onClick={(e) => login(e)}

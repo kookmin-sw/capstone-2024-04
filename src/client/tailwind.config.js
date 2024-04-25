@@ -5,8 +5,14 @@ export default {
     extend: {
       colors: {
         main: "#4200ff",
-        error: "#ff0000",
+        white: "#ffffff",
+        white_sub: "#a9c3eb",
+        black: "#191919",
+        black_sub: "#54657b",
+        red: "#ff0000",
         placeholder: "#6b6b6b",
+        gray1: "#f0f0f0",
+        gray2: "#d9d9d9",
       },
     },
   },

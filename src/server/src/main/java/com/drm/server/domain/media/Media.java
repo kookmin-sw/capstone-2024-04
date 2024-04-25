@@ -1,6 +1,7 @@
 package com.drm.server.domain.media;
 
 import com.drm.server.common.BaseTimeEntity;
+import com.drm.server.controller.dto.request.MediaRequest;
 import com.drm.server.domain.dashboard.Dashboard;
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import jakarta.persistence.*;
@@ -23,8 +24,10 @@ public class Media extends BaseTimeEntity {
     private Long mediaId;
 
     @Column
+    private String fileName;
     private String mediaLink;
     private String title;
+    private String description;
     // FK - dashboardId
     @OneToOne
     @JoinColumn(name = "dashboard_id")
@@ -33,4 +36,14 @@ public class Media extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "media")
     private List<MediaApplication> mediaApplicationList = new ArrayList<>();
+
+    public Media(Dashboard dashboard) {
+        dashboard.getMedia();
+    }
+
+    public static Media toEntity(MediaRequest.Create mediaRequest,String fileName, String mediaLink,Dashboard dashboard){
+        return Media.builder().fileName(fileName).mediaLink(mediaLink).title(mediaRequest.getAdvertisementTitle()).description(mediaRequest.getAdvertisementDescription()).dashboard(dashboard).build();
+    }
+
+
 }

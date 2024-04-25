@@ -16,10 +16,14 @@ public class UserResponse {
         private Long userId;
         @Schema(description = "이메일",example = "sdkf@gmai.com")
         private String email;
+        @Schema(description = "회사",example = "(주)국민KM")
+        private String company;
 
-        public UserInfo(Long userId, String email) {
+
+        public UserInfo(Long userId, String email,String company) {
             this.userId = userId;
             this.email = email;
+            this.company = company;
         }
     }
 
