@@ -11,6 +11,8 @@ jobs:
     steps:
 
       - uses: actions/checkout@v2
+        with:
+          ref: server/deploy
 
       - name: Change Directory and Docker compose
         run: |
