@@ -40,8 +40,18 @@ const PostMediaScreen = () => {
       startDate: date[0],
       endDate: date[1],
     };
-    const file = fileStr;
-    const result = await postMedia({ request, file });
+    const file = video;
+
+    const formData = new FormData();
+
+    const blob = new Blob([JSON.stringify(request)], {
+      type: "application/json",
+    });
+
+    formData.append("request", blob);
+    if (file) formData.append("file", file);
+
+    const result = await postMedia(formData);
 
     if (result && result.status === 200) {
       // 사용자 입력 정보 초기화
