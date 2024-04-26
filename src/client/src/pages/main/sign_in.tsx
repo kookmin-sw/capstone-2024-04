@@ -1,5 +1,4 @@
 import { FormEvent, useRef, useState } from "react";
-import logo from "../../assets/images/logo.svg";
 import { signin } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
@@ -10,7 +9,6 @@ enum ErrorText {
   notEnterId = "아이디를 입력해주세요.",
   notEnterPw = "비밀번호를 입력해주세요.",
 }
-
 
 const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
   const [errorText, setErrorText] = useState("");
@@ -37,7 +35,7 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
     const body = { email: id, password: pw };
     const result = await signin(body);
 
-    if (result.status === 200) {
+    if (result.data.status === 201) {
       const cookies = new Cookies();
       const tokenData = result.data.data;
 
@@ -52,7 +50,8 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
       // 자동 로그인 체크박스 체킹 여부에 따라 쿠키 설정
       cookies.set("autoLogin", autoLogin);
 
-      navigate("/home");
+      setInterval(() => navigate("/home"), 500);
+
       return true;
     }
 
@@ -69,10 +68,7 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
 
   return (
     <div className="flex flex-col w-[360px]">
-      <div className="flex gap-2 mb-4">
-        <img className="w-10 mb-4" src={logo} />
-        <h1 className="text-black font-black text-4xl">DO YOU READ ME</h1>
-      </div>
+      <h1 className="text-black text-xl mb-4">로그인</h1>
       <p className="text-placeholder">아이디</p>
       <input
         type="text"

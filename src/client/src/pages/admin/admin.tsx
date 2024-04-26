@@ -3,28 +3,18 @@ import logoWhite from "../../assets/images/LogoWhite.svg";
 import infoCircle from "../../assets/icons/InfoCircle.svg";
 import clipboardTextClockBlacksub from "../../assets/icons/clipboard-text-clock-blacksub.svg";
 import clipboardTextClockWhitesub from "../../assets/icons/clipboard-text-clock-whitesub.svg";
-import chartTimelineBlacksub from "../../assets/icons/chart-timeline-blacksub.svg";
-import chartTimelineWhitesub from "../../assets/icons/chart-timeline-whitesub.svg";
 import cogBlacksub from "../../assets/icons/cog-blacksub.svg";
 import cogWhitesub from "../../assets/icons/cog-whitesub.svg";
-import fileCompareBlacksub from "../../assets/icons/file-compare-blacksub.svg";
-import fileCompareWhitesub from "../../assets/icons/file-compare-whitesub.svg";
-import uploadBlacksub from "../../assets/icons/upload-blacksub.svg";
-import uploadWhitesub from "../../assets/icons/upload-whitesub.svg";
-import viewDashboardBlacksub from "../../assets/icons/view-dashboard-blacksub.svg";
-import viewDashboardWhitesub from "../../assets/icons/view-dashboard-whitesub.svg";
+import listboxWhite from "../../assets/icons/list-box-whitesub.svg";
+import listboxBlack from "../../assets/icons/list-box-blacksub.svg";
 import MenuButton from "../../components/menu_button";
-import PostMediaScreen from "./post-media/post_media";
+
 import { Body1, Headline1 } from "../../components/text";
-import CompareMediaScreen from "./compare-media/compare_media";
-import SettingScreen from "./setting/setting";
-import DashBoard from "./dashboard/dashboard";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
-import Insight from "./insight/insight";
-import HistoryScreen from "./history/history";
+import SettingScreen from "../home/setting/setting";
 
-const HomePage = () => {
+const AdminPage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const [divHeight, setDivHeight] = useState(0);
@@ -43,41 +33,18 @@ const HomePage = () => {
 
   const menuButtons = [
     {
-      title: "대시보드",
-      description: "해당 기간에 집행한 광고에 대한 통계를 확인할 수 있어요.",
-      iconWhiteSrc: viewDashboardWhitesub,
-      iconBlackSrc: viewDashboardBlacksub,
-      component: <DashBoard />,
-    },
-    {
-      title: "인사이트",
-      description:
-        "하나의 광고에 대해 전체 기간의 통계를 한눈에 확인할 수 있어요.",
-      iconWhiteSrc: chartTimelineWhitesub,
-      iconBlackSrc: chartTimelineBlacksub,
-      component: <Insight />,
-    },
-    {
-      title: "위치정보비교",
-      description:
-        "각 위치별로 유동인구 정보를 비교할 수 있어요. 집행할 디스플레이 선택시 참고하면 좋아요.",
-      iconWhiteSrc: fileCompareWhitesub,
-      iconBlackSrc: fileCompareBlacksub,
-      component: <CompareMediaScreen />,
-    },
-    {
-      title: "광고 등록",
-      description: "집행할 광고를 등록하세요.",
-      iconWhiteSrc: uploadWhitesub,
-      iconBlackSrc: uploadBlacksub,
-      component: <PostMediaScreen />,
+      title: "광고승인",
+      description: "전체 광고 히스토리를 확인할 수 있어요.",
+      iconWhiteSrc: listboxWhite,
+      iconBlackSrc: listboxBlack,
+      component: <>광고승인(어드민)</>,
     },
     {
       title: "히스토리",
-      description: "전체 광고 히스토리를 확인할 수 있어요.",
+      description: "전체 고객사의 광고 히스토리를 볼 수 있어요.",
       iconWhiteSrc: clipboardTextClockWhitesub,
       iconBlackSrc: clipboardTextClockBlacksub,
-      component: <HistoryScreen />,
+      component: <>히스토리(어드민)</>,
     },
     {
       title: "설정",
@@ -152,7 +119,10 @@ const HomePage = () => {
       >
         <div className="flex justify-between items-end">
           <div className="flex gap-9 mt-[55px] items-end">
-            <Headline1 text={menuButtons[currMenuIdx].title} color="text-white" />
+            <Headline1
+              text={menuButtons[currMenuIdx].title}
+              color="text-white"
+            />
             <Body1
               text={menuButtons[currMenuIdx].description}
               color="text-white_sub"
@@ -169,4 +139,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default AdminPage;
