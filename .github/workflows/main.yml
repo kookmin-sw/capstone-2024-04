@@ -1,0 +1,20 @@
+on:
+  push:
+    branches: 
+      - 'server/deploy'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+
+      - uses: actions/checkout@v2
+        with:
+          ref: server/deploy
+
+      - name: Change Directory and Docker compose
+        run: |
+          cd /home/capstone-2024-04/src/server                                                                                              
+          sudo docker compose up -d --build
