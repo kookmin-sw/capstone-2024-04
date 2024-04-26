@@ -44,7 +44,7 @@ const PostMediaScreen = () => {
 
     const result = await postMedia(formData);
 
-    if (result && result.status === 200) {
+    if (result && result.status === 201) {
       // 사용자 입력 정보 초기화
       toast.success("성공적으로 광고가 등록되었습니다.");
 
