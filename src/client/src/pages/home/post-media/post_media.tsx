@@ -7,6 +7,7 @@ import { getLocation } from "../../../api/location";
 import { LocationInfo } from "../../../interfaces/interface";
 import { PostMediaRequest, postMedia } from "../../../api/media";
 import { toast } from "react-hot-toast";
+import moment from "moment";
 
 const PostMediaScreen = () => {
   const enum PostMode {
@@ -170,6 +171,10 @@ const PostMediaScreen = () => {
       <div className="flex-1 flex-col px-[30px]">
         <Subtitle1 text="광고 등록일" color="text-black" />
         <RangePicker
+          disabledDate={(current) => {
+            let customDate = moment().format("YYYY-MM-DD");
+            return current && current < moment(customDate, "YYYY-MM-DD");
+          }}
           format="YYYY-MM-DD"
           onChange={(_, dateStrings) => setDate(dateStrings)}
           className="mt-2 mb-7"
