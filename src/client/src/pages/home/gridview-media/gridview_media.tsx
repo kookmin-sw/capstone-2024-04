@@ -1,12 +1,12 @@
 import React from "react";
-import MediaCard, { MediaCardProps } from "../../../components/media_card";
-import { Subtitle2 } from "../../../components/text";
-import { DashBoardMode } from "../dashboard/dashboard";
+import MediaCard from "../../../components/media_card";
+import { MediaInfo } from "../../../interfaces/interface";
+import { InsightMode } from "../insight/insight";
 
 interface GridViewMedia {
-  mediaList: Array<MediaCardProps>;
-  setMode: React.Dispatch<React.SetStateAction<DashBoardMode>>;
-  setDetailInfo: React.Dispatch<React.SetStateAction<MediaCardProps | null>>;
+  mediaList: Array<MediaInfo>;
+  setMode: React.Dispatch<React.SetStateAction<InsightMode>>;
+  setDetailInfo: React.Dispatch<React.SetStateAction<MediaInfo | null>>;
 }
 
 const GridViewMedia = ({
@@ -16,23 +16,28 @@ const GridViewMedia = ({
 }: GridViewMedia) => {
   return (
     <div className="flex flex-col gap-7 min-w-[920px] h-full">
-      <Subtitle2 text="광고 목록" color="black" />
-      <div className="grid grid-cols-4 gap-x-2 gap-y-7 overflow-y-scroll">
-        {mediaList.map((media, index) => {
-          return (
-            <MediaCard
-              onClick={() => {
-                setDetailInfo(media);
-                setMode(DashBoardMode.DETAIL);
-              }}
-              key={`card-${index}`}
-              img={media.img}
-              title={media.title}
-              description={media.description}
-            />
-          );
-        })}
-      </div>
+      {mediaList.length !== 0 ? (
+        <div className="grid grid-cols-4 gap-x-2 gap-y-7 overflow-y-scroll">
+          {mediaList.map((media, index) => {
+            return (
+              <MediaCard
+                onClick={() => {
+                  setDetailInfo(media);
+                  setMode(InsightMode.DETAIL);
+                }}
+                key={`card-${index}`}
+                img={media.mediaLink}
+                title={media.title}
+                description={media.description}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        <div className="w-full h-full flex justify-center items-center text-base font-medium">
+          아직 집행한 광고가 없습니다.
+        </div>
+      )}
     </div>
   );
 };

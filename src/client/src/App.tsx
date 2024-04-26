@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import MainPage from "./pages/main/main";
 import HomePage from "./pages/home/home";
 import Cookies from "universal-cookie";
+import AdminPage from "./pages/admin/admin";
 
 interface ProtectedRouteProps {
   isAuthenticated: boolean;
@@ -34,6 +35,15 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated()}>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     </>
