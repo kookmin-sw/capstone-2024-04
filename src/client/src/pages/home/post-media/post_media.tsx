@@ -18,19 +18,10 @@ const PostMediaScreen = () => {
   const [description, setDescription] = useState("");
   const [postMode, setPostMode] = useState<PostMode>(PostMode.UPLOAD);
   const [video, setVideo] = useState<File | null>(null);
-  const [fileStr, setFileStr] = useState("");
   const [options, setOptions] = useState<SelectProps["options"]>([]);
   const [locationId, setLocationId] = useState<number>(-1);
   const [date, setDate] = useState<string[]>([]);
   const { RangePicker } = DatePicker;
-
-  const fileToBase64 = (file: File) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      setFileStr(reader.result?.toString() || "");
-    };
-  };
 
   const requestPostMedia = async () => {
     const request: PostMediaRequest = {
@@ -60,7 +51,7 @@ const PostMediaScreen = () => {
       setTitle("");
       setDescription("");
       setVideo(null);
-      setFileStr("");
+      // setFileStr("");
       setLocationId(-1);
       setDate([]);
     } else {
@@ -80,7 +71,6 @@ const PostMediaScreen = () => {
     const video = e.target.files?.[0];
     if (video) {
       setVideo(video);
-      fileToBase64(video);
     }
   };
 
@@ -179,7 +169,7 @@ const PostMediaScreen = () => {
         <Subtitle1 text="광고 등록일" color="text-black" />
         <RangePicker
           format="YYYY-MM-DD"
-          onChange={(dates, dateStrings) => setDate(dateStrings)}
+          onChange={(_, dateStrings) => setDate(dateStrings)}
           className="mt-2 mb-7"
           style={{ width: "100%" }}
         />
