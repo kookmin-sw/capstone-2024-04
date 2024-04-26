@@ -1,5 +1,4 @@
 import { FormEvent, useRef, useState } from "react";
-import logo from "../../assets/images/logo.svg";
 import { signin } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
@@ -36,7 +35,7 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
     const body = { email: id, password: pw };
     const result = await signin(body);
 
-    if (result.status === 200 || result.status === 201) {
+    if (result.data.status === 200) {
       const cookies = new Cookies();
       const tokenData = result.data.data;
 

@@ -43,7 +43,7 @@ privateApi.interceptors.response.use((response: AxiosResponse) => {
     const accessToken = cookies.get('accessToken');
     const refreshToken = cookies.get('refreshToken');    
 
-    if (errorResponse.status === 400 && errorResponse.divisionCode === 'G12')
+    if (errorResponse.status === 401)
     {
         if (refreshToken) {
             const tokens =  await tokenRefresh({accessToken, refreshToken});
@@ -58,6 +58,7 @@ privateApi.interceptors.response.use((response: AxiosResponse) => {
 
         } else {
             // token 모두 제거 후, 초기 페이지로 redirect 할 예정
+            console.error('refreshToken이 만료되어 사라짐');
             toast.error('로그인 시간 제한이 만료되었습니다.');
         }
     }
