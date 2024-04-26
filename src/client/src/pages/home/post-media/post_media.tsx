@@ -210,7 +210,7 @@ const PostMediaScreen = () => {
           </div>
         ) : (
           <div className="flex flex-col">
-            <Subtitle1 text="광고 이미지 미리보기" color="text-black" />
+            <Subtitle1 text="광고 미리보기" color="text-black" />
             <div className="w-full mt-2 aspect-video border-gray2 border-[1px] rounded-lg" />
           </div>
         )}
