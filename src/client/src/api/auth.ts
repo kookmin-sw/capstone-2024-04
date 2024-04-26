@@ -1,6 +1,5 @@
 import Cookies from "universal-cookie";
 import { SignInAPIProps, SignUpAPIProps } from "../interfaces/interface";
-import privateApi from "./private_api";
 import publicApi from "./public_api";
 
 
@@ -21,7 +20,7 @@ export const signin = async ({email, password}: SignInAPIProps) => {
         password,
     }).catch((err) => {
         return err.response;
-    });
+    });    
     return response;
 }
 
