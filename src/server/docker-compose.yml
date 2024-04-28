@@ -11,5 +11,21 @@ services:
       - 6379:6379
 #    networks:
 #      - eum-test
+  application:
+    container_name: spring-app
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://43.201.57.42:3306/advt
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+    depends_on:
+      - redis-docker
+#    networks:
+#      - test_network
 #networks:
 #  eum-test:
