@@ -54,3 +54,16 @@ export interface Option {
     label: string;
     children?: Option[];
 }
+
+export interface MediaInfo {
+    mediaId: number,
+    mediaLink: string,
+    title: string,
+    description: string,
+    dashboard: DashBoardInfo[],
+}
+
+export interface DashBoardInfo {
+    title: string,
+    description: string,
+}
