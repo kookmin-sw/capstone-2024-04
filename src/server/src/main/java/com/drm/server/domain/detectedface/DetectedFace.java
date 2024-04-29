@@ -3,6 +3,7 @@ package com.drm.server.domain.detectedface;
 import com.drm.server.common.BaseTimeEntity;
 import com.drm.server.common.KoreaLocalDateTime;
 import com.drm.server.domain.mediaApplication.MediaApplication;
+import com.drm.server.handler.LongConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +29,7 @@ public class DetectedFace extends BaseTimeEntity {
     private LocalDateTime leaveAt;
 
 
-    @Convert(converter = DataConverter.class)
+    @Convert(converter = LongConverter.class)
     @Column(length = 4000)
     private List<Boolean> staring;
 
