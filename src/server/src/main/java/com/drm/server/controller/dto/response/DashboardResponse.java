@@ -42,12 +42,16 @@ public class DashboardResponse {
     @Getter
     @Setter
     public static class DashboardDataInfo {
+        @Schema(description = "해당 광고에 대해 집계된, 집행된 광고의 날짜 수", example = "25")
+        private Long mediaAppsCnt;
         @Schema(description = "시간당 관심을 표현한 사람 수 (0시 - 23시 까지)", example = "[20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6]")
         private List<Long> hourlyInterestedCount;
 
         @Schema(description = "시간당 포착된 사람 수 (0시 - 23시 까지)", example = "[15, 28, 45, 20, 25, 7, 19, 30, 48, 18, 27, 5, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6]")
         private List<Long> hourlyPassedCount;
 
+        @Schema(description = "시간당 평균 응시 횟수(0시 - 23시까지)", example = "[2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2")
+        private List<Float> hourlyAvgStaringTime;
         @Schema(description = "전체 포착된 사람 수", example = "254")
         private Long totalPeopleCount;
 
@@ -68,14 +72,16 @@ public class DashboardResponse {
 
         @Builder
         public DashboardDataInfo() {
-            this.hourlyInterestedCount = new ArrayList<>(asList(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0));
-            this.hourlyPassedCount =  new ArrayList<>(asList(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0));
+            this.hourlyInterestedCount = new ArrayList<>(Collections.nCopies(24, 0L));
+            this.hourlyPassedCount =  new ArrayList<>(Collections.nCopies(24, 0L));
+            this.hourlyAvgStaringTime = new ArrayList<>(Collections.nCopies(24,0F));
             this.totalPeopleCount = 0L;
             this.avgStaringTime = 0;
             this.avgAge = 0;
             this.maleInterestCnt = 0L;
             this.femaleInterestCnt = 0L;
             this.maleCnt = 0L;
+            this.mediaAppsCnt = 0L;
         }
 
         public DashboardDataInfo(DailyMediaBoard board){
@@ -88,13 +94,20 @@ public class DashboardResponse {
             this.avgStaringTime = board.getAvgStaringTime();
             this.maleCnt = board.getMaleCnt();
         }
+        public void addMediaAppsCnt(){
+            this.mediaAppsCnt++;
+        }
+        public void addHourlyAvgStaringTime(List<Float> boardList){
+            List<Float> summedList = DashboardCalculator.calculateHourListDataPerHour(this.hourlyAvgStaringTime, boardList);
+            this.hourlyAvgStaringTime = DashboardCalculator.divideHourListData(summedList, this.mediaAppsCnt);
 
+        }
         public void addHourlyPassedCount(List<Long> boardList){
-            this.hourlyPassedCount = calculateHourListDataPerHour(this.hourlyPassedCount, boardList);
+            this.hourlyPassedCount = DashboardCalculator.calculateHourListDataPerHour(this.hourlyPassedCount, boardList);
         }
 
         public void addHourlyInterestedCount(List<Long> boardList) {
-            this.hourlyInterestedCount = calculateHourListDataPerHour(this.hourlyInterestedCount, boardList);
+            this.hourlyInterestedCount = DashboardCalculator.calculateHourListDataPerHour(this.hourlyInterestedCount, boardList);
         }
     }
 
@@ -135,8 +148,8 @@ public class DashboardResponse {
 
         // 평균이므로 나눠주는 연산 필요함 -> 전체 일 수 덧셈 이후에 나누기
         public void addPassedPeopleCntPerHour(List<Long> boardList){
-            List<Long> summedList = calculateHourListDataPerHour(this.passedPeopleListPerHour, boardList);
-            this.passedPeopleListPerHour = divideHourListData(summedList, this.mediaAppsCnt);
+            List<Long> summedList = DashboardCalculator.calculateHourListDataPerHour(this.passedPeopleListPerHour, boardList);
+            this.passedPeopleListPerHour = DashboardCalculator.divideHourListData(summedList, this.mediaAppsCnt);
         }
 
         public void addAvgMaleRatio(Long maleCnt, Long totalCnt){
@@ -175,22 +188,7 @@ public class DashboardResponse {
         @Schema(description = "광고 집행 Id")
         private Long mediaApplicationId;
     }
-    public static List<Long> calculateHourListDataPerHour(List<Long> updateList, List<Long> inputList){
-        if(updateList.size() != inputList.size()) throw new IllegalStateException("HOUR PASSED DATA LIST SIZE IS DIFFERENT");
-        for(int i=0; i<inputList.size(); i++){
-            updateList.set(i, inputList.get(i) + updateList.get(i));
-        }
-        return updateList;
-    }
 
-    public static List<Long> divideHourListData(List<Long> updateList, Long cnt){
-        if(cnt == 0) throw new IllegalArgumentException("DIVIDE CNT IS ZERO");
-        for(int i=0; i<updateList.size(); i++){
-            Long new_data = updateList.get(i)/ cnt;
-            updateList.set(i, new_data);
-        }
-        return updateList;
-    }
 }
 
 

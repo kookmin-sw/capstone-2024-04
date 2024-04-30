@@ -130,10 +130,14 @@ public class DashboardService {
         for (MediaApplication mediaApp : mediaAppList){
             List<DailyMediaBoard> boards = dailyMediaBoardService.findDailyBoardByMediaApplication(mediaApp);
             for(DailyMediaBoard board : boards){
+                // 광고에 대해 해당 광고 집행 횟수 +1
+                boardInfo.addMediaAppsCnt();
                 // 시간별 관심 데이터 합치기
                 // 시간별 유동인구 데이터 합치기
                 boardInfo.addHourlyPassedCount(board.getHourlyPassedCount());
                 boardInfo.addHourlyInterestedCount(board.getHourlyInterestedCount());
+                // * avgStaring 은 Float 연산
+                boardInfo.addHourlyAvgStaringTime(board.getHourlyAvgStaringTime());
                 // 수치 합치기
                 boardInfo.setFemaleInterestCnt(boardInfo.getFemaleInterestCnt() + board.getFemaleInterestCnt());
                 boardInfo.setMaleCnt(boardInfo.getMaleCnt()+ board.getMaleCnt());
