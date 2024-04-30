@@ -126,31 +126,15 @@ public class DashboardService {
     // 일별로 저장되어 있는 광고 결과 데이터를 합치기
     public DashboardResponse.DashboardDataInfo calculateDataPerDashboard(List<MediaApplication> mediaAppList){
         DashboardResponse.DashboardDataInfo boardInfo = new DashboardResponse.DashboardDataInfo();
-
+        // 광고별 집행 단위들 조회
         for (MediaApplication mediaApp : mediaAppList){
             List<DailyMediaBoard> boards = dailyMediaBoardService.findDailyBoardByMediaApplication(mediaApp);
+            // 집행 단위별 일별 보드 조회
             for(DailyMediaBoard board : boards){
-                // 광고에 대해 해당 광고 집행 횟수 +1
-                boardInfo.addMediaAppsCnt();
-                // 시간별 관심 데이터 합치기
-                // 시간별 유동인구 데이터 합치기
-                boardInfo.addHourlyPassedCount(board.getHourlyPassedCount());
-                boardInfo.addHourlyInterestedCount(board.getHourlyInterestedCount());
-                // * avgStaring 은 Float 연산
-                boardInfo.addHourlyAvgStaringTime(board.getHourlyAvgStaringTime());
-                // 수치 합치기
-                boardInfo.setFemaleInterestCnt(boardInfo.getFemaleInterestCnt() + board.getFemaleInterestCnt());
-                boardInfo.setMaleCnt(boardInfo.getMaleCnt()+ board.getMaleCnt());
-                boardInfo.setMaleInterestCnt(boardInfo.getMaleInterestCnt() + board.getMaleInterestCnt());
-                // 평균값 계산 및 합치기
-                Long newTotalPeopleCnt = boardInfo.getTotalPeopleCount() + board.getTotalPeopleCount();
-                if(newTotalPeopleCnt > 0) {
-                    boardInfo.setAvgAge((boardInfo.getAvgAge() * boardInfo.getTotalPeopleCount() + board.getAvgAge() * board.getTotalPeopleCount()) /
-                            newTotalPeopleCnt);
-                    boardInfo.setAvgStaringTime((boardInfo.getAvgStaringTime() * boardInfo.getTotalPeopleCount() + board.getAvgStaringTime() * board.getTotalPeopleCount())
-                            / newTotalPeopleCnt);
-                }
-                boardInfo.setTotalPeopleCount(newTotalPeopleCnt);
+                // 일별 데이터 집계하여 dto 리턴
+                boardInfo.updateDtoWithBoardData(board.getTotalPeopleCount(), board.getHourlyPassedCount(), board.getHourlyInterestedCount(),
+                        board.getHourlyAvgStaringTime(), board.getAvgAge(), board.getAvgStaringTime(),
+                        board.getMaleInterestCnt(), board.getFemaleInterestCnt(), board.getMaleCnt());
             }
         }
         return boardInfo;
@@ -166,7 +150,7 @@ public class DashboardService {
                 List<DailyMediaBoard> boards = dailyMediaBoardService.findDailyBoardByMediaApplication(app);
                 // board (전체 집계 인원 수, 시간대별 집계 사람 수, 전체 남성 수) -> dto 에 반영
                 for(DailyMediaBoard board : boards){
-                    info.updateDtoWithBoardData(board.getTotalPeopleCount(), board.getHourlyInterestedCount(), board.getMaleCnt());
+                    info.updateDtoWithBoardData(board.getTotalPeopleCount(), board.getHourlyInterestedCount(), board.getTotalAgeRangeCount(), board.getMaleCnt());
                 }
         }
         log.info("DASHBOARD PER LOCATION SUCCESSFULLY SEARCHED : " + locationId);

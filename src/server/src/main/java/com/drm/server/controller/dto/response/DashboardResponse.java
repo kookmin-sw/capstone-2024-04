@@ -109,6 +109,30 @@ public class DashboardResponse {
         public void addHourlyInterestedCount(List<Long> boardList) {
             this.hourlyInterestedCount = DashboardCalculator.calculateHourListDataPerHour(this.hourlyInterestedCount, boardList);
         }
+        public void updateDtoWithBoardData(Long totalPeopleCntData, List<Long> hourlyPassedData, List<Long> hourlyInterestData,
+                                     List<Float> avgStaringTimeListData, Float avgAgeData, Float avgStaringData,
+                                           Long maleInterestCntData, Long femaleInterestCntData, Long maleCntData){
+            // 광고에 대해 해당 광고 집행 횟수 +1
+            this.addMediaAppsCnt();
+            // 시간별 관심 데이터 합치기
+            // 시간별 유동인구 데이터 합치기
+            this.addHourlyPassedCount(hourlyPassedData);
+            this.addHourlyInterestedCount(hourlyInterestData);
+            // * avgStaring 은 Float 연산
+            this.addHourlyAvgStaringTime(avgStaringTimeListData);
+            // 수치 합치기
+            this.setFemaleInterestCnt(this.getFemaleInterestCnt() + femaleInterestCntData);
+            this.setMaleCnt(this.getMaleCnt()+ maleCntData);
+            this.setMaleInterestCnt(this.getMaleInterestCnt() + maleInterestCntData);
+            // 평균값 계산 및 합치기
+            Long newTotalPeopleCnt = this.getTotalPeopleCount() + totalPeopleCntData;
+            if(newTotalPeopleCnt > 0) {
+                this.setAvgAge((this.getAvgAge() * this.getTotalPeopleCount() + avgAgeData * totalPeopleCntData) / newTotalPeopleCnt);
+                this.setAvgStaringTime((this.getAvgStaringTime() * this.getTotalPeopleCount() + avgStaringData * totalPeopleCntData)
+                        / newTotalPeopleCnt);
+            }
+            this.setTotalPeopleCount(newTotalPeopleCnt);
+        }
     }
 
     @Getter
@@ -124,8 +148,8 @@ public class DashboardResponse {
         @Schema(description = "시간당 평균 유동인구 수(리스트 형태)", example = "[1500, 280, 452, 204, 255, 72, 19, 30, 48, 185, 271, 54, 203, 314, 505, 204, 310, 62, 204, 351, 503, 20, 30, 6]")
         private List<Long> passedPeopleListPerHour;
 
-//        @Schema(description = "시간대별 평균 나이대", example = "[15, 28, 45, 20, 25, 7, 19, 30, 48, 18, 27, 5, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6]")
-//        private List<Long> avgAgeListPerHour;
+        @Schema(description = "나이대별 방문자 수(10대 - 90대)", example = "[15, 28, 45, 20, 25, 7, 19, 30, 48]")
+        private List<Long> totalAgeRangeCount;
 
         @Schema(description = "유동 인구 남자의 비율(성비) 0 ~ 100 사이의 숫자", example = "64")
         private Long avgMaleRatio;
@@ -157,8 +181,10 @@ public class DashboardResponse {
             Long avgMaleNum = (long)((double)maleCnt / totalCnt * 100);
             this.avgMaleRatio = (this.avgMaleRatio * (this.mediaAppsCnt - 1) + avgMaleNum) / this.mediaAppsCnt;
         }
-
-        public void updateDtoWithBoardData(Long totalCnt, List<Long> boardList, Long maleCnt){
+        private void addTotalAveRangeCnt(List<Long> visitorAgeList) {
+            this.totalAgeRangeCount = DashboardCalculator.calculateHourListDataPerHour(this.totalAgeRangeCount, visitorAgeList);
+        }
+        public void updateDtoWithBoardData(Long totalCnt, List<Long> boardList, List<Long> visitorAgeList, Long maleCnt){
             if(totalCnt == 0) {
                 log.info("UPDATING : NO PEOPLE DATA FROM THE DAILY BOARD");
                 return;
@@ -169,7 +195,10 @@ public class DashboardResponse {
             this.addPassedPeopleCntPerDay(totalCnt);
             this.addPassedPeopleCntPerHour(boardList);
             this.addAvgMaleRatio(maleCnt, totalCnt);
+            this.addTotalAveRangeCnt(visitorAgeList);
         }
+
+
 
 
     }
