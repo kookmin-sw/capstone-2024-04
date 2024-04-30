@@ -1,12 +1,12 @@
 package com.drm.server.domain.dailyMediaBoard;
 
 import com.drm.server.common.BaseTimeEntity;
-import com.drm.server.domain.detectedface.DataConverter;
+import com.drm.server.handler.FloatConverter;
+import com.drm.server.handler.LongConverter;
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,16 +27,27 @@ public class DailyMediaBoard extends BaseTimeEntity {
     private Long totalPeopleCount;
 
     // 시간당 관심을 표현한 사람 수 (0시 - 12시 까지)
-    @Convert(converter = DataConverter.class)
+    @Convert(converter = LongConverter.class)
     private List<Long> hourlyPassedCount;
 
     // 시간당 포착된 사람 수 (0시 - 12시 까지)
-    @Convert(converter = DataConverter.class)
+    @Convert(converter = LongConverter.class)
     private List<Long> hourlyInterestedCount;
+
+    @Convert(converter = FloatConverter.class)
+    private List<Float> hourlyAvgStaringTime;
+
+    @Convert(converter = LongConverter.class)
+    private List<Long> interestedAgeRangeCount;
+
+    @Convert(converter = LongConverter.class)
+    private List<Long> totalAgeRangeCount;
 
     @ManyToOne
     @JoinColumn(name = "mediaApplicationId")
     private MediaApplication mediaApplication;
+
+
 
     // 관심을 표현한 남자의 인원 수
     private Long maleInterestCnt;
@@ -57,6 +68,19 @@ public class DailyMediaBoard extends BaseTimeEntity {
 //   시간별 관심 인원 추가
     public void addHourlyInterestedCount(int hour) {
         this.hourlyInterestedCount.set(hour, this.hourlyInterestedCount.get(hour) + 1);
+    }
+//    시간별 평균 시선시간
+    public void updateHourlyAvgStaringTime(int hour, float staringTime) {
+        this.hourlyAvgStaringTime.set(hour, ((this.hourlyAvgStaringTime.get(hour) *  this.getHourlyInterestedCount().get(hour) + staringTime ) / (this.getHourlyInterestedCount().get(hour) + 1)  ));
+    }
+
+//    연령대별 관심 수
+    public void updateInterestedAgeRangeCount(int ageRange) {
+        this.interestedAgeRangeCount.set(ageRange - 1, this.interestedAgeRangeCount.get(ageRange  - 1) + 1);
+    }
+// 연령대별 유동인구 수
+    public void addTotalAgeRangeCount(int ageRange) {
+        this.totalAgeRangeCount.set(ageRange - 1, this.totalAgeRangeCount.get(ageRange - 1) + 1);
     }
 
     public void addMaleCnt() {
@@ -84,7 +108,11 @@ public class DailyMediaBoard extends BaseTimeEntity {
     }
     public static DailyMediaBoard toEntity(MediaApplication mediaApplication){
         return DailyMediaBoard.builder().totalPeopleCount(0L)
-                .hourlyInterestedCount( new ArrayList<>(Collections.nCopies(24, 0L))).hourlyPassedCount( new ArrayList<>(Collections.nCopies(24, 0L)))
+                .hourlyInterestedCount( new ArrayList<>(Collections.nCopies(24, 0L)))
+                .hourlyPassedCount( new ArrayList<>(Collections.nCopies(24, 0L)))
+                .hourlyAvgStaringTime(new ArrayList<>(Collections.nCopies(24,0F)))
+                .totalAgeRangeCount(new ArrayList<>(Collections.nCopies(9,0L)))
+                .interestedAgeRangeCount(new ArrayList<>(Collections.nCopies(9,0L)))
                 .mediaApplication(mediaApplication)
                 .maleInterestCnt(0L).femaleInterestCnt(0L).maleCnt(0L)
                 .avgStaringTime(0F).avgAge(0F)

@@ -85,7 +85,7 @@ public class UserService {
         this.checkDuplicatedEmail(email);
         User setUser = User.toEntity(email, passwordEncoder.encode(password),company);
         User getUser =userRepository.save(setUser);
-        return new UserResponse.UserInfo(getUser.getUserId(), getUser.getEmail(), getUser.getCompany());
+        return new UserResponse.UserInfo(getUser);
     }
     public User getUser(String userId){
         return userRepository.findById(Long.valueOf(userId)).orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
