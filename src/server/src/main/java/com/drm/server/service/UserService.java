@@ -1,5 +1,6 @@
 package com.drm.server.service;
 
+import com.drm.server.common.FileDto;
 import com.drm.server.controller.dto.response.UserResponse;
 import com.drm.server.domain.user.User;
 import com.drm.server.domain.user.UserRepository;
@@ -79,8 +80,19 @@ public class UserService {
             throw new BusinessLogicException("NoSuchAlgorithmException");
         }
     }
+    public UserResponse.UserInfo updateProfile(User user,FileDto fileDto){
+        user.updateProfileImage(fileDto.getUploadFileUrl());
+        return new UserResponse.UserInfo(userRepository.save(user));
 
-
+    }
+    public void verifyPassword(User user,String password){
+        if(!passwordEncoder.matches(password,user.getPassword())) throw new IllegalArgumentException("잘못된 비밀번호 입니다");
+    }
+    public void updatePassword(User user, String password, String updatePassword){
+        if(!passwordEncoder.matches(password,user.getPassword())) throw new IllegalArgumentException("잘못된 비밀번호 입니다");
+        user.updatePassword(passwordEncoder.encode(updatePassword));
+        userRepository.save(user);
+    }
     public UserResponse.UserInfo createUser(String email, String password,String company) {
         this.checkDuplicatedEmail(email);
         User setUser = User.toEntity(email, passwordEncoder.encode(password),company);
