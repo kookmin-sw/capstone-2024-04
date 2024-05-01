@@ -1,8 +1,7 @@
 package com.drm.server.domain.dashboard;
 
 import com.drm.server.common.BaseTimeEntity;
-import com.drm.server.domain.dailyMediaBoard.DailyMediaBoard;
-import com.drm.server.domain.detectedface.DataConverter;
+import com.drm.server.handler.LongConverter;
 import com.drm.server.domain.media.Media;
 import com.drm.server.domain.user.User;
 import jakarta.persistence.*;
@@ -26,7 +25,7 @@ public class Dashboard extends BaseTimeEntity {
     private Long dashboardId;
 
     @Column
-    @Convert(converter = DataConverter.class)
+    @Convert(converter = LongConverter.class)
     private List<Long> avgHourlyPassedCount;
     private float avgStaringTime;
     private Long maleInterestCnt;

@@ -78,7 +78,7 @@ const CompareMediaScreen = () => {
         label={
           <div className="flex gap-[18px] items-center">
             <img className="w-[16px] h-[16px]" src={accountMultiple} />
-            <Body1 text="하루 평균 유동인구수" color="black" />
+            <Body1 text="하루 평균 유동인구수" color="text-black" />
           </div>
         }
         value={
@@ -90,7 +90,7 @@ const CompareMediaScreen = () => {
                   className="flex flex-col gap-2 py-6 items-center justify-center min-w-[240px]"
                 >
                   <img className="w-[30px] h-[30px]" src={walk} />
-                  <Subtitle2 text={`${info.info1}명`} color="black" />
+                  <Subtitle2 text={`${info.info1}명`} color="text-black" />
                 </div>
               ) : (
                 <div className="min-h-[120px]"></div>
@@ -104,7 +104,7 @@ const CompareMediaScreen = () => {
         label={
           <div className="flex gap-[18px] items-center">
             <img className="w-6 h-6" src={exclamationThick} />
-            <Body1 text="관심을 보인 비율" color="black" />
+            <Body1 text="관심을 보인 비율" color="text-black" />
           </div>
         }
         value={
@@ -116,7 +116,7 @@ const CompareMediaScreen = () => {
                   className="flex flex-col gap-2 py-6 items-center justify-center min-w-[240px]"
                 >
                   <img className="w-[32px] h-[25px]" src={attentionPeople} />
-                  <Subtitle2 text={`${info.info2}%`} color="black" />
+                  <Subtitle2 text={`${info.info2}%`} color="text-black" />
                 </div>
               ) : (
                 <div className="min-h-[120px]"></div>
@@ -130,7 +130,7 @@ const CompareMediaScreen = () => {
         label={
           <div className="flex gap-[18px] items-center">
             <img className="w-[22px] h-[17px]" src={gender} />
-            <Body1 text="관심도 성비" color="black" />
+            <Body1 text="관심도 성비" color="text-black" />
           </div>
         }
         value={
@@ -142,7 +142,7 @@ const CompareMediaScreen = () => {
                   className="flex flex-col gap-2 py-6 items-center justify-center min-w-[240px]"
                 >
                   <img className="w-[30px] h-[30px]" src={walk} />
-                  <Subtitle2 text={`${info.info3[0]}%`} color="black" />
+                  <Subtitle2 text={`${info.info3[0]}%`} color="text-black" />
                 </div>
               ) : (
                 <div className="min-h-[164px]"></div>
@@ -156,7 +156,7 @@ const CompareMediaScreen = () => {
         label={
           <div className="flex gap-[18px] items-center">
             <img className="w-6 h-6" src={eye} />
-            <Body1 text="인당 평균 시선 고정시간" color="black" />
+            <Body1 text="인당 평균 시선 고정시간" color="text-black" />
           </div>
         }
         value={
@@ -168,7 +168,7 @@ const CompareMediaScreen = () => {
                   className="flex flex-col gap-2 py-6 items-center justify-center min-w-[240px]"
                 >
                   <img className="w-6 h-6" src={focus} />
-                  <Subtitle2 text={`${info.info4}초`} color="black" />
+                  <Subtitle2 text={`${info.info4}초`} color="text-black" />
                 </div>
               ) : (
                 <div className="min-h-[120px]"></div>

@@ -19,7 +19,10 @@ const FindPasswordPage = ({ goToSignIn }: FindPasswordPageProps) => {
           홈으로
         </a>
       </div>
-      <Headline1 text="회원가입시 등록한 메일을 입력하세요" color="black" />
+      <Headline1
+        text="회원가입시 등록한 메일을 입력하세요"
+        color="text-black"
+      />
 
       <p className="mt-4 text-placeholder">아이디</p>
       <input
