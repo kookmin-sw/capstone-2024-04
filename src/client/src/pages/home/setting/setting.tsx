@@ -1,7 +1,7 @@
 import { Subtitle1, Subtitle2 } from "../../../components/text";
 import { useEffect, useRef, useState } from "react";
 import { UserInfo } from "../../../interfaces/interface";
-import { patchProfile } from "../../../api/user";
+import { patchProfile, verifyPassword } from "../../../api/user";
 import { toast } from "react-hot-toast";
 import Cookies from "universal-cookie";
 
@@ -44,9 +44,18 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
     );
   }, [pw, newPw, newPwCheck, pwErr, newPwErr, newPwCheckErr]);
 
-  const changeProfile = async () => {
-    selectProfile;
+  const changeProfile = () => {
     selectProfile.current?.click();
+  };
+
+  const checkPassword = async (password: string) => {
+    try {
+      await verifyPassword(password);
+      setPwErr(""); // 비밀번호가 일치하는 경우
+    } catch (err: any) {
+      console.log(err.message); // 에러 메시지 출력
+      setPwErr("비밀번호가 일치하지 않습니다.");
+    }
   };
 
   const handleProfileChange = async (e: any) => {
@@ -117,7 +126,9 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
             onChange={(e) => setPw(e.target.value)}
             onFocus={() => setPwErr("")}
             onBlur={(e) => {
-              if (e.target.value === "") setPwErr("비밀번호를 입력해주세요.");
+              e.target.value === ""
+                ? setPwErr("비밀번호를 입력해주세요.")
+                : checkPassword(e.target.value);
             }}
           />
         </div>

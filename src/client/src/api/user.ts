@@ -5,10 +5,6 @@ interface patchPasswordProps {
     updatePassword: string,
 }
 
-interface verifyPasswordProps {
-    password: string,
-}
-
 export const patchProfile = async (formData: FormData) => {
     const response = await privateApi.patch('/api/v1/user/profile', formData, {headers: {
         "Content-Type": "multipart/form-data",
@@ -21,7 +17,9 @@ export const patchPassword = async ({password, updatePassword}: patchPasswordPro
     return response;
 }
 
-export const verifyPassword = async ({password}: verifyPasswordProps) => {
-    const response = await privateApi.patch('/api/v1/user/verify-password', {password}).catch((err) => {return err.response})
+export const verifyPassword = async (password: string) => {
+    const response = await privateApi.post('/api/v1/user/verify-password', {password}).catch((err) => {
+        throw new Error("비밀번호가 일치하지 않습니다.");
+    });
     return response;
 }
