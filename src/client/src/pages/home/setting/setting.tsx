@@ -1,6 +1,9 @@
 import { Subtitle1, Subtitle2 } from "../../../components/text";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserInfo } from "../../../interfaces/interface";
+import { patchProfile } from "../../../api/user";
+import { toast } from "react-hot-toast";
+import Cookies from "universal-cookie";
 
 interface SettingScreenProps {
   userInfo: null | undefined | UserInfo;
@@ -20,6 +23,7 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
   const [newPwCheck, setNewPwCheck] = useState("");
 
   const [isActive, setIsActive] = useState(false);
+  const selectProfile = useRef(null);
 
   useEffect(() => {
     if (newPw === newPwCheck) {
@@ -40,6 +44,31 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
     );
   }, [pw, newPw, newPwCheck, pwErr, newPwErr, newPwCheckErr]);
 
+  const changeProfile = async () => {
+    selectProfile;
+    selectProfile.current?.click();
+  };
+
+  const handleProfileChange = async (e: any) => {
+    const file = e.target.files?.[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    console.log(file);
+    if (file) {
+      const result = await patchProfile(formData);
+      console.log(result);
+
+      if (result.data.status === 200 || result.data.status === 201) {
+        const cookies = new Cookies();
+        cookies.set("userInfo", result.data.data);
+        setUserInfo(result.data.data);
+        toast.success("프로필 변경이 완료되었습니다.");
+      } else {
+        toast.error("프로필 변경에 실패하였습니다.");
+      }
+    }
+  };
+
   return !isShowChangePassword ? (
     <div className="flex flex-col h-full justify-between px-[30px] min-w-[920px] overflow-y-scroll">
       <div className="flex flex-col items-start gap-5">
@@ -48,7 +77,16 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
           className="w-[93px] h-[93px] rounded-full border-[1px] border-gray2"
           src={userInfo?.profileImage}
         />
-        <button className="p-4 bg-gray1 rounded-[3px]">프로필 변경</button>
+        <input
+          type="file"
+          accept="image/*"
+          style={{ display: "none" }}
+          ref={selectProfile}
+          onChange={handleProfileChange}
+        />
+        <button onClick={changeProfile} className="p-4 bg-gray1 rounded-[3px]">
+          프로필 변경
+        </button>
         <Subtitle1 text="아이디" color="text-placeholder" />
         <div className="flex items-center w-[320px] h-12 rounded-md border-[1px] border-gray2 px-6">
           {userInfo?.email}
