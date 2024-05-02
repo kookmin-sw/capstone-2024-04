@@ -23,7 +23,7 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
   const [newPwCheck, setNewPwCheck] = useState("");
 
   const [isActive, setIsActive] = useState(false);
-  const selectProfile = useRef(null);
+  const selectProfile = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (newPw === newPwCheck) {
