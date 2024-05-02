@@ -9,6 +9,7 @@ export enum DashBoardMode {
 }
 
 export interface TableItem {
+  key: number;
   mediaId: number;
   mediaLink: string;
   title: string;
@@ -54,6 +55,7 @@ const DashBoard = () => {
 
   const data: TableItem[] = [
     {
+      key: 1,
       mediaId: 1,
       mediaLink:
         "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
@@ -63,6 +65,7 @@ const DashBoard = () => {
       status: true,
     },
     {
+      key: 2,
       mediaId: 2,
       mediaLink:
         "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
