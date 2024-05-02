@@ -1,7 +1,7 @@
 import { Subtitle1, Subtitle2 } from "../../../components/text";
 import { useEffect, useRef, useState } from "react";
 import { UserInfo } from "../../../interfaces/interface";
-import { patchProfile, verifyPassword } from "../../../api/user";
+import { patchPassword, patchProfile, verifyPassword } from "../../../api/user";
 import { toast } from "react-hot-toast";
 import Cookies from "universal-cookie";
 
@@ -46,6 +46,18 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
 
   const changeProfile = () => {
     selectProfile.current?.click();
+  };
+
+  const changePassword = async () => {
+    const result = await patchPassword({ password: pw, updatePassword: newPw });
+    if (result.data.status === 200 || result.data.status === 201) {
+      setPw("");
+      setNewPw("");
+      setNewPwCheck("");
+      toast.success("비밀번호 변경이 완료되었습니다.");
+    } else {
+      toast.error("비밀번호 변경에 실패하였습니다.");
+    }
   };
 
   const checkPassword = async (password: string) => {
@@ -179,7 +191,7 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
             isActive ? "bg-main" : "bg-black_sub"
           } text-white rounded-[3px]`}
           onClick={() => {
-            window.alert("비밀번호가 변경되었습니다.");
+            changePassword();
             setIsShowChangePassword(false);
           }}
           disabled={!isActive}
