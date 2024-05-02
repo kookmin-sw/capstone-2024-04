@@ -13,12 +13,14 @@ import { Body1, Headline1 } from "../../components/text";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import SettingScreen from "../home/setting/setting";
+import { UserInfo } from "../../interfaces/interface";
 
 const AdminPage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const [divHeight, setDivHeight] = useState(0);
   const [currMenuIdx, setCurrMenuIdx] = useState(0);
+  const [currInfo, setCurrInfo] = useState<UserInfo | undefined | null>(null);
 
   const logout = () => {
     const cookies = new Cookies();
@@ -30,6 +32,16 @@ const AdminPage = () => {
 
     navigate("/");
   };
+
+  const loadInfo = () => {
+    const cookies = new Cookies();
+    const userInfo: UserInfo = cookies.get("userInfo");
+    setCurrInfo(userInfo);
+  };
+
+  useEffect(() => {
+    loadInfo();
+  }, []);
 
   const menuButtons = [
     {
@@ -51,7 +63,9 @@ const AdminPage = () => {
       description: "",
       iconWhiteSrc: cogWhitesub,
       iconBlackSrc: cogBlacksub,
-      component: <SettingScreen />,
+      component: (
+        <SettingScreen userInfo={currInfo} setUserInfo={setCurrInfo} />
+      ),
     },
   ];
 
