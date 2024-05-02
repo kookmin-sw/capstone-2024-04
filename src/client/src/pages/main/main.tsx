@@ -68,6 +68,11 @@ const MainPage = () => {
       if (refreshToken !== null && accessToken !== null) {
         navigate("/home");
       }
+    } else {
+      // 자동 로그인을 선택하지 않은 경우 -> 기존 저장된 쿠키 삭제
+      cookies.remove("refreshToken");
+      cookies.remove("accessToken");
+      cookies.remove("userInfo");
     }
   }, []);
 
