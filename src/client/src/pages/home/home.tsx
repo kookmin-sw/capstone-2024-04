@@ -86,7 +86,7 @@ const HomePage = () => {
       description: "",
       iconWhiteSrc: cogWhitesub,
       iconBlackSrc: cogBlacksub,
-      component: <SettingScreen />,
+      component: <SettingScreen userInfo={currInfo} setUserInfo={setCurrInfo} />,
     },
   ];
 

@@ -1,7 +1,15 @@
 import { Subtitle1, Subtitle2 } from "../../../components/text";
 import { useEffect, useState } from "react";
+import { UserInfo } from "../../../interfaces/interface";
 
-const SettingScreen = () => {
+interface SettingScreenProps {
+  userInfo: null | undefined | UserInfo;
+  setUserInfo: React.Dispatch<
+    React.SetStateAction<null | undefined | UserInfo>
+  >;
+}
+
+const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
   const [isShowChangePassword, setIsShowChangePassword] = useState(false);
   const [pwErr, setPwErr] = useState("");
   const [newPwErr, setNewPwErr] = useState("");
@@ -36,15 +44,18 @@ const SettingScreen = () => {
     <div className="flex flex-col h-full justify-between px-[30px] min-w-[920px] overflow-y-scroll">
       <div className="flex flex-col items-start gap-5">
         <Subtitle2 text="프로필 사진" color="text-black" />
-        <img className="w-[93px] h-[93px] rounded-full border-[1px] border-gray2" />
+        <img
+          className="w-[93px] h-[93px] rounded-full border-[1px] border-gray2"
+          src={userInfo?.profileImage}
+        />
         <button className="p-4 bg-gray1 rounded-[3px]">프로필 변경</button>
         <Subtitle1 text="아이디" color="text-placeholder" />
         <div className="flex items-center w-[320px] h-12 rounded-md border-[1px] border-gray2 px-6">
-          qwerty_02@kookmin.ac.kr
+          {userInfo?.email}
         </div>
         <Subtitle1 text="회사명" color="text-placeholder" />
         <div className="flex items-center w-[320px] h-12 rounded-md border-[1px] border-gray2 px-6">
-          (주)KMU컴퍼니
+          {userInfo?.company}
         </div>
         <Subtitle1 text="비밀번호" color="text-placeholder" />
         <button
