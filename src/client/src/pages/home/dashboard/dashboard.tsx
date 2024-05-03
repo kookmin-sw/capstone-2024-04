@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MediaCardProps } from "../../../components/media_card";
 import { Subtitle2 } from "../../../components/text";
 import { Table, TableColumnsType } from "antd";
+import DashBoardDetail from "./dashboard_detail";
 
 export enum DashBoardMode {
   LIST,
@@ -9,6 +10,7 @@ export enum DashBoardMode {
 }
 
 export interface TableItem {
+  key: number;
   mediaId: number;
   mediaLink: string;
   title: string;
@@ -54,6 +56,7 @@ const DashBoard = () => {
 
   const data: TableItem[] = [
     {
+      key: 1,
       mediaId: 1,
       mediaLink:
         "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
@@ -63,6 +66,7 @@ const DashBoard = () => {
       status: true,
     },
     {
+      key: 2,
       mediaId: 2,
       mediaLink:
         "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
@@ -81,10 +85,16 @@ const DashBoard = () => {
         columns={columns}
         dataSource={data}
         pagination={{ pageSize: 8, position: ["bottomCenter"] }}
+        onRow={(record) => ({
+          onClick: () => {
+            console.log(record);
+            setMode(DashBoardMode.DETAIL);
+          },
+        })}
       />
     </div>
   ) : (
-    <>Detail Page</>
+    <DashBoardDetail />
   );
 };
 
