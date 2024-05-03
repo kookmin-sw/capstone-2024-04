@@ -107,6 +107,7 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
         </p>
       </div>
       <button
+        type="button"
         onClick={(e) => login(e)}
         className="bg-main text-white p-4 rounded-md my-5"
       >

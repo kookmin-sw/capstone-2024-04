@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MediaCardProps } from "../../../components/media_card";
 import { Subtitle2 } from "../../../components/text";
 import { Table, TableColumnsType } from "antd";
+import DashBoardDetail from "./dashboard_detail";
 
 export enum DashBoardMode {
   LIST,
@@ -84,10 +85,16 @@ const DashBoard = () => {
         columns={columns}
         dataSource={data}
         pagination={{ pageSize: 8, position: ["bottomCenter"] }}
+        onRow={(record) => ({
+          onClick: () => {
+            console.log(record);
+            setMode(DashBoardMode.DETAIL);
+          },
+        })}
       />
     </div>
   ) : (
-    <>Detail Page</>
+    <DashBoardDetail />
   );
 };
 
