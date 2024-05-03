@@ -29,7 +29,7 @@ public class MediaService {
 
     @Transactional
     public Media createMedia(MediaRequest.Create create, Dashboard dashboard, MultipartFile multipartFile) {
-        FileDto fileDto = fileService.uploadFile(multipartFile);
+        FileDto fileDto = fileService.uploadFile("image",multipartFile);
         Media media = Media.toEntity(create, fileDto.getUploadFileName(),fileDto.getUploadFileUrl(), dashboard);
        return mediaRepository.save(media);
     }

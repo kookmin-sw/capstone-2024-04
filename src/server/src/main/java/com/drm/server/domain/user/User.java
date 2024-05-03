@@ -38,4 +38,11 @@ public class User extends BaseTimeEntity {
         return User.builder().email(email).password(password).company(company).deleted(false).profileImage("").authority(Authority.USER).build();
     }
 
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }
