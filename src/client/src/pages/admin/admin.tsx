@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import SettingScreen from "../home/setting/setting";
 import { UserInfo } from "../../interfaces/interface";
+import AdminApplyPage from "./apply/apply";
+import AdminHistoryPage from "./history/history";
 
 const AdminPage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -49,14 +51,14 @@ const AdminPage = () => {
       description: "전체 광고 히스토리를 확인할 수 있어요.",
       iconWhiteSrc: listboxWhite,
       iconBlackSrc: listboxBlack,
-      component: <>광고승인(어드민)</>,
+      component: <AdminApplyPage />,
     },
     {
       title: "히스토리",
       description: "전체 고객사의 광고 히스토리를 볼 수 있어요.",
       iconWhiteSrc: clipboardTextClockWhitesub,
       iconBlackSrc: clipboardTextClockBlacksub,
-      component: <>히스토리(어드민)</>,
+      component: <AdminHistoryPage />,
     },
     {
       title: "설정",
