@@ -37,6 +37,7 @@ public class TokenService {
         if(!passwordEncoder.matches(signIn.getPassword(),getUser.getPassword())) throw new IllegalArgumentException("잘못된 비밀번호 입니다");
         CustomUserInfoDto userInfo = modelMapper.map(getUser, CustomUserInfoDto.class);
         UserResponse.TokenInfo  tokenInfo = jwtTokenProvider.generateToken(userInfo);
+        tokenInfo.setUserInfo(new UserResponse.UserInfo(getUser));
         //RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
         redisService.setValuesWithTimeUnit("RT:" + getUser.getUserId(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(),TimeUnit.MILLISECONDS);
         return tokenInfo;
@@ -72,7 +73,8 @@ public class TokenService {
 
         // 4. 새로운 토큰 생성
         UserResponse.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
-
+        User getUser = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+        tokenInfo.setUserInfo(new UserResponse.UserInfo(getUser));
 
         // 5. RefreshToken Redis 업데이트
         redisService.setValuesWithTimeUnit("RT:" + authentication.getName(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(),TimeUnit.MILLISECONDS);
