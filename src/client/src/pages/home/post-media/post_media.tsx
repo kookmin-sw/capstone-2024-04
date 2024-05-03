@@ -3,9 +3,9 @@ import inbox from "../../../assets/icons/Inbox.svg";
 import upload from "../../../assets/icons/Upload.svg";
 import { DatePicker, Select, Input, SelectProps } from "antd";
 import { Body1, Subtitle1 } from "../../../components/text";
-import { getLocation } from "../../../api/location";
+import { getLocation } from "../../../api/client/location";
 import { LocationInfo } from "../../../interfaces/interface";
-import { PostMediaRequest, postMedia } from "../../../api/media";
+import { PostMediaRequest, postMedia } from "../../../api/client/media";
 import { toast } from "react-hot-toast";
 import moment from "moment";
 

@@ -1,8 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
-import { signup } from "../../api/auth";
+import { signup } from "../../api/client/auth";
 import { SignUpPageProps } from "../../interfaces/interface";
-
-
 
 const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
   const [email, setEmail] = useState("");

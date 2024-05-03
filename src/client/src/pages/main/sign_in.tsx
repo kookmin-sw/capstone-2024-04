@@ -1,5 +1,5 @@
 import { FormEvent, useRef, useState } from "react";
-import { signin } from "../../api/auth";
+import { signin } from "../../api/client/auth";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { SignInPageProps, UserInfo } from "../../interfaces/interface";

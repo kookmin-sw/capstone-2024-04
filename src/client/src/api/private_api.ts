@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "ax
 import toast from 'react-hot-toast';
 import Cookies from "universal-cookie";
 import { ErrorResponse } from "../interfaces/interface";
-import { tokenRefresh } from "./auth";
+import { tokenRefresh } from "./client/auth";
 
 
 const API_ENDPOINT = import.meta.env.VITE_APP_API_ENDPOINT;

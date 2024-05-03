@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dashboardIconWhite from "../../../assets/icons/view-dashboard-whitesub.svg";
 import chartIconMain from "../../../assets/icons/chart-timeline-main.svg";
-import { getMedia } from "../../../api/media";
+import { getMedia } from "../../../api/client/media";
 import { toast } from "react-hot-toast";
 
 dayjs.extend(customParseFormat);

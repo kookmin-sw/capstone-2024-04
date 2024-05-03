@@ -1,7 +1,11 @@
 import { Subtitle1, Subtitle2 } from "../../../components/text";
 import { useEffect, useRef, useState } from "react";
 import { UserInfo } from "../../../interfaces/interface";
-import { patchPassword, patchProfile, verifyPassword } from "../../../api/user";
+import {
+  patchPassword,
+  patchProfile,
+  verifyPassword,
+} from "../../../api/client/user";
 import { toast } from "react-hot-toast";
 import Cookies from "universal-cookie";
 
