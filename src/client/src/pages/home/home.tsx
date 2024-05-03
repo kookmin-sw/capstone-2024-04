@@ -23,12 +23,14 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import Insight from "./insight/insight";
 import HistoryScreen from "./history/history";
+import { UserInfo } from "../../interfaces/interface";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const [divHeight, setDivHeight] = useState(0);
   const [currMenuIdx, setCurrMenuIdx] = useState(0);
+  const [currInfo, setCurrInfo] = useState<UserInfo | undefined | null>(null);
 
   const logout = () => {
     const cookies = new Cookies();
@@ -84,14 +86,24 @@ const HomePage = () => {
       description: "",
       iconWhiteSrc: cogWhitesub,
       iconBlackSrc: cogBlacksub,
-      component: <SettingScreen />,
+      component: <SettingScreen userInfo={currInfo} setUserInfo={setCurrInfo} />,
     },
   ];
+
+  const loadInfo = () => {
+    const cookies = new Cookies();
+    const userInfo: UserInfo = cookies.get("userInfo");
+    setCurrInfo(userInfo);
+  };
+
+  useEffect(() => {
+    loadInfo();
+  }, []);
 
   useEffect(() => {
     const height = mainDivRef.current?.clientHeight || 0;
     setDivHeight(height);
-  }, []);
+  }, [divHeight]);
 
   return (
     <div className="flex">
@@ -100,11 +112,14 @@ const HomePage = () => {
         <div ref={mainDivRef} className="bg-main pt-9 pb-[66px] px-[60px]">
           <img className="h-5" src={logoWhite} />
           <div className="flex flex-col w-[180px] mt-12 items-center">
-            <img className="w-20 h-20 rounded-full bg-white" src="" />
+            <img
+              className="w-20 h-20 rounded-full bg-white"
+              src={currInfo?.profileImage}
+            />
             <p className="font-medium text-base text-white pt-5 pb-2">
-              (주)KM컴퍼니
+              {currInfo?.company}
             </p>
-            <p className="text-white">kmofficial@gmail.com</p>
+            <p className="text-white">{currInfo?.email}</p>
           </div>
         </div>
         <div className="flex-grow bg-[#F0F2F5] flex flex-col justify-between">
@@ -152,7 +167,10 @@ const HomePage = () => {
       >
         <div className="flex justify-between items-end">
           <div className="flex gap-9 mt-[55px] items-end">
-            <Headline1 text={menuButtons[currMenuIdx].title} color="text-white" />
+            <Headline1
+              text={menuButtons[currMenuIdx].title}
+              color="text-white"
+            />
             <Body1
               text={menuButtons[currMenuIdx].description}
               color="text-white_sub"
