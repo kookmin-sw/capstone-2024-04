@@ -12,7 +12,6 @@ import com.drm.server.domain.mediaApplication.Status;
 import com.drm.server.domain.playlist.PlayListRepository;
 import com.drm.server.domain.user.User;
 import com.drm.server.exception.ForbiddenException;
-import com.google.protobuf.Empty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import software.amazon.ion.NullValueException;
@@ -31,7 +30,6 @@ public class MediaApplicationService {
     private final MediaApplicationRepository mediaApplicationRepository;
     private final LocationRepository locationRepository;
     private final PlayListRepository playListRepository;
-    private final DailyMediaBoardService dailyMediaBoardService;
 
     public MediaApplication createMediaApplication(Media media, Location location, String startDate,String endDate){
         if(KoreaLocalDateTime.stringToLocalDateTime(startDate).isAfter(KoreaLocalDateTime.stringToLocalDateTime(endDate) ))throw new IllegalArgumentException("시작 시간이 끝나는 시간 보다 늦을수 없습니다");

@@ -80,4 +80,20 @@ public class UserController {
         APIResponse response = APIResponse.of(SuccessCode.UPDATE_SUCCESS, "비밀번호 변경 성공");
         return ResponseEntity.ok(response);
     }
+//    @Operation(summary = "탈퇴", description = "비밀번호 변경전 기존 비밀번호 재검증을 위해 기존 비밀번호도 같이 넣어주세요(최종 변경)")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "201", description = "성공"),
+//            @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//            @ApiResponse(responseCode = "401", description = "토큰 시간 만료, 형식 오류,로그아웃한 유저 접근,헤더에 값이 없을때",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//            @ApiResponse(responseCode = "403", description = "권한이 없는 경우",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//            @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//            @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//    })
+//    @PostMapping(path = "withdrwal")
+//    public ResponseEntity<APIResponse> withdrawal(@AuthenticationPrincipal CustomUserDetails userDetails){
+//        User getUser =userService.getUser(userDetails.getUsername());
+//        userService.withdrawal(getUser);
+//
+//    }
+
 }

@@ -56,4 +56,15 @@ public interface MediaApplicationRepository extends JpaRepository<MediaApplicati
             @Param("media") Media media,
             @Param("today") LocalDate today,
             @Param("status") Status status);
+
+    @Query("SELECT CASE WHEN COUNT(ma) > 0 THEN true ELSE false END " +
+            "FROM MediaApplication ma " +
+            "WHERE ma.media IN :mediaList " +
+            "AND ma.startDate <= :today " +
+            "AND ma.endDate >= :today " +
+            "AND ( ma.status = :status)")
+    boolean existsRunningMedia(
+            @Param("mediaList") List<Media> mediaList,
+            @Param("today") LocalDate today,
+            @Param("status") Status status);
 }
