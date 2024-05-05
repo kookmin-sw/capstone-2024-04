@@ -3,6 +3,7 @@ import { signin } from "../../api/client/auth";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { SignInPageProps, UserInfo } from "../../interfaces/interface";
+import { adminSignIn } from "../../api/admin/auth";
 
 enum ErrorText {
   incorrect = "아이디 또는 비밀번호를 잘못 입력했습니다.",
@@ -33,8 +34,9 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
     }
 
     const body = { email: id, password: pw };
-    const result = await signin(body);
+    let result = await signin(body);
 
+    // 일반 사용자 로그인 시도
     if (result.data.status === 201) {
       const cookies = new Cookies();
       const loginData = result.data.data;
@@ -55,6 +57,32 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
         cookies.set("userInfo", userInfo),
       ]);
       navigate("/home");
+
+      return true;
+    }
+
+    // 어드민 로그인 시도
+    result = await adminSignIn(body);
+    if (result.data.status === 201) {
+      const cookies = new Cookies();
+      const loginData = result.data.data;
+
+      const refreshToken = loginData.refreshToken;
+      const accessToken = loginData.accessToken;
+      const expirationTime = loginData.refreshTokenExpirationTime;
+
+      const userInfo: UserInfo = loginData.userInfo;
+
+      await Promise.all([
+        // 쿠키에 토큰 저장
+        cookies.set("accessToken", accessToken),
+        cookies.set("refreshToken", refreshToken, { maxAge: expirationTime }),
+        // 자동 로그인 체크박스 체킹 여부에 따라 쿠키 설정
+        cookies.set("autoLogin", autoLogin),
+        // 사용자 정보 저장
+        cookies.set("userInfo", userInfo),
+      ]);
+      navigate("/admin");
 
       return true;
     }
