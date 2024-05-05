@@ -3,6 +3,7 @@ import MainPage from "./pages/main/main";
 import HomePage from "./pages/home/home";
 import Cookies from "universal-cookie";
 import AdminPage from "./pages/admin/admin";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 interface ProtectedRouteProps {
   isAuthenticated: boolean;
@@ -21,9 +22,12 @@ const isAuthenticated = () => {
 const ProtectedRoute = ({ isAuthenticated, children }: ProtectedRouteProps) => {
   return isAuthenticated ? <>{children}</> : <Navigate to="/" />;
 };
+
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient} contextSharing={true}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainPage />} />
@@ -46,7 +50,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </QueryClientProvider>
   );
 }
 
