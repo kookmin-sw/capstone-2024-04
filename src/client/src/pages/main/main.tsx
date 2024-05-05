@@ -2,9 +2,7 @@ import { Carousel } from "antd";
 import carousel_1 from "../../assets/images/carousel_1.svg";
 import SignInPage from "./sign_in";
 import SignUpPage from "./sign_up";
-import { Fragment, useEffect, useState } from "react";
-import Cookies from "universal-cookie";
-import { useNavigate } from "react-router-dom";
+import { Fragment, useState } from "react";
 import FindPasswordPage from "./find_password";
 import logoWhite from "../../assets/images/LogoWhite.svg";
 
@@ -56,20 +54,6 @@ const MainPage = () => {
    * 2: FindPasswordScreen
    */
   const [screenIndex, setScreenIndex] = useState(0);
-  const navigate = useNavigate();
-  const cookies = new Cookies();
-
-  useEffect(() => {
-    if (cookies.get("autoLogin")) {
-      // 최근 로그인에서 자동 로그인을 체크한 경우
-      const refreshToken = cookies.get("refreshToken");
-      const accessToken = cookies.get("accessToken");
-
-      if (refreshToken !== null && accessToken !== null) {
-        navigate("/home");
-      }
-    }
-  }, []);
 
   const screenArray = [
     <SignInPage

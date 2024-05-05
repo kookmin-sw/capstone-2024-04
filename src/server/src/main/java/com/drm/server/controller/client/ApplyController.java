@@ -9,6 +9,7 @@ import com.drm.server.domain.dashboard.Dashboard;
 import com.drm.server.domain.location.Location;
 import com.drm.server.domain.media.Media;
 import com.drm.server.domain.mediaApplication.MediaApplication;
+import com.drm.server.domain.mediaApplication.Status;
 import com.drm.server.domain.user.CustomUserDetails;
 import com.drm.server.domain.user.User;
 import com.drm.server.service.*;
@@ -117,26 +118,7 @@ public class ApplyController {
         User getUser = userService.getUser(userDetails.getUsername());
 
     }
-//    @GetMapping("applies")
-//    @Operation(summary = "신청 리스트 조회")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "성공"),
-//            @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-//            @ApiResponse(responseCode = "401", description = "토큰 시간 만료, 형식 오류,로그아웃한 유저 접근,헤더에 값이 없을때",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-//            @ApiResponse(responseCode = "403", description = "권한이 없는 경우",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-//            @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-//            @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-//    })
-//    public ResponseEntity<APIResponse<List<MediaApplicationResponse.MediaApplicationInfo>>> getAllApplications( @AuthenticationPrincipal CustomUserDetails userDetails){
-//        User getUser = userService.getUser(userDetails.getUsername());
-//        List<Dashboard> dashboards = dashboardService.findByUser(getUser);
-//        List<MediaApplication> mediaApplications = mediaApplicationService.findByDashBoad(dashboards);
-//        List<MediaApplicationResponse.MediaApplicationInfo> totalApplicationInfos = mediaApplications.stream().map(MediaApplicationResponse.MediaApplicationInfo::new).collect(Collectors.toList());
-//        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, totalApplicationInfos);
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
-
-    @GetMapping("{mediaId}/apply")
+    @GetMapping("applies")
     @Operation(summary = "신청 리스트 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
@@ -146,14 +128,15 @@ public class ApplyController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    public ResponseEntity<APIResponse<List<MediaApplicationResponse.MediaApplicationInfo>>> getApplications(@PathVariable Long mediaId, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<APIResponse<List<MediaApplicationResponse.TotalApplicationInfo>>> getAllApplications(@RequestParam(value = "filter",required = false) Status status, @AuthenticationPrincipal CustomUserDetails userDetails){
         User getUser = userService.getUser(userDetails.getUsername());
-        Media getMedia = mediaService.findById(mediaId,getUser);
-        List<MediaApplication> mediaApplications = mediaApplicationService.findByMedia(getMedia);
-        List<MediaApplicationResponse.MediaApplicationInfo> totalApplicationInfos = mediaApplications.stream().map(MediaApplicationResponse.MediaApplicationInfo::new).collect(Collectors.toList());
+        List<Dashboard> dashboards = dashboardService.findByUser(getUser);
+        List<MediaApplication> mediaApplications = mediaApplicationService.findByDashBoards(dashboards,status);
+        List<MediaApplicationResponse.TotalApplicationInfo> totalApplicationInfos = mediaApplications.stream().map(MediaApplicationResponse.TotalApplicationInfo::new).collect(Collectors.toList());
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, totalApplicationInfos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
 
 

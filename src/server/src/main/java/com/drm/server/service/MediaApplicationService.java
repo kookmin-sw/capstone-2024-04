@@ -1,5 +1,6 @@
 package com.drm.server.service;
 
+import com.drm.server.common.KoreaLocalDateTime;
 import com.drm.server.controller.dto.response.MediaApplicationResponse;
 import com.drm.server.domain.dashboard.Dashboard;
 import com.drm.server.domain.location.Location;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import software.amazon.ion.NullValueException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,9 +30,9 @@ public class MediaApplicationService {
     private final MediaApplicationRepository mediaApplicationRepository;
     private final LocationRepository locationRepository;
     private final PlayListRepository playListRepository;
-    private final DailyMediaBoardService dailyMediaBoardService;
 
     public MediaApplication createMediaApplication(Media media, Location location, String startDate,String endDate){
+        if(KoreaLocalDateTime.stringToLocalDateTime(startDate).isAfter(KoreaLocalDateTime.stringToLocalDateTime(endDate) ))throw new IllegalArgumentException("시작 시간이 끝나는 시간 보다 늦을수 없습니다");
         MediaApplication mediaApplication = MediaApplication.toEntity(startDate, endDate, media, location);
         return mediaApplicationRepository.save(mediaApplication);
     }
@@ -105,5 +107,17 @@ public class MediaApplicationService {
 
     public void deleteAll() {
         mediaApplicationRepository.deleteAll();
+    }
+
+    public List<MediaApplication> findByDashBoards(List<Dashboard> dashboards,Status status) {
+        List<Media> mediaList = new ArrayList<>();
+        dashboards.forEach(dashboard -> {
+            mediaList.add(dashboard.getMedia());
+        });
+        if(status == null ) {
+            return mediaApplicationRepository.findByMediaInOrderByCreateDateDesc(mediaList).orElse(Collections.emptyList());
+        }
+        LocalDate currentDate = LocalDate.now();
+        return mediaApplicationRepository.findByMediaInAndDashboardData(mediaList,currentDate,status).orElse(Collections.emptyList());
     }
 }

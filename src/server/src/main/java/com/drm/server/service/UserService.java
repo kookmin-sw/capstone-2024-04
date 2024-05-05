@@ -2,6 +2,7 @@ package com.drm.server.service;
 
 import com.drm.server.common.FileDto;
 import com.drm.server.controller.dto.response.UserResponse;
+import com.drm.server.domain.mediaApplication.MediaApplicationRepository;
 import com.drm.server.domain.user.User;
 import com.drm.server.domain.user.UserRepository;
 import com.drm.server.exception.BusinessLogicException;
@@ -30,6 +31,7 @@ public class UserService {
     private final RedisTemplate redisTemplate;
     private final RedisService redisService;
     private final PasswordEncoder passwordEncoder;
+    private final MediaApplicationRepository mediaApplicationRepository;
 
 
 
@@ -109,4 +111,9 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+//    public void withdrawal(User getUser) {
+//        mediaApplicationRepository.existsRunningMedia()
+//        getUser.withdrwal();
+//
+//    }
 }
