@@ -16,9 +16,7 @@ export const getApply = async () => {
     return response;
 }
 
-export const patchApply = async ({applyId, status}: patchApplyProps) => {
-    const response = await privateApi.patch('/api/v2/apply', {applyId, status}).catch((err) => {
-        return err.response;
-    })
+export const patchApply = async ({applyId, status}: patchApplyProps) => { 
+    const response = await privateApi.patch('/api/v2/apply', {applyId, status}).catch((err) => {return err.response});
     return response;
 }

@@ -1,3 +1,4 @@
+import { SignInAPIProps } from "../../interfaces/interface";
 import publicApi from "../public_api";
 
 export const adminSignIn = async ({email, password}: SignInAPIProps) => {
