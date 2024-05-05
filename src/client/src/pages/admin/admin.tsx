@@ -47,8 +47,8 @@ const AdminPage = () => {
 
   const menuButtons = [
     {
-      title: "광고승인",
-      description: "전체 광고 히스토리를 확인할 수 있어요.",
+      title: "광고 승인",
+      description: "전체 고객사의 광고를 승인하거나 거절할 수 있어요.",
       iconWhiteSrc: listboxWhite,
       iconBlackSrc: listboxBlack,
       component: <AdminApplyPage />,
