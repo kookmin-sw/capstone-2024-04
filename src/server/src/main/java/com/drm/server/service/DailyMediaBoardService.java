@@ -38,9 +38,9 @@ public class DailyMediaBoardService {
         dailyMediaBoard.updateAvgAge(detectedFace.getAge());
 //        관심이 있다
         if(detectedFace.getFaceCaptureCnt() > 0){
-            dailyMediaBoard.updateAvgStaringTime(detectedFace.getFaceCaptureCnt()); //평균시선 시간
+            dailyMediaBoard.updateAvgStaringTime(detectedFace.getFaceCaptureCnt(), detectedFace.getFps()); //평균시선 시간
             dailyMediaBoard.updateInterestedAgeRangeCount(ageRange); //연령대별 관심인구수
-            dailyMediaBoard.updateHourlyAvgStaringTime(dataHour, detectedFace.getFaceCaptureCnt()); //시간별 평균시선
+            dailyMediaBoard.updateHourlyAvgStaringTime(dataHour, detectedFace.getFaceCaptureCnt(), detectedFace.getFps()); //시간별 평균시선
             dailyMediaBoard.addHourlyInterestedCount(dataHour); // 시간별 관심인구
 
             if(detectedFace.isMale()){
