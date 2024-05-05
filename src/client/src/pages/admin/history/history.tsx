@@ -1,17 +1,45 @@
 import { Subtitle2 } from "../../../components/text";
 import { Table, TableColumnsType } from "antd";
-import StatusBadge, { Status } from "../../../components/status_badge";
+import StatusBadge from "../../../components/status_badge";
+import { useEffect, useState } from "react";
+import { getApply } from "../../../api/admin/apply";
+import { TotalApplicationInfo } from "../../../interfaces/interface";
 
 interface ApplyTableItem {
   key: number;
   mediaId: number;
   mediaLink: string;
+  company: string;
   title: string;
   display: string;
   date: string[];
+  status: string;
 }
 
 const AdminHistoryPage = () => {
+  const loadApplyList = async () => {
+    const result = await getApply();
+    const data: TotalApplicationInfo[] = result.data.data;
+    setDataSource(
+      data.map((item: TotalApplicationInfo) => ({
+        key: item.application.applicationId,
+        mediaId: item.media.mediaId,
+        mediaLink: item.media.mediaLink,
+        company: item.application.user.company,
+        title: item.media.title,
+        display: item.application.location.address,
+        date: [item.application.startDate, item.application.endDate],
+        status: item.application.status,
+      }))
+    );
+  };
+
+  useEffect(() => {
+    loadApplyList();
+  }, []);
+
+  const [dataSource, setDataSource] = useState<ApplyTableItem[]>([]);
+
   const columns: TableColumnsType<ApplyTableItem> = [
     {
       title: "",
@@ -43,29 +71,10 @@ const AdminHistoryPage = () => {
     },
     {
       title: "광고 상태",
-      dataIndex: "",
-      render: () => <StatusBadge status={Status.등록거절} />,
-    },
-  ];
-
-  const tableData: ApplyTableItem[] = [
-    {
-      key: 1,
-      mediaId: 1,
-      mediaLink:
-        "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
-      title: "광고 테스트 1",
-      display: "미래관 4층",
-      date: ["2024-04-18", "2024-04-21"],
-    },
-    {
-      key: 2,
-      mediaId: 2,
-      mediaLink:
-        "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
-      title: "광고 테스트 2",
-      display: "과학관 1층 카페",
-      date: ["2024-04-17", "2024-04-18"],
+      dataIndex: "status",
+      render: (status, record) => (
+        <StatusBadge status={status} date={record.date} />
+      ),
     },
   ];
 
@@ -75,7 +84,7 @@ const AdminHistoryPage = () => {
       <Table
         size="small"
         columns={columns}
-        dataSource={tableData}
+        dataSource={dataSource}
         pagination={{ pageSize: 8, position: ["bottomCenter"] }}
       />
     </div>

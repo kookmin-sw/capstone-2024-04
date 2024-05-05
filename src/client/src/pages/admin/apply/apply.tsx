@@ -1,4 +1,3 @@
-import { useQuery } from "react-query";
 import { ApplyStatus, getApply, patchApply } from "../../../api/admin/apply";
 import { Subtitle2 } from "../../../components/text";
 import { Table, TableColumnsType } from "antd";
