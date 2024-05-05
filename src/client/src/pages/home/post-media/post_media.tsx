@@ -7,6 +7,7 @@ import { getLocation } from "../../../api/location";
 import { LocationInfo } from "../../../interfaces/interface";
 import { PostMediaRequest, postMedia } from "../../../api/media";
 import { toast } from "react-hot-toast";
+import moment from "moment";
 
 const PostMediaScreen = () => {
   const enum PostMode {
@@ -18,18 +19,17 @@ const PostMediaScreen = () => {
   const [description, setDescription] = useState("");
   const [postMode, setPostMode] = useState<PostMode>(PostMode.UPLOAD);
   const [video, setVideo] = useState<File | null>(null);
-  const [fileStr, setFileStr] = useState("");
   const [options, setOptions] = useState<SelectProps["options"]>([]);
   const [locationId, setLocationId] = useState<number>(-1);
   const [date, setDate] = useState<string[]>([]);
   const { RangePicker } = DatePicker;
 
-  const fileToBase64 = (file: File) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      setFileStr(reader.result?.toString() || "");
-    };
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setVideo(null);
+    setLocationId(-1);
+    setDate([]);
   };
 
   const requestPostMedia = async () => {
@@ -40,19 +40,25 @@ const PostMediaScreen = () => {
       startDate: date[0],
       endDate: date[1],
     };
-    const file = fileStr;
-    const result = await postMedia({ request, file });
+    const file = video;
 
-    if (result && result.status === 200) {
+    const formData = new FormData();
+    const blob = new Blob([JSON.stringify(request)], {
+      type: "application/json",
+    });
+    formData.append("request", blob);
+
+    if (file) formData.append("file", file);
+    else {
+      toast.error("광고는 필수로 선택되어야 합니다.");
+      return; // 실패
+    }
+    const result = await postMedia(formData);
+
+    if (result && result.status === 201) {
       // 사용자 입력 정보 초기화
       toast.success("성공적으로 광고가 등록되었습니다.");
-
-      setTitle("");
-      setDescription("");
-      setVideo(null);
-      setFileStr("");
-      setLocationId(-1);
-      setDate([]);
+      resetForm();
     } else {
       toast.error("광고 등록에 실패하였습니다.");
     }
@@ -70,7 +76,6 @@ const PostMediaScreen = () => {
     const video = e.target.files?.[0];
     if (video) {
       setVideo(video);
-      fileToBase64(video);
     }
   };
 
@@ -93,8 +98,6 @@ const PostMediaScreen = () => {
   useEffect(() => {
     loadLocationList();
   }, []);
-
-  useEffect(() => {});
 
   return (
     <div className="flex h-full min-w-[920px]">
@@ -168,8 +171,12 @@ const PostMediaScreen = () => {
       <div className="flex-1 flex-col px-[30px]">
         <Subtitle1 text="광고 등록일" color="text-black" />
         <RangePicker
+          disabledDate={(current) => {
+            let customDate = moment().format("YYYY-MM-DD");
+            return current && current < moment(customDate, "YYYY-MM-DD");
+          }}
           format="YYYY-MM-DD"
-          onChange={(dates, dateStrings) => setDate(dateStrings)}
+          onChange={(_, dateStrings) => setDate(dateStrings)}
           className="mt-2 mb-7"
           style={{ width: "100%" }}
         />
@@ -203,7 +210,7 @@ const PostMediaScreen = () => {
           </div>
         ) : (
           <div className="flex flex-col">
-            <Subtitle1 text="광고 이미지 미리보기" color="text-black" />
+            <Subtitle1 text="광고 미리보기" color="text-black" />
             <div className="w-full mt-2 aspect-video border-gray2 border-[1px] rounded-lg" />
           </div>
         )}

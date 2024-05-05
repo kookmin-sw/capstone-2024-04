@@ -2,7 +2,7 @@ import { FormEvent, useRef, useState } from "react";
 import { signin } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
-import { SignInPageProps } from "../../interfaces/interface";
+import { SignInPageProps, UserInfo } from "../../interfaces/interface";
 
 enum ErrorText {
   incorrect = "아이디 또는 비밀번호를 잘못 입력했습니다.",
@@ -37,20 +37,24 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
 
     if (result.data.status === 201) {
       const cookies = new Cookies();
-      const tokenData = result.data.data;
+      const loginData = result.data.data;
 
-      const refreshToken = tokenData.refreshToken;
-      const accessToken = tokenData.accessToken;
-      const expirationTime = tokenData.refreshTokenExpirationTime;
+      const refreshToken = loginData.refreshToken;
+      const accessToken = loginData.accessToken;
+      const expirationTime = loginData.refreshTokenExpirationTime;
 
-      // 쿠키에 토큰 저장
-      cookies.set("accessToken", accessToken);
-      cookies.set("refreshToken", refreshToken, { maxAge: expirationTime });
+      const userInfo: UserInfo = loginData.userInfo;
 
-      // 자동 로그인 체크박스 체킹 여부에 따라 쿠키 설정
-      cookies.set("autoLogin", autoLogin);
-
-      setInterval(() => navigate("/home"), 500);
+      await Promise.all([
+        // 쿠키에 토큰 저장
+        cookies.set("accessToken", accessToken),
+        cookies.set("refreshToken", refreshToken, { maxAge: expirationTime }),
+        // 자동 로그인 체크박스 체킹 여부에 따라 쿠키 설정
+        cookies.set("autoLogin", autoLogin),
+        // 사용자 정보 저장
+        cookies.set("userInfo", userInfo),
+      ]);
+      navigate("/home");
 
       return true;
     }
@@ -103,6 +107,7 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
         </p>
       </div>
       <button
+        type="button"
         onClick={(e) => login(e)}
         className="bg-main text-white p-4 rounded-md my-5"
       >
