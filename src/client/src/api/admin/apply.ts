@@ -13,6 +13,7 @@ export enum ApplyStatus {
 
 export const getApply = async () => {
     const response = await privateApi.get('/api/v2/apply').catch((err) => {return err.response});
+    console.log(response);
     return response;
 }
 

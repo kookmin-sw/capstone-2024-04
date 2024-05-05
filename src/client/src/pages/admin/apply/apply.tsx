@@ -2,8 +2,9 @@ import { useQuery } from "react-query";
 import { ApplyStatus, getApply, patchApply } from "../../../api/admin/apply";
 import { Subtitle2 } from "../../../components/text";
 import { Table, TableColumnsType } from "antd";
-import { Key, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { TotalApplicationInfo } from "../../../interfaces/interface";
 
 interface ApplyTableItem {
   key: number;
@@ -15,11 +16,29 @@ interface ApplyTableItem {
 }
 
 const AdminApplyPage = () => {
-  const { data, isSuccess, isError, refetch } = useQuery(
-    "admin-get-apply",
-    () => getApply()
-  );
+  const loadApplyList = async () => {
+    const result = await getApply();
+    const data: TotalApplicationInfo[] = result.data.data.filter(
+      (item: TotalApplicationInfo) => item.application.status === "WAITING"
+    );
+    console.log(data);
+    setDataSource(
+      data.map((item: TotalApplicationInfo) => ({
+        key: item.application.applicationId,
+        mediaId: item.media.mediaId,
+        mediaLink: item.media.mediaLink,
+        title: item.media.title,
+        display: item.application.location.address,
+        date: [item.application.startDate, item.application.endDate],
+      }))
+    );
+  };
 
+  useEffect(() => {
+    loadApplyList();
+  }, []);
+
+  const [dataSource, setDataSource] = useState<ApplyTableItem[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
 
   const acceptApply = async (keys: number[]) => {
@@ -30,6 +49,7 @@ const AdminApplyPage = () => {
 
     if (result && result.status === 200) {
       toast.success("광고 신청 승인에 성공하였습니다.");
+      setDataSource(dataSource.filter((item) => !keys.includes(item.key)));
     } else {
       toast.error("광고 신청 승인에 실패하였습니다.");
     }
@@ -43,6 +63,7 @@ const AdminApplyPage = () => {
 
     if (result && result.status === 200) {
       toast.success("광고 신청 거절에 성공하였습니다.");
+      setDataSource(dataSource.filter((item) => !keys.includes(item.key)));
     } else {
       toast.error("광고 신청 거절에 실패하였습니다.");
     }
@@ -100,27 +121,6 @@ const AdminApplyPage = () => {
     },
   ];
 
-  const tableData: ApplyTableItem[] = [
-    {
-      key: 1,
-      mediaId: 1,
-      mediaLink:
-        "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
-      title: "광고 테스트 1",
-      display: "미래관 4층",
-      date: ["2024-04-18", "2024-04-21"],
-    },
-    {
-      key: 2,
-      mediaId: 2,
-      mediaLink:
-        "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
-      title: "광고 테스트 2",
-      display: "과학관 1층 카페",
-      date: ["2024-04-17", "2024-04-18"],
-    },
-  ];
-
   const rowSelection = {
     selectedKeys,
     onChange: (keys: Key[]) => {
@@ -129,48 +129,38 @@ const AdminApplyPage = () => {
     },
   };
 
-  if (isSuccess && typeof data !== "undefined")
-    return (
-      <div className="flex flex-col min-w-[920px] h-full px-[30px] gap-7 overflow-y-scroll">
-        <div className="flex justify-between">
-          <Subtitle2 text="승인 대기 중인 목록" color="text-black" />
-          <div className="flex gap-4">
-            <button
-              className="px-4 py-2 border-[1px] border-[#d9d9d9] rounded-sm"
-              type="button"
-              disabled={selectedKeys.length === 0}
-              onClick={() => rejectApply(selectedKeys)}
-            >
-              거절하기
-            </button>
-            <button
-              className="px-4 py-2 border-[1px] bg-main text-white border-main rounded-sm"
-              type="button"
-              disabled={selectedKeys.length === 0}
-              onClick={() => acceptApply(selectedKeys)}
-            >
-              승인하기
-            </button>
-          </div>
+  return (
+    <div className="flex flex-col min-w-[920px] h-full px-[30px] gap-7 overflow-y-scroll">
+      <div className="flex justify-between">
+        <Subtitle2 text="승인 대기 중인 목록" color="text-black" />
+        <div className="flex gap-4">
+          <button
+            className="px-4 py-2 border-[1px] border-[#d9d9d9] rounded-sm"
+            type="button"
+            disabled={selectedKeys.length === 0}
+            onClick={() => rejectApply(selectedKeys)}
+          >
+            거절하기
+          </button>
+          <button
+            className="px-4 py-2 border-[1px] bg-main text-white border-main rounded-sm"
+            type="button"
+            disabled={selectedKeys.length === 0}
+            onClick={() => acceptApply(selectedKeys)}
+          >
+            승인하기
+          </button>
         </div>
-        <Table
-          size="small"
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={tableData}
-          pagination={{ pageSize: 8, position: ["bottomCenter"] }}
-        />
       </div>
-    );
-
-  if (isError || typeof data === "undefined")
-    return (
-      <div className="flex w-full min-w-[920px] h-full justify-center items-center">
-        <button type="button" onClick={() => refetch()}>
-          다시 시도하기
-        </button>
-      </div>
-    );
+      <Table
+        size="small"
+        rowSelection={rowSelection}
+        columns={columns}
+        dataSource={dataSource}
+        pagination={{ pageSize: 8, position: ["bottomCenter"] }}
+      />
+    </div>
+  );
 };
 
 export default AdminApplyPage;
