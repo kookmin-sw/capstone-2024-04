@@ -15,7 +15,6 @@ spring:
       format-sql: true
       highlight-sql: true
       ddl-auto: update
-
       dialect: org.hibernate.dialect.MySQLDialect # ??? ??
     properties:
       hibernate:

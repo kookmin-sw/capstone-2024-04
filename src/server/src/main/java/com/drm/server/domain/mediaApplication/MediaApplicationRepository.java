@@ -37,4 +37,23 @@ public interface MediaApplicationRepository extends JpaRepository<MediaApplicati
     MediaApplication findFirstByOrderByCreateDateDesc();
 
     Optional<List<MediaApplication>> findAllByLocation(Location location);
+    Optional<List<MediaApplication>> findByMediaInOrderByCreateDateDesc(List<Media> mediaList);
+    @Query("SELECT ma FROM MediaApplication ma " +
+            "WHERE ma.media IN :mediaList " +
+            "AND ma.startDate <= :today " +
+            "AND (:status IS NULL OR ma.status = :status)")
+    Optional<List<MediaApplication>> findByMediaInAndDashboardData(
+            @Param("mediaList") List<Media> mediaList,
+            @Param("today") LocalDate today,
+            @Param("status") Status status);
+
+    @Query("SELECT CASE WHEN COUNT(ma) > 0 THEN true ELSE false END " +
+            "FROM MediaApplication ma " +
+            "WHERE ma.media = :media " +
+            "AND ma.startDate <= :today " +
+            "AND (:status IS NULL OR ma.status = :status)")
+    boolean existsByMediaAndStartDateBeforeAndStatusIsNullOrStatus(
+            @Param("media") Media media,
+            @Param("today") LocalDate today,
+            @Param("status") Status status);
 }

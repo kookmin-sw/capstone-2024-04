@@ -38,7 +38,7 @@ public class Media extends BaseTimeEntity {
     private List<MediaApplication> mediaApplicationList = new ArrayList<>();
 
     public Media(Dashboard dashboard) {
-        dashboard.getMedia();
+        this.mediaId = dashboard.getMedia().getMediaId();
     }
 
     public static Media toEntity(MediaRequest.Create mediaRequest,String fileName, String mediaLink,Dashboard dashboard){

@@ -11,6 +11,7 @@ import com.drm.server.domain.dashboard.Dashboard;
 import com.drm.server.domain.location.Location;
 import com.drm.server.domain.media.Media;
 import com.drm.server.domain.mediaApplication.MediaApplication;
+import com.drm.server.domain.mediaApplication.Status;
 import com.drm.server.domain.user.CustomUserDetails;
 import com.drm.server.domain.user.User;
 import com.drm.server.service.*;
@@ -76,10 +77,10 @@ public class MediaController {
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     @GetMapping("")
-    public ResponseEntity<APIResponse<List<MediaResponse.MediaInfo>>> getMedia(@AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<APIResponse<List<MediaResponse.MediaInfo>>> getMedia(@RequestParam(value = "filter",required = false)Status filter, @AuthenticationPrincipal CustomUserDetails userDetails){
         User getUser = userService.getUser(userDetails.getUsername());
         List<Dashboard> dashboards = dashboardService.findByUser(getUser);
-        List<MediaResponse.MediaInfo> mediaInfos = mediaService.findByDashboard(dashboards);
+        List<MediaResponse.MediaInfo> mediaInfos = mediaService.findByDashboard(dashboards,filter);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, mediaInfos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
