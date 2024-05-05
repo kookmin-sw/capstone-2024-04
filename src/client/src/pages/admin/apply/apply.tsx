@@ -129,7 +129,7 @@ const AdminApplyPage = () => {
     },
   };
 
-  if (isSuccess && typeof data === "undefined")
+  if (isSuccess && typeof data !== "undefined")
     return (
       <div className="flex flex-col min-w-[920px] h-full px-[30px] gap-7 overflow-y-scroll">
         <div className="flex justify-between">
