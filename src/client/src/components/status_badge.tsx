@@ -10,24 +10,24 @@ const StatusBadge = ({ status, date }: StatusBadgeProps) => {
   const [text, setText] = useState<string>("");
 
   useEffect(() => {
-    if ((status = "REJECT")) {
+    if (status === "REJECT") {
       setColor("bg-[#808080]");
       setText("등록거절");
-    } else if ((status = "ACCEPT")) {
+    } else if (status === "ACCEPT") {
       setColor("bg-[#30B6A7]");
       setText("집행예정");
-    } else if ((status = "ACCEPT")) {
+    } else if (status === "ACCEPT") {
       setColor("bg-[#EF816A]");
       setText("집행종료");
-    } else if ((status = "ACCEPT")) {
+    } else if (status === "ACCEPT") {
       setColor("bg-[#406EE5]");
       setText("집행중");
-    } else if ((status = "WAITING")) {
+    } else if (status === "WAITING") {
       setColor("bg-[#B3B3B3]");
       setText("등록대기");
     }
     console.log(text);
-  }, [status]);
+  }, [color, text]);
 
   return (
     <div
