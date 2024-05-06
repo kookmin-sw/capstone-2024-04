@@ -173,14 +173,20 @@ const AdminApplyPage = () => {
         <div className="flex gap-2 items-center text-black/[0.06]">
           <p
             className="cursor-pointer text-[#999999] text-sm"
-            onClick={() => rejectApply([key])}
+            onClick={(e) => {
+              e.stopPropagation();
+              rejectApply([key]);
+            }}
           >
             거절
           </p>
           |
           <p
             className="cursor-pointer text-main text-sm"
-            onClick={() => acceptApply([key])}
+            onClick={(e) => {
+              e.stopPropagation();
+              acceptApply([key]);
+            }}
           >
             승인
           </p>
