@@ -1,4 +1,4 @@
-import { ApplyStatus, getApply, patchApply } from "../../../api/admin/apply";
+import { getApply, patchApply } from "../../../api/admin/apply";
 import { Subtitle2 } from "../../../components/text";
 import { Table, TableColumnsType } from "antd";
 import { Key, useEffect, useState } from "react";
@@ -43,7 +43,7 @@ const AdminApplyPage = () => {
   const acceptApply = async (keys: number[]) => {
     const result = await patchApply({
       applyId: keys,
-      status: ApplyStatus.ACCEPT,
+      status: "ACCEPT",
     });
 
     if (result && result.status === 200) {
@@ -57,7 +57,7 @@ const AdminApplyPage = () => {
   const rejectApply = async (keys: number[]) => {
     const result = await patchApply({
       applyId: keys,
-      status: ApplyStatus.REJECT,
+      status: "REJECT",
     });
 
     if (result && result.status === 200) {

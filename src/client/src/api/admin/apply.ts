@@ -1,14 +1,8 @@
 import privateApi from "../private_api"
 
 export interface patchApplyProps {
-    applyId: Array<number>,
-    status: ApplyStatus, 
-}
-
-export enum ApplyStatus {
-    WAITING,
-    REJECT,
-    ACCEPT,
+    applyId: number[],
+    status: string, 
 }
 
 export const getApply = async () => {
@@ -18,6 +12,7 @@ export const getApply = async () => {
 }
 
 export const patchApply = async ({applyId, status}: patchApplyProps) => { 
+    console.log({applyId, status});
     const response = await privateApi.patch('/api/v2/apply', {applyId, status}).catch((err) => {return err.response});
     return response;
 }
