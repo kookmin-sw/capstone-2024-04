@@ -96,9 +96,7 @@ const HistoryScreen = () => {
           />
           <Subtitle1 text="광고 등록일" color="text-black" />
           <DatePicker.RangePicker
-            allowClear={false}
-            open={false}
-            inputReadOnly={true}
+            style={{ pointerEvents: "none" }}
             defaultValue={[
               dayjs("2024-04-04", dateFormat),
               dayjs("2024-06-10", dateFormat),
@@ -107,8 +105,7 @@ const HistoryScreen = () => {
           />
           <Subtitle1 text="디스플레이" color="text-black" />
           <Select
-            allowClear={false}
-            open={false}
+            style={{ pointerEvents: "none" }}
             defaultValue={"선택된 디스플레이"} // TODO: interface 수정 필요
             className="mt-[10px] mb-4"
           />
