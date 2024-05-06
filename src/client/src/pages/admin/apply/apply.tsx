@@ -1,6 +1,6 @@
 import { getApply, patchApply } from "../../../api/admin/apply";
-import { Subtitle2 } from "../../../components/text";
-import { Table, TableColumnsType } from "antd";
+import { Subtitle1, Subtitle2 } from "../../../components/text";
+import { DatePicker, Input, Select, Table, TableColumnsType } from "antd";
 import { Key, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { TotalApplicationInfo } from "../../../interfaces/interface";
@@ -12,7 +12,73 @@ interface ApplyTableItem {
   title: string;
   display: string;
   date: string[];
+  origin: TotalApplicationInfo;
 }
+
+const AdminApplyDetail = ({
+  application,
+}: {
+  application: TotalApplicationInfo;
+}) => {
+  return (
+    <div className="flex h-full min-w-[920px]">
+      <div className="flex-1 flex flex-col px-[30px] h-full justify-between">
+        <div>
+          <Subtitle1 text="등록 타입" color="text-black" />
+
+          <img
+            className="w-full aspect-video bg-black mt-3"
+            src={application.media.mediaLink}
+          />
+        </div>
+
+        <div>
+          <button
+            type="button"
+            className="px-4 py-3 text-white bg-main text-sm rounded-[3px]"
+            onClick={() => {}}
+          >
+            광고 승인하기
+          </button>
+          <button
+            type="button"
+            className="px-4 py-3 text-black bg-[#e7e7e7] text-sm rounded-[3px]"
+            onClick={() => {}}
+          >
+            거절하기
+          </button>
+        </div>
+      </div>
+      <div className="flex-1 flex-col px-[30px]">
+        <Subtitle1 text="광고 등록일" color="text-black" />
+        <DatePicker.RangePicker
+          format="YYYY-MM-DD"
+          className="mt-2 mb-7"
+          style={{ width: "100%" }}
+        />
+        <Subtitle1 text="디스플레이 선택" color="text-black" />
+        <Select className="mt-2 mb-7" style={{ width: "100%" }} />
+
+        <div className="flex flex-col mt-4">
+          <Subtitle1 text="광고 타이틀" color="text-black" />
+          <Input
+            className="mt-2 mb-10"
+            placeholder="해당 광고의 대시보드 타이틀을 입력해주세요"
+            // onChange={(e) => setTitle(e.target.value)}
+          />
+          <Subtitle1 text="광고 설명" color="text-black" />
+          <Input.TextArea
+            className="mt-2"
+            style={{ resize: "none" }}
+            rows={5}
+            placeholder="해당 광고의 대시보드 설명을 입력해주세요"
+            // onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const AdminApplyPage = () => {
   const loadApplyList = async () => {
@@ -29,6 +95,7 @@ const AdminApplyPage = () => {
         title: item.media.title,
         display: item.application.location.address,
         date: [item.application.startDate, item.application.endDate],
+        origin: item,
       }))
     );
   };
@@ -39,6 +106,8 @@ const AdminApplyPage = () => {
 
   const [dataSource, setDataSource] = useState<ApplyTableItem[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
+  const [currApplication, setCurrApplication] =
+    useState<TotalApplicationInfo | null>(null);
 
   const acceptApply = async (keys: number[]) => {
     const result = await patchApply({
@@ -128,7 +197,7 @@ const AdminApplyPage = () => {
     },
   };
 
-  return (
+  return currApplication === null ? (
     <div className="flex flex-col min-w-[920px] h-full px-[30px] gap-7 overflow-y-scroll">
       <div className="flex justify-between">
         <Subtitle2 text="승인 대기 중인 목록" color="text-black" />
@@ -157,8 +226,15 @@ const AdminApplyPage = () => {
         columns={columns}
         dataSource={dataSource}
         pagination={{ pageSize: 8, position: ["bottomCenter"] }}
+        onRow={(record) => ({
+          onClick: () => {
+            setCurrApplication(record.origin);
+          },
+        })}
       />
     </div>
+  ) : (
+    <AdminApplyDetail application={currApplication} />
   );
 };
 
