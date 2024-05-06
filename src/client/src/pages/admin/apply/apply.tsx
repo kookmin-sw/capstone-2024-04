@@ -3,6 +3,7 @@ import { Subtitle1, Subtitle2 } from "../../../components/text";
 import { DatePicker, Input, Select, Table, TableColumnsType } from "antd";
 import { Key, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import dayjs from "dayjs";
 import { TotalApplicationInfo } from "../../../interfaces/interface";
 
 interface ApplyTableItem {
@@ -24,7 +25,7 @@ const AdminApplyDetail = ({
     <div className="flex h-full min-w-[920px]">
       <div className="flex-1 flex flex-col px-[30px] h-full justify-between">
         <div>
-          <Subtitle1 text="등록 타입" color="text-black" />
+          <Subtitle1 text="광고 썸네일" color="text-black" />
 
           <img
             className="w-full aspect-video bg-black mt-3"
@@ -32,7 +33,7 @@ const AdminApplyDetail = ({
           />
         </div>
 
-        <div>
+        <div className="flex gap-3">
           <button
             type="button"
             className="px-4 py-3 text-white bg-main text-sm rounded-[3px]"
@@ -52,27 +53,33 @@ const AdminApplyDetail = ({
       <div className="flex-1 flex-col px-[30px]">
         <Subtitle1 text="광고 등록일" color="text-black" />
         <DatePicker.RangePicker
-          format="YYYY-MM-DD"
+          defaultValue={[
+            dayjs(application.application.startDate, "YYYY-MM-DD"),
+            dayjs(application.application.endDate, "YYYY-MM-DD"),
+          ]}
           className="mt-2 mb-7"
-          style={{ width: "100%" }}
+          style={{ width: "100%", pointerEvents: "none" }}
         />
         <Subtitle1 text="디스플레이 선택" color="text-black" />
-        <Select className="mt-2 mb-7" style={{ width: "100%" }} />
+        <Select
+          className="mt-2 mb-7"
+          style={{ width: "100%", pointerEvents: "none" }}
+          defaultValue={application.application.location.address}
+        />
 
         <div className="flex flex-col mt-4">
           <Subtitle1 text="광고 타이틀" color="text-black" />
           <Input
+            style={{ pointerEvents: "none" }}
             className="mt-2 mb-10"
-            placeholder="해당 광고의 대시보드 타이틀을 입력해주세요"
-            // onChange={(e) => setTitle(e.target.value)}
+            defaultValue={application.media.title}
           />
           <Subtitle1 text="광고 설명" color="text-black" />
           <Input.TextArea
             className="mt-2"
-            style={{ resize: "none" }}
+            style={{ resize: "none", pointerEvents: "none" }}
             rows={5}
-            placeholder="해당 광고의 대시보드 설명을 입력해주세요"
-            // onChange={(e) => setDescription(e.target.value)}
+            defaultValue={application.media.description}
           />
         </div>
       </div>
