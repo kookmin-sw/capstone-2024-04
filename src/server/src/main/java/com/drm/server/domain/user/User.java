@@ -26,6 +26,7 @@ public class User extends BaseTimeEntity {
     private String email;
     private String password;
     private String company;
+    private String profileImage;
     private boolean deleted;
     @Column
     @Enumerated(EnumType.STRING)
@@ -34,7 +35,14 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user",orphanRemoval = true)
     private List<Dashboard> dashboards = new ArrayList<>();
     public static User toEntity(String email,String password,String company){
-        return User.builder().email(email).password(password).company(company).deleted(false).authority(Authority.USER).build();
+        return User.builder().email(email).password(password).company(company).deleted(false).profileImage("").authority(Authority.USER).build();
     }
 
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }

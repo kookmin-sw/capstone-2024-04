@@ -23,6 +23,13 @@ export interface LocationInfo {
     address: string;
 }
 
+export interface UserInfo {
+    userId: number;
+    email: string;
+    company: string;
+    profileImage: string;
+}
+
 /** ETC */
 export interface SignUpPageProps {
     goToSignIn: any;

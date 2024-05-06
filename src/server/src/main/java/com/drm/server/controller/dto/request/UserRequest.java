@@ -71,4 +71,22 @@ public class UserRequest {
         @NotEmpty(message = "refreshToken 을 입력해주세요.")
         private String refreshToken;
     }
+    @Getter
+    @Setter
+    public static class Password {
+        @NotEmpty(message = "기존 비밀번호를 입력해주세요")
+        private String password;
+    }
+    @Getter
+    @Setter
+    public static class NewPassword {
+        @NotEmpty(message = "기존 비밀번호를 입력해주세요")
+        private String password;
+        @NotEmpty(message = "새 비밀번호를 입력해주세요")
+        @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "영문자,숫자를 조합하여 8글자 이상 입력해주세요.")
+        private String updatePassword;
+    }
+
+
+
 }
