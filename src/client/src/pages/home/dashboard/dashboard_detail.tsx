@@ -1,6 +1,29 @@
 import { Select } from "antd";
+import { DashboardDataInfo } from "../../../interfaces/interface";
 
 const DashBoardDetail = () => {
+  const dummy: DashboardDataInfo = {
+    mediaAppsCnt: 25,
+    hourlyInterestedCount: [
+      20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6, 20,
+      31, 50, 20, 30, 6,
+    ],
+    hourlyPassedCount: [
+      15, 28, 45, 20, 25, 7, 19, 30, 48, 18, 27, 5, 20, 31, 50, 20, 30, 6, 20,
+      31, 50, 20, 30, 6,
+    ],
+    hourlyAvgStaringTime: [
+      2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3,
+      9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2,
+    ],
+    totalPeopleCount: 254,
+    avgStaringTime: 3.1,
+    avgAge: 27.2,
+    maleInterestCnt: 150,
+    femaleInterestCnt: 104,
+    maleCnt: 200,
+  };
+
   return (
     <div className="min-w-[920px] w-full h-full overflow-y-scroll flex flex-col">
       <div className="flex justify-between items-start">
@@ -19,14 +42,51 @@ const DashBoardDetail = () => {
             인사이트 바로가기
           </button>
         </div>
-        <img alt="광고 썸네일" src="" />
+        <img
+          className="border-[1px] rounded h-full aspect-video"
+          alt="광고 썸네일"
+          src=""
+        />
       </div>
       <div className="flex flex-col">
         <div className="flex justify-between">
           <p className="text-base">광고 관심도 분석 결과</p>
           <Select />
         </div>
-        <div className="grid grid-cols-4">{/* 총 유동인구수 라인 */}</div>
+        <div className="grid grid-cols-4 gap-6">
+          <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
+            <p className="text-base font-medium">총 유동인구수</p>
+            <p className="my-4 text-center font-light text-[26px]">
+              {dummy.totalPeopleCount.toLocaleString("ko-KR")}명
+            </p>
+          </div>
+          <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
+            <p className="text-base font-medium">관심 인구수</p>
+            <p className="my-4 text-center font-light text-[26px]">
+              {(dummy.maleInterestCnt + dummy.femaleInterestCnt).toLocaleString(
+                "ko-KR"
+              )}
+              명
+            </p>
+          </div>
+          <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
+            <p className="text-base font-medium">광고 관심도</p>
+            <p className="my-4 text-center font-light text-[26px]">
+              {(
+                ((dummy.maleInterestCnt + dummy.femaleInterestCnt) /
+                  dummy.totalPeopleCount) *
+                100
+              ).toFixed(1)}
+              %
+            </p>
+          </div>
+          <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
+            <p className="text-base font-medium">시선 고정시간</p>
+            <p className="my-4 text-center font-light text-[26px]">
+              {dummy.avgStaringTime}초
+            </p>
+          </div>
+        </div>
         <div></div>
       </div>
     </div>
