@@ -65,6 +65,33 @@ export interface FindPasswordPageProps {
     goToSignIn: any;
 }
 
+export interface datePerDay {
+    date: string;
+}
+
+export interface DashboardDataInfo {
+    mediaAppsCnt: number;
+    hourlyInterestedCount: number[];
+    hourlyPassedCount: number[];
+    hourlyAvgStaringTime: number[];
+    totalPeopleCount: number;
+    avgStaringTime: number;
+    avgAge: number;
+    maleInterestCnt: number;
+    femaleInterestCnt: number;
+    maleCnt: number;
+}
+
+export interface LocationDataInfo{
+    mediaAppsCnt: number;
+    passedPeopleCntPerDay: number;
+    passedPeopleListPerHour: number[];
+    totalAgeRangeCount: number[];
+    avgMaleRatio: number;
+}
+
+
+
 export interface MenuButtonProps {
     title: string;
     iconWhiteSrc: string;
@@ -95,4 +122,16 @@ export interface MediaInfo {
 export interface DashBoardInfo {
     title: string,
     description: string,
+}
+
+export interface Create {
+    advertisementTitle: string,
+    advertisementDescription: string,
+    locationId: number,
+    startDate: string,
+    endDate: string,
+}
+
+export interface MediaApplicationList {
+    applyId: number[],
 }
