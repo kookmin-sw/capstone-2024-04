@@ -1,7 +1,7 @@
 import { DatePicker, Modal, Select, Table, TableColumnsType } from "antd";
 import { Subtitle1, Subtitle2 } from "../../../components/text";
 import { MediaInfo } from "../../../interfaces/interface";
-import StatusBadge, { Status } from "../../../components/status_badge";
+import StatusBadge from "../../../components/status_badge";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -14,7 +14,7 @@ dayjs.extend(customParseFormat);
 const dateFormat = "YYYY-MM-DD";
 
 const HistoryScreen = () => {
-  const columns: TableColumnsType<MediaInfoWithStatus> = [
+  const columns: TableColumnsType<MediaInfo> = [
     {
       title: "",
       dataIndex: "mediaLink",
@@ -37,29 +37,20 @@ const HistoryScreen = () => {
     {
       title: "광고 상태",
       dataIndex: "status",
-      render: (status: Status) => <StatusBadge status={status} />,
+      render: (status) => <StatusBadge status={status} date={["", ""]} />,
     },
   ];
 
-  const [mediaData, setMediaData] = useState<MediaInfoWithStatus[]>([]);
+  const [mediaData, setMediaData] = useState<MediaInfo[]>([]);
   const [openModal, setOpenModal] = useState(false);
-  const [selectedMedia, setSelectedMedia] =
-    useState<MediaInfoWithStatus | null>(null);
-  interface MediaInfoWithStatus extends MediaInfo {
-    status: Status;
-  }
+  const [selectedMedia, setSelectedMedia] = useState<MediaInfo | null>(null);
 
   const loadHistory = async () => {
     try {
       const result = await getMedia();
 
       if (result.status === 200) {
-        const newHistory: MediaInfoWithStatus[] = result.data.data.map(
-          (media: MediaInfo) => {
-            return { ...media, status: Status.집행중 } as MediaInfoWithStatus;
-          }
-        );
-        setMediaData(newHistory);
+        setMediaData(result.data.data);
       }
     } catch (error) {
       toast.error("히스토리 조회에 실패하였습니다.");
@@ -105,9 +96,7 @@ const HistoryScreen = () => {
           />
           <Subtitle1 text="광고 등록일" color="text-black" />
           <DatePicker.RangePicker
-            allowClear={false}
-            open={false}
-            inputReadOnly={true}
+            style={{ pointerEvents: "none" }}
             defaultValue={[
               dayjs("2024-04-04", dateFormat),
               dayjs("2024-06-10", dateFormat),
@@ -116,14 +105,13 @@ const HistoryScreen = () => {
           />
           <Subtitle1 text="디스플레이" color="text-black" />
           <Select
-            allowClear={false}
-            open={false}
+            style={{ pointerEvents: "none" }}
             defaultValue={"선택된 디스플레이"} // TODO: interface 수정 필요
             className="mt-[10px] mb-4"
           />
           <Subtitle1 text="광고 상태" color="text-black" />
           <div className="mb-5 mt-2">
-            <StatusBadge status={selectedMedia?.status} />
+            {/* <StatusBadge status={selectedMedia?.} /> */}
           </div>
           <div className="flex gap-2">
             <button

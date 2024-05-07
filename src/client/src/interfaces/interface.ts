@@ -30,6 +30,28 @@ export interface UserInfo {
     profileImage: string;
 }
 
+export interface TodayList {
+    playListId: number;
+    posting: boolean;
+    location: Location;
+    media: MediaInfo;
+}
+
+export interface MediaApplicationInfo {
+    applicationId: number;
+    startDate: string;
+    endDate: string;
+    status: string;
+    location: LocationInfo;
+    user: UserInfo;
+}
+
+export interface TotalApplicationInfo {
+    media: MediaInfo;
+    application: MediaApplicationInfo;
+}
+
+
 /** ETC */
 export interface SignUpPageProps {
     goToSignIn: any;
@@ -67,7 +89,7 @@ export interface MediaInfo {
     mediaLink: string,
     title: string,
     description: string,
-    dashboard: DashBoardInfo[],
+    dashboardId: number,
 }
 
 export interface DashBoardInfo {

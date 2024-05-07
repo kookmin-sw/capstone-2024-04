@@ -62,6 +62,10 @@ privateApi.interceptors.response.use((response: AxiosResponse) => {
             toast.error('로그인 시간 제한이 만료되었습니다.');
         }
     }
+
+    if (errorResponse) {
+        return errorResponse;
+    }
 });
 
 export default privateApi;

@@ -1,4 +1,4 @@
-import StatusBadge, { Status } from "./status_badge";
+import StatusBadge from "./status_badge";
 
 export interface MediaCardProps {
   img: string;
@@ -18,7 +18,7 @@ const MediaCard = ({ img, title, description, onClick }: MediaCardProps) => {
         <h3 className="text-base font-medium text-black">{title}</h3>
         <p className="line-clamp-2 text-ellipsis">{description}</p>
         {/* 현재 Status에 대한 정보가 없어서 임시 '등록거절'로 두었습니다. */}
-        <StatusBadge status={Status.등록거절} />
+        <StatusBadge status={"등록거절"} date={["", ""]} />
       </div>
     </div>
   );
