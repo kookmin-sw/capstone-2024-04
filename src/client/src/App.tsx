@@ -19,6 +19,19 @@ const isAuthenticated = () => {
   );
 };
 
+const isAdmin = () => {
+  const cookies = new Cookies();
+
+  const role = cookies.get("role") as string;
+
+  if (!role || !role.includes("ADMIN")) return false;
+
+  return (
+    cookies.get("accessToken") !== undefined &&
+    cookies.get("refreshToken") !== undefined
+  );
+};
+
 const ProtectedRoute = ({ isAuthenticated, children }: ProtectedRouteProps) => {
   return isAuthenticated ? <>{children}</> : <Navigate to="/" />;
 };
@@ -42,7 +55,7 @@ function App() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute isAuthenticated={isAuthenticated()}>
+              <ProtectedRoute isAuthenticated={isAdmin()}>
                 <AdminPage />
               </ProtectedRoute>
             }

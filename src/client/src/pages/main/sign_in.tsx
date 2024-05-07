@@ -46,6 +46,7 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
       const expirationTime = loginData.refreshTokenExpirationTime;
 
       const userInfo: UserInfo = loginData.userInfo;
+      const role = loginData.authority;
 
       await Promise.all([
         // 쿠키에 토큰 저장
@@ -55,6 +56,7 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
         cookies.set("autoLogin", autoLogin),
         // 사용자 정보 저장
         cookies.set("userInfo", userInfo),
+        cookies.set("role", role),
       ]);
       navigate("/home");
 
@@ -72,6 +74,7 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
       const expirationTime = loginData.refreshTokenExpirationTime;
 
       const userInfo: UserInfo = loginData.userInfo;
+      const role = loginData.authority;
 
       await Promise.all([
         // 쿠키에 토큰 저장
@@ -81,6 +84,7 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
         cookies.set("autoLogin", autoLogin),
         // 사용자 정보 저장
         cookies.set("userInfo", userInfo),
+        cookies.set("role", role),
       ]);
       navigate("/admin");
 
