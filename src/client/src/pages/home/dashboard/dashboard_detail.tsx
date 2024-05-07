@@ -1,5 +1,7 @@
 import { Select } from "antd";
 import { DashboardDataInfo } from "../../../interfaces/interface";
+import ApexCharts from "apexcharts";
+import { InterestPeopleChart } from "./pie";
 
 const DashBoardDetail = () => {
   const dummy: DashboardDataInfo = {
@@ -48,7 +50,7 @@ const DashBoardDetail = () => {
           src=""
         />
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-6">
         <div className="flex justify-between">
           <p className="text-base">광고 관심도 분석 결과</p>
           <Select />
@@ -87,7 +89,22 @@ const DashBoardDetail = () => {
             </p>
           </div>
         </div>
-        <div></div>
+        <div className="flex gap-6">
+          <div className="flex flex-col w-[360px] px-7 py-5 border-[1px] border-black/0.06 rounded gap-2">
+            <p className="text-base font-medium">관심인구 성비</p>
+            <p className="text-sm text-[#6b6b6b]">
+              광고에 관심을 보인 사람의 성비를 분석했어요.
+            </p>
+            <InterestPeopleChart
+              interestPeopleCount={[
+                dummy.maleInterestCnt,
+                dummy.femaleInterestCnt,
+              ]}
+            />
+          </div>
+          <div className="flex flex-col flex-1 px-7 py-5 border-[1px] border-black/0.06 rounded"></div>
+        </div>
+        <div className="px-7 py-5 border-[1px] border-black/0.06 rounded w-full"></div>
       </div>
     </div>
   );
