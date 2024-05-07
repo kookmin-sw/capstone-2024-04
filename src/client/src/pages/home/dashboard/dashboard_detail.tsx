@@ -51,11 +51,11 @@ const DashBoardDetail = () => {
           src=""
         />
       </div>
+      <div className="flex justify-between mt-10 mb-3">
+        <p className="text-base">광고 관심도 분석 결과</p>
+        <Select />
+      </div>
       <div className="flex flex-col gap-6">
-        <div className="flex justify-between">
-          <p className="text-base">광고 관심도 분석 결과</p>
-          <Select />
-        </div>
         <div className="grid grid-cols-4 gap-6">
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">총 유동인구수</p>
