@@ -1,7 +1,8 @@
 import { Select } from "antd";
 import { DashboardDataInfo } from "../../../interfaces/interface";
-import ApexCharts from "apexcharts";
 import { InterestPeopleChart } from "./pie";
+import { InterestBar } from "./interestBar";
+import { TotalBar } from "./totalBar";
 
 const DashBoardDetail = () => {
   const dummy: DashboardDataInfo = {
@@ -90,21 +91,54 @@ const DashBoardDetail = () => {
           </div>
         </div>
         <div className="flex gap-6">
-          <div className="flex flex-col w-[360px] px-7 py-5 border-[1px] border-black/0.06 rounded gap-2">
+          <div className="flex flex-col w-[360px]  px-7 py-5 border-[1px] border-black/0.06 rounded gap-2">
             <p className="text-base font-medium">관심인구 성비</p>
             <p className="text-sm text-[#6b6b6b]">
               광고에 관심을 보인 사람의 성비를 분석했어요.
             </p>
-            <InterestPeopleChart
-              interestPeopleCount={[
-                dummy.maleInterestCnt,
-                dummy.femaleInterestCnt,
+            <div className="flex h-full justify-center items-center">
+              <InterestPeopleChart
+                interestPeopleCount={[
+                  dummy.maleInterestCnt,
+                  dummy.femaleInterestCnt,
+                ]}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col flex-1 px-7 py-5 border-[1px] border-black/0.06 rounded gap-2">
+            <p className="text-base font-medium">관심인구 나이대</p>
+            <p className="text-sm text-[#6b6b6b]">
+              광고에 관심을 보인 사람의 나이대를 분석했어요.
+            </p>
+            <InterestBar
+              interestAge={[
+                { name: "10대", data: [10] },
+                { name: "20대", data: [13] },
+              ]}
+            />
+            <p className="text-base font-medium">전체 유동인구 나이대</p>
+            <p className="text-sm text-[#6b6b6b]">
+              광고 디스플레이 앞을 지나간 모든 사람의 나이대는 다음과 같아요.
+            </p>
+            <TotalBar
+              totalAge={[
+                { name: "10대", data: [10] },
+                { name: "20대", data: [13] },
+                { name: "30대", data: [1] },
+                { name: "40대", data: [19] },
               ]}
             />
           </div>
-          <div className="flex flex-col flex-1 px-7 py-5 border-[1px] border-black/0.06 rounded"></div>
         </div>
-        <div className="px-7 py-5 border-[1px] border-black/0.06 rounded w-full"></div>
+        <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded w-full gap-2">
+          <p className="text-base font-medium">
+            시간대별 광고 관심도 및 유동인구 추이
+          </p>
+          <p className="text-sm text-[#6b6b6b]">
+            광고 관심도는 디스플레이 앞을 지나간 모든 사람 중 관심을 가진 사람이
+            얼마나 많았는지를 알려주는 지표예요.
+          </p>
+        </div>
       </div>
     </div>
   );
