@@ -48,8 +48,8 @@ public class MediaApplicationService {
         List<MediaApplicationResponse.MediaApplicationInfo> infos = new ArrayList<>();
         mediaApplicationIds.forEach(applyid -> {
             MediaApplication mediaApplication = mediaApplicationRepository.findById(applyid).orElseThrow(() -> new IllegalArgumentException("Invalid applyId"));
-            boolean available = mediaApplicationRepository.hasOverlappingApplications(mediaApplication.getStartDate(), mediaApplication.getEndDate(),mediaApplication.getLocation());
-            if(available) throw new IllegalArgumentException("해당 날짜와 장소에는 이미 광고가 등록되어있습니다");
+//            boolean available = mediaApplicationRepository.hasOverlappingApplications(mediaApplication.getStartDate(), mediaApplication.getEndDate(),mediaApplication.getLocation());
+//            if(available) throw new IllegalArgumentException("해당 날짜와 장소에는 이미 광고가 등록되어있습니다");
             mediaApplication.updateStatus(status);
             mediaApplicationRepository.save(mediaApplication);
             MediaApplicationResponse.MediaApplicationInfo mediaApplicationInfo = new MediaApplicationResponse.MediaApplicationInfo(mediaApplication);

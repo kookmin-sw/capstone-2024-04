@@ -34,7 +34,7 @@ public class PlayList extends BaseTimeEntity {
     private MediaApplication mediaApplication;
 
     public PlayList(MediaApplication mediaApplication) {
-        this.posting = true;
+        this.posting = false;
         this.location = mediaApplication.getLocation();
         this.mediaApplication = mediaApplication;
     }

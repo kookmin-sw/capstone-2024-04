@@ -9,14 +9,14 @@ public class PlayListResponse {
     @Setter
     public static class TodayList{
         private Long playListId;
-        private boolean posting;
+        private boolean broadCasting;
         private LocationResponse.LocationInfo location;
         private MediaResponse.MediaInfo media;
 
 
         public TodayList(PlayList playList) {
             this.playListId = playList.getPlayListId();
-            this.posting = playList.isPosting();
+            this.broadCasting = playList.isPosting();
             this.location = new LocationResponse.LocationInfo(playList.getLocation());
             this.media = new MediaResponse.MediaInfo(playList.getMediaApplication().getMedia());
         }

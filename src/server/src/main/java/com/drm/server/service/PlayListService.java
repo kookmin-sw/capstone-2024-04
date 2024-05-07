@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,11 +34,10 @@ public class PlayListService {
         LocalDate currentDate = LocalDate.now();
         List<MediaApplication> mediaApplications = mediaApplicationRepository.findAcceptedApplicationsForToday( currentDate).orElse(Collections.emptyList());
         log.info(String.valueOf(mediaApplications.stream().count()));
-        verifyPlayList(currentDate,mediaApplications);
-        List<PlayList> playLists = mediaApplications.stream()
+        List<MediaApplication> unUploadPlayList = verifyPlayList(currentDate,mediaApplications);
+        List<PlayList> playLists = unUploadPlayList.stream()
                 .peek(mediaApplication -> dailyMediaBoardService.createDailyBoard(mediaApplication,currentDate))
                 .map(PlayList::new).collect(Collectors.toList());
-        playListRepository.saveAll(playLists);
         return playListRepository.saveAll(playLists);
     }
     public List<PlayList> todayList(Long locationId){
@@ -46,12 +46,15 @@ public class PlayListService {
         return playListRepository.findByLocationAndCreateDateContaining(location,currentDate.atStartOfDay()).orElse(Collections.emptyList());
     }
 
-    private void verifyPlayList(LocalDate localDate, List<MediaApplication> mediaApplications){
+    private List<MediaApplication> verifyPlayList(LocalDate localDate, List<MediaApplication> mediaApplications){
+        List<MediaApplication> unUploadPlayList = new ArrayList<>();
         mediaApplications.forEach(mediaApplication -> {
-            if(playListRepository.existsByCreateDateAndMediaApplications(localDate.atStartOfDay(),mediaApplication))
-                throw new IllegalArgumentException("해당 플레이리스트는 이미 등록되어있습니다");
+            if(!playListRepository.existsByCreateDateAndMediaApplications(localDate.atStartOfDay(),mediaApplication)){
+                unUploadPlayList.add(mediaApplication);
+            }
         });
         // currentDate 에 해당되는 MediaAplication 의 daily Board 들 각각 생성
+        return unUploadPlayList;
 
     }
 
