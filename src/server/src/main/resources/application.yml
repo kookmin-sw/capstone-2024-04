@@ -41,7 +41,10 @@ spring:
           timeout: 5000
           writetimeout: 5000
     auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30?
-
+  data:
+    redis:
+      host: localhost
+      port: 6379
 springdoc:
   swagger-ui:
     groups-order: desc
