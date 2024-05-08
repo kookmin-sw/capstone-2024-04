@@ -33,6 +33,10 @@ public class PlayList extends BaseTimeEntity {
     @JoinColumn(name = "media_application_id")
     private MediaApplication mediaApplication;
 
+    public void brodcasting() {
+        this.posting = true;
+    }
+
     public PlayList(MediaApplication mediaApplication) {
         this.posting = false;
         this.location = mediaApplication.getLocation();

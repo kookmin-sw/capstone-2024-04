@@ -32,13 +32,15 @@ public class PlayListService {
 //    @Scheduled(cron = "0/5 * * * * ?")
     public List<PlayList> updatePlayList(){
         LocalDate currentDate = LocalDate.now();
+//        오늘 날짜의 신청리스트 조회
         List<MediaApplication> mediaApplications = mediaApplicationRepository.findAcceptedApplicationsForToday( currentDate).orElse(Collections.emptyList());
-        log.info(String.valueOf(mediaApplications.stream().count()));
-        List<MediaApplication> unUploadPlayList = verifyPlayList(currentDate,mediaApplications);
+//        추가 안된 광고 추가
+        List<MediaApplication> unUploadPlayList = unUploadPlayList(currentDate,mediaApplications);
         List<PlayList> playLists = unUploadPlayList.stream()
                 .peek(mediaApplication -> dailyMediaBoardService.createDailyBoard(mediaApplication,currentDate))
                 .map(PlayList::new).collect(Collectors.toList());
-        return playListRepository.saveAll(playLists);
+        List<PlayList> newPlayList = playListRepository.saveAll(playLists);
+        return newPlayList;
     }
     public List<PlayList> todayList(Long locationId){
         Location location = locationRepository.findById(locationId).orElseThrow(() -> new IllegalArgumentException("invalid locationId"));
@@ -46,7 +48,7 @@ public class PlayListService {
         return playListRepository.findByLocationAndCreateDateContaining(location,currentDate.atStartOfDay()).orElse(Collections.emptyList());
     }
 
-    private List<MediaApplication> verifyPlayList(LocalDate localDate, List<MediaApplication> mediaApplications){
+    private List<MediaApplication> unUploadPlayList(LocalDate localDate, List<MediaApplication> mediaApplications){
         List<MediaApplication> unUploadPlayList = new ArrayList<>();
         mediaApplications.forEach(mediaApplication -> {
             if(!playListRepository.existsByCreateDateAndMediaApplications(localDate.atStartOfDay(),mediaApplication)){
@@ -68,5 +70,23 @@ public class PlayListService {
     // test 코드용 호출
     public void testUpdatePlayList(){
         updatePlayList();
+    }
+    public List<PlayList> updateBroadCasting(){
+        LocalDate currentDate = LocalDate.now();
+        List<Location> locations = locationRepository.findAll();
+        locations.forEach(location -> {
+//            플레이리스트가 실행중인게 없을 경우
+            boolean isposting = playListRepository.existsByLocationAndPostingIsTrue(location, currentDate.atStartOfDay());
+            List<PlayList> playLists = playListRepository.findFirstFalseByLocationAndCreateDateOrderByCreateDateAsc(location, currentDate.atStartOfDay()).orElse(Collections.emptyList());
+            log.info(String.valueOf(isposting));
+//            실행중인 플레이리스트도 없으면서 플레이리스타 존재하는 경우
+            if(!isposting && playLists.size() != 0) {
+
+                PlayList unBroadCasting = playLists.get(0);
+                unBroadCasting.brodcasting();
+                playListRepository.save(unBroadCasting);
+            }
+        });
+        return playListRepository.findByBroadCasting(currentDate.atStartOfDay());
     }
 }
