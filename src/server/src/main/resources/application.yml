@@ -43,7 +43,7 @@ spring:
     auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30?
   data:
     redis:
-      host: localhost
+      host: host.docker.internal
       port: 6379
 springdoc:
   swagger-ui:
