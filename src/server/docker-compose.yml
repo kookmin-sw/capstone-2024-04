@@ -1,31 +1,32 @@
-version: '3'
+version: '3.8'
+
 services:
   redis-docker:
     image: redis:latest
     command: redis-server --port 6379
-    container_name: "docker-redis"
+    container_name: docker-redis
     labels:
-      - "name=redis"
-      - "mode=standalone"
+      name: redis
+      mode: standalone
     ports:
-      - 6379:6379
+      - "6379:6379"
     networks:
-      - eum-test
-  application:
-    container_name: spring-app
-    restart: on-failure
+      - app-net
+
+  app:
+    container_name: spring-boot-app
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://43.201.57.42:3306/advt
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "root"
     depends_on:
       - redis-docker
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod  # Set the active profile; adjust as necessary
     networks:
-      - eum-test
+      - app-net
+
 networks:
-  eum-test:
+  app-net:
+
