@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { MediaCardProps } from "../../../components/media_card";
 import { Subtitle2 } from "../../../components/text";
 import { Table, TableColumnsType } from "antd";
 import DashBoardDetail from "./dashboard_detail";
@@ -21,7 +20,7 @@ export interface TableItem {
 
 const DashBoard = () => {
   const [mode, setMode] = useState(DashBoardMode.LIST);
-  const [detailInfo, setDetailInfo] = useState<MediaCardProps | null>(null);
+  // const [detailInfo, setDetailInfo] = useState<MediaCardProps | null>(null);
 
   const columns: TableColumnsType<TableItem> = [
     {

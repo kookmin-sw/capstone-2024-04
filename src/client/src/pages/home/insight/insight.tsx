@@ -12,6 +12,8 @@ const Insight = () => {
   const [mode, setMode] = useState(InsightMode.LIST);
   const [detailInfo, setDetailInfo] = useState<MediaInfo | null>(null);
 
+  console.log(detailInfo);
+
   const data: MediaInfo[] = [
     {
       mediaId: 1,
