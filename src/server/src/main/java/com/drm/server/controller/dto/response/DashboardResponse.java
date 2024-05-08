@@ -50,7 +50,10 @@ public class DashboardResponse {
         @Schema(description = "시간당 포착된 사람 수 (0시 - 23시 까지)", example = "[15, 28, 45, 20, 25, 7, 19, 30, 48, 18, 27, 5, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6]")
         private List<Long> hourlyPassedCount;
 
-        @Schema(description = "시간당 평균 응시 횟수(0시 - 23시까지)", example = "[2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2")
+        @Schema(description = "나이대별 관심을 보인 사람 수(10대 - 90대)", example = "[15, 28, 45, 20, 25, 7, 19, 30, 48]")
+        private List<Long> interestedPeopleAgeRangeCount;
+
+        @Schema(description = "시간당 평균 응시 횟수(0시 - 23시까지)", example = "[2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2]")
         private List<Float> hourlyAvgStaringTime;
         @Schema(description = "전체 포착된 사람 수", example = "254")
         private Long totalPeopleCount;
@@ -75,6 +78,7 @@ public class DashboardResponse {
             this.hourlyInterestedCount = new ArrayList<>(Collections.nCopies(24, 0L));
             this.hourlyPassedCount =  new ArrayList<>(Collections.nCopies(24, 0L));
             this.hourlyAvgStaringTime = new ArrayList<>(Collections.nCopies(24,0F));
+            this.interestedPeopleAgeRangeCount = new ArrayList<>(Collections.nCopies(10, 0L));
             this.totalPeopleCount = 0L;
             this.avgStaringTime = 0;
             this.avgAge = 0;
@@ -85,6 +89,7 @@ public class DashboardResponse {
         }
 
         public DashboardDataInfo(DailyMediaBoard board){
+            // interest age add
             this.hourlyInterestedCount = board.getHourlyInterestedCount();
             this.hourlyPassedCount = board.getHourlyPassedCount();
             this.femaleInterestCnt = board.getFemaleInterestCnt();
@@ -109,7 +114,10 @@ public class DashboardResponse {
         public void addHourlyInterestedCount(List<Long> boardList) {
             this.hourlyInterestedCount = DashboardCalculator.calculateHourListDataPerHour(this.hourlyInterestedCount, boardList);
         }
-        public void updateDtoWithBoardData(Long totalPeopleCntData, List<Long> hourlyPassedData, List<Long> hourlyInterestData,
+        public void addHourlyInterestedPeopleAgeRange(List<Long> boardList){
+            this.interestedPeopleAgeRangeCount = DashboardCalculator.calculateHourListDataPerHour(this.interestedPeopleAgeRangeCount, boardList);
+        }
+        public void updateDtoWithBoardData(Long totalPeopleCntData, List<Long> interestedPeopleAgeListData, List<Long> hourlyPassedData, List<Long> hourlyInterestData,
                                      List<Float> avgStaringTimeListData, Float avgAgeData, Float avgStaringData,
                                            Long maleInterestCntData, Long femaleInterestCntData, Long maleCntData){
             // 광고에 대해 해당 광고 집행 횟수 +1
@@ -118,6 +126,8 @@ public class DashboardResponse {
             // 시간별 유동인구 데이터 합치기
             this.addHourlyPassedCount(hourlyPassedData);
             this.addHourlyInterestedCount(hourlyInterestData);
+            // 관심 가진 사람의 나이대별 집계
+            this.addHourlyInterestedPeopleAgeRange(interestedPeopleAgeListData);
             // * avgStaring 은 Float 연산
             this.addHourlyAvgStaringTime(avgStaringTimeListData);
             // 수치 합치기
