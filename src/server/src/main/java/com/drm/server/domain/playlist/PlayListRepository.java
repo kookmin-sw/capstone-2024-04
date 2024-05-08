@@ -41,6 +41,10 @@ public interface PlayListRepository extends JpaRepository<PlayList,Long> {
             "WHERE DATE(pl.createDate) = Date(:today) " +
             "AND pl.posting = true " )
     List<PlayList> findByBroadCasting(@Param("today") LocalDateTime today);
-
+    @Query("SELECT pl FROM PlayList pl " +
+            "WHERE pl.location = :location " +
+            "AND DATE(pl.createDate) = Date(:today) " +
+            "AND pl.posting = true" )
+    Optional<PlayList> findByLocationAndCreateDateAndPosting(@Param("location") Location location, @Param("today") LocalDateTime today);
 }
 

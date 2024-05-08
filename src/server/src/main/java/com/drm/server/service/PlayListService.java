@@ -83,7 +83,7 @@ public class PlayListService {
             if(!isposting && playLists.size() != 0) {
 
                 PlayList unBroadCasting = playLists.get(0);
-                unBroadCasting.brodcasting();
+                unBroadCasting.brodCasting();
                 playListRepository.save(unBroadCasting);
             }
         });
