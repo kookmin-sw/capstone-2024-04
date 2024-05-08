@@ -9,8 +9,8 @@ services:
       - "mode=standalone"
     ports:
       - 6379:6379
-#    networks:
-#      - eum-test
+    networks:
+      - eum-test
   application:
     container_name: spring-app
     restart: on-failure
@@ -25,7 +25,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: "root"
     depends_on:
       - redis-docker
-#    networks:
-#      - test_network
-#networks:
-#  eum-test:
+    networks:
+      - eum-test
+networks:
+  eum-test:
