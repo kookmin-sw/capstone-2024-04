@@ -96,6 +96,12 @@ public class DashboardServiceTest {
                 "translate.png",
                 "image/png",
                 new FileInputStream("/Users/dongguk/Desktop/동국자료/해외여행/CES/translate.png"));
+
+        locationService.createLocation(1, "2호선 1번 칸");
+        locationService.createLocation(2, "2호선 2번 칸");
+        locationService.createLocation(3, "2호선 3번 칸");
+
+
         Location location = locationService.findById(1L);
         Location location2 = locationService.findById(2L);
         Location location3 = locationService.findById(3L);
@@ -115,7 +121,8 @@ public class DashboardServiceTest {
         Dashboard ds = dashboardService.createDashboard(user);
         Dashboard ds2 = dashboardService.createDashboard(user);
 
-        Media media =  mediaService.createMockMedia(mediaRequest, ds, file);
+        Media media =  mediaService.createMedia(mediaRequest, ds, file);
+//        Media media =  mediaService.createMockMedia(mediaRequest, ds, file);
 //        Media media2 =  mediaService.createMockMedia(mediaRequest2, ds2, file);
 
         // 여러개의 광고 집행 단위가 존재 가정
@@ -145,9 +152,37 @@ public class DashboardServiceTest {
 
 
     @Test
-    @Disabled
-//    @Transactional
-    public void getDashBoardsTest(){
+//    @Disabled
+    @Transactional
+    public void getDashBoardsTest() throws IOException {
+//        SetupManually();
+        // given
+        // 회원 가입 세팅
+        String email = "test@email";
+        Optional<User> userOptional = userService.getUserByEmail(email);
+        User user = new User();
+        if(userOptional.isEmpty()){
+            UserResponse.UserInfo userInfo = userService.createUser(email, "1234", "drm");
+            user = userService.getUser(userInfo.getUserId());
+        }
+        else{
+            user = userOptional.get();
+        }
+
+        // 미디어 생성 요청 세팅
+        MockMultipartFile file = new MockMultipartFile("image",
+                "translate.png",
+                "image/png",
+                new FileInputStream("/Users/dongguk/Desktop/동국자료/해외여행/CES/translate.png"));
+
+        locationService.createLocation(1, "2호선 1번 칸");
+        locationService.createLocation(2, "2호선 2번 칸");
+        locationService.createLocation(3, "2호선 3번 칸");
+
+//        Location location = locationService.findById(1L);
+//        Location location2 = locationService.findById(2L);
+//        Location location3 = locationService.findById(3L);
+
 //        // when
 //        List<DashboardResponse.DashboardDataInfo> dashboardList = dashboardService.findDashboardsByUser(user.getUserId());
 //        DashboardResponse.DashboardDataInfo dashboard = dashboardService.findDashboardById(user.getUserId(), ds.getDashboardId());
@@ -162,7 +197,7 @@ public class DashboardServiceTest {
 //            assertEquals(info.getTitle(), testMediaList.get(testMediaList.size() - i).getDashboardTitle());
 //            assertEquals(info.getDescription(), testMediaList.get(testMediaList.size() - i).getDashboardDescription());
 //        }
-//
+
 //        // remove
 //        for(MediaRequest.Create testMedia : testMediaList){
 //            dashboardService.deleteDashboardByTitle(testMedia.getDashboardTitle());
@@ -170,8 +205,8 @@ public class DashboardServiceTest {
     }
 
     @Test
-    @Disabled
-//    @Transactional
+//    @Disabled
+    @Transactional
     // 특정 광고에 대한 요약 데이터 조회하는 테스트
     // 로직 자체는 동작
     // 카프카 데이터 넣어서 잘 계산, 조회하는지만 검증 필요
@@ -256,4 +291,6 @@ public class DashboardServiceTest {
         log.info("info getPassedPeopleCntPerDay : " + info.getPassedPeopleCntPerDay().toString());
 
     }
+
+
 }
