@@ -38,5 +38,5 @@ out/
 !**/src/main/resources/firebase.json
 *.json
 !**/src/main/resources/static/index.html
-src/server/src/main/resources/firebase.json
 src/server/src/main/resources/static/index.html
+src/main/resources/devapplication.yml
