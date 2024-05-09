@@ -24,3 +24,10 @@ export const postMedia = async (formData: FormData) => {
     });
     return response;
 }
+
+export const deleteMedia = async ({mediaId}: any) => {
+    const response  = await privateApi.delete(`/api/v1/media/${mediaId}`).catch((err) => {
+        return err.response;
+    });
+    return response;
+}
