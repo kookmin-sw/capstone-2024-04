@@ -50,7 +50,7 @@ public class MediaService {
         return mediaRepository.save(media);
     }
 
-    public List<MediaResponse.MediaInfo> findByDashboard(List<Dashboard> dashboards, Status status, Pageable pageable){
+    public List<MediaResponse.MediaInfo> findByDashboard(List<Dashboard> dashboards, Status status){
         if (status == null ){
             return dashboards.stream().map(MediaResponse.MediaInfo::new).collect(Collectors.toList());
         }
