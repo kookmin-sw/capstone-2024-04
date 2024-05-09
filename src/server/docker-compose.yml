@@ -1,24 +1,5 @@
 version: '3'
 services:
-  database:
-    container_name: mysql_db
-    image: mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: drm
-      MYSQL_ROOT_HOST: '%'
-      MYSQL_ROOT_PASSWORD: root
-      TZ: 'Asia/Seoul'
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./mysql/conf.d:/etc/mysql/conf.d # MySQL 설정 파일 위치
-    command:
-      - "mysqld"
-      - "--character-set-server=utf8mb4"
-      - "--collation-server=utf8mb4_unicode_ci"
-    networks:
-      - test_network
   redis-docker:
     image: redis:latest
     command: redis-server --port 6379
@@ -31,19 +12,18 @@ services:
     networks:
       - test_network
   application:
-    container_name: docker-compose-test
+    container_name: drm-server
     restart: on-failure
     build:
       context: .
       dockerfile: ./Dockerfile
     ports:
-      - "8080:8080"
+      - "8084:8084"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/drm
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "root"
+      SPRING_DATASOURCE_URL: jdbc:mysql://223.130.163.37:3306/drm
+      SPRING_DATASOURCE_USERNAME: "keum2023"
+      SPRING_DATASOURCE_PASSWORD: "keum2023!"
     depends_on:
-      - database
       - redis-docker
     networks:
       - test_network
