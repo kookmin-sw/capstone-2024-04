@@ -31,13 +31,13 @@ public class PlayListService {
     @Scheduled(cron = "0 0 0 * * ?")
 //    @Scheduled(cron = "0/5 * * * * ?")
     public List<PlayList> updatePlayList(){
-        LocalDate currentDate = LocalDate.now();
+        LocalDate today = LocalDate.now();
 //        오늘 날짜의 신청리스트 조회
-        List<MediaApplication> mediaApplications = mediaApplicationRepository.findAcceptedApplicationsForToday( currentDate).orElse(Collections.emptyList());
+        List<MediaApplication> mediaApplications = mediaApplicationRepository.findAcceptedApplicationsForToday( today).orElse(Collections.emptyList());
 //        추가 안된 광고 추가
-        List<MediaApplication> unUploadPlayList = unUploadPlayList(currentDate,mediaApplications);
+        List<MediaApplication> unUploadPlayList = unUploadPlayList(today,mediaApplications);
         List<PlayList> playLists = unUploadPlayList.stream()
-                .peek(mediaApplication -> dailyMediaBoardService.createDailyBoard(mediaApplication,currentDate))
+                .peek(mediaApplication -> dailyMediaBoardService.createDailyBoard(mediaApplication,today))
                 .map(PlayList::new).collect(Collectors.toList());
         List<PlayList> newPlayList = playListRepository.saveAll(playLists);
         return newPlayList;

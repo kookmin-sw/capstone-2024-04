@@ -4,7 +4,6 @@ import com.drm.server.common.APIResponse;
 import com.drm.server.common.ErrorResponse;
 import com.drm.server.common.enums.SuccessCode;
 import com.drm.server.controller.dto.request.MediaRequest;
-import com.drm.server.controller.dto.response.DashboardResponse;
 import com.drm.server.controller.dto.response.MediaApplicationResponse;
 import com.drm.server.controller.dto.response.MediaResponse;
 import com.drm.server.domain.dashboard.Dashboard;
@@ -15,7 +14,6 @@ import com.drm.server.domain.mediaApplication.Status;
 import com.drm.server.domain.user.CustomUserDetails;
 import com.drm.server.domain.user.User;
 import com.drm.server.service.*;
-import com.google.protobuf.Api;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,6 +23,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -77,10 +77,10 @@ public class MediaController {
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     @GetMapping("")
-    public ResponseEntity<APIResponse<List<MediaResponse.MediaInfo>>> getMedia(@RequestParam(value = "filter",required = false)Status filter, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<APIResponse<List<MediaResponse.MediaInfo>>> getMedia(@RequestParam(value = "filter",required = false)Status filter,@PageableDefault(size = 8) Pageable pageable, @AuthenticationPrincipal CustomUserDetails userDetails){
         User getUser = userService.getUser(userDetails.getUsername());
         List<Dashboard> dashboards = dashboardService.findByUser(getUser);
-        List<MediaResponse.MediaInfo> mediaInfos = mediaService.findByDashboard(dashboards,filter);
+        List<MediaResponse.MediaInfo> mediaInfos = mediaService.findByDashboard(dashboards,filter,pageable);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, mediaInfos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

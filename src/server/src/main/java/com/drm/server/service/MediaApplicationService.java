@@ -13,6 +13,7 @@ import com.drm.server.domain.playlist.PlayListRepository;
 import com.drm.server.domain.user.User;
 import com.drm.server.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import software.amazon.ion.NullValueException;
 
@@ -34,6 +35,8 @@ public class MediaApplicationService {
     public MediaApplication createMediaApplication(Media media, Location location, String startDate,String endDate){
         if(KoreaLocalDateTime.stringToLocalDateTime(startDate).isAfter(KoreaLocalDateTime.stringToLocalDateTime(endDate) ))throw new IllegalArgumentException("시작 시간이 끝나는 시간 보다 늦을수 없습니다");
         MediaApplication mediaApplication = MediaApplication.toEntity(startDate, endDate, media, location);
+//        같은 장소에 송출 날짜 겹치는 경우 예외
+        verifyDuplicateMediaInSameLocation(mediaApplication);
         return mediaApplicationRepository.save(mediaApplication);
     }
     public void deleteMediaApplication(Long mediaId, Long mediaApplicationId, User user){
@@ -63,8 +66,8 @@ public class MediaApplicationService {
         return mediaApplication;
     }
 
-    public List<MediaApplication> findAllApplications(){
-        List<MediaApplication> mediaApplications = mediaApplicationRepository.findAll();
+    public List<MediaApplication> findAllApplications(Pageable pageable){
+        List<MediaApplication> mediaApplications = mediaApplicationRepository.findAllByOrderByCreateDateDesc(pageable);
         return mediaApplications;
     }
 
@@ -98,6 +101,10 @@ public class MediaApplicationService {
         verifyUser(mediaApplication,user);
         if(!mediaApplication.getStatus().equals(WAITING)) throw new ForbiddenException("신청 대기일때만 삭제 가능합니다");
     }
+    private void verifyDuplicateMediaInSameLocation(MediaApplication mediaApplication){
+        if(mediaApplicationRepository.existsByMediaBetweenDate(mediaApplication.getMedia(), mediaApplication.getStartDate(), mediaApplication.getEndDate(), mediaApplication.getLocation()))
+            throw new IllegalArgumentException("이미 해당 장소와 날짜에 신청한 이력이 있습니다, 다른날짜에 신청해주세요");
+    }
 
     public List<MediaApplication> findMediaAppsByLocation(Location location) {
        return mediaApplicationRepository.findAllByLocation(location).orElseThrow(() -> new NullValueException());
@@ -107,15 +114,15 @@ public class MediaApplicationService {
         mediaApplicationRepository.deleteAll();
     }
 
-    public List<MediaApplication> findByDashBoards(List<Dashboard> dashboards,Status status) {
+    public List<MediaApplication> findByDashBoards(List<Dashboard> dashboards,Status status,Pageable pageable) {
         List<Media> mediaList = new ArrayList<>();
         dashboards.forEach(dashboard -> {
             mediaList.add(dashboard.getMedia());
         });
         if(status == null ) {
-            return mediaApplicationRepository.findByMediaInOrderByCreateDateDesc(mediaList).orElse(Collections.emptyList());
+            return mediaApplicationRepository.findByMediaInOrderByCreateDateDesc(mediaList,pageable).orElse(Collections.emptyList());
         }
         LocalDate currentDate = LocalDate.now();
-        return mediaApplicationRepository.findByMediaInAndDashboardData(mediaList,currentDate,status).orElse(Collections.emptyList());
+        return mediaApplicationRepository.findByMediaInAndDashboardData(mediaList,currentDate,status,pageable).orElse(Collections.emptyList());
     }
 }

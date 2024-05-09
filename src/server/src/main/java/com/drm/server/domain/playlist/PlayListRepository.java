@@ -19,10 +19,15 @@ public interface PlayListRepository extends JpaRepository<PlayList,Long> {
             "AND p.posting = true")
     Optional<MediaApplication> findMediaApplicationsByLocationAndCreateDate(@Param("location") Location location, @Param("createDate") LocalDateTime createDate);
 
-    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM PlayList p WHERE DATE(p.createDate) = DATE(:date) AND p.mediaApplication = :mediaApplications")
-    boolean existsByCreateDateAndMediaApplications(@Param("date") LocalDateTime date, @Param("mediaApplications") MediaApplication mediaApplications);
+    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false " +
+            "END FROM PlayList p" +
+            " WHERE DATE(p.createDate) = DATE(:today)" +
+            " AND p.mediaApplication = :mediaApplications")
+    boolean existsByCreateDateAndMediaApplications(@Param("today") LocalDateTime today, @Param("mediaApplications") MediaApplication mediaApplications);
 
-    @Query("SELECT p FROM PlayList p WHERE p.location = :location AND DATE(p.createDate) = Date(:today)")
+    @Query("SELECT p FROM PlayList p" +
+            " WHERE p.location = :location" +
+            " AND DATE(p.createDate) = Date(:today)")
     Optional<List<PlayList>> findByLocationAndCreateDateContaining(@Param("location") Location location, @Param("today") LocalDateTime today);
 
     @Query("SELECT COUNT(pl) " +
@@ -32,12 +37,6 @@ public interface PlayListRepository extends JpaRepository<PlayList,Long> {
             "AND pl.posting = true")
     int existsByLocationAndPostingIsTrue(@Param("location") Location location, @Param("today") LocalDateTime today);
 
-    @Query("SELECT pl FROM PlayList pl " +
-            "WHERE pl.location = :location " +
-            "AND DATE(pl.createDate) = Date(:today) ")
-    Optional<List<PlayList>> findFirstFalseByLocationAndCreateDateOrderByCreateDateAsc(
-            @Param("location") Location location,
-            @Param("today") LocalDateTime today);
     @Query("SELECT pl FROM PlayList pl " +
             "WHERE DATE(pl.createDate) = Date(:today) " +
             "AND pl.posting = true " )
