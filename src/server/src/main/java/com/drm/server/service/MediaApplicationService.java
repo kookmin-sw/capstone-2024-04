@@ -1,5 +1,6 @@
 package com.drm.server.service;
 
+import com.drm.server.common.KoreaLocalDateTime;
 import com.drm.server.controller.dto.response.MediaApplicationResponse;
 import com.drm.server.domain.dashboard.Dashboard;
 import com.drm.server.domain.location.Location;
@@ -12,9 +13,11 @@ import com.drm.server.domain.playlist.PlayListRepository;
 import com.drm.server.domain.user.User;
 import com.drm.server.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import software.amazon.ion.NullValueException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,10 +31,12 @@ public class MediaApplicationService {
     private final MediaApplicationRepository mediaApplicationRepository;
     private final LocationRepository locationRepository;
     private final PlayListRepository playListRepository;
-    private final DailyMediaBoardService dailyMediaBoardService;
 
     public MediaApplication createMediaApplication(Media media, Location location, String startDate,String endDate){
+        if(KoreaLocalDateTime.stringToLocalDateTime(startDate).isAfter(KoreaLocalDateTime.stringToLocalDateTime(endDate) ))throw new IllegalArgumentException("시작 시간이 끝나는 시간 보다 늦을수 없습니다");
         MediaApplication mediaApplication = MediaApplication.toEntity(startDate, endDate, media, location);
+//        같은 장소에 송출 날짜 겹치는 경우 예외
+        verifyDuplicateMediaInSameLocation(mediaApplication);
         return mediaApplicationRepository.save(mediaApplication);
     }
     public void deleteMediaApplication(Long mediaId, Long mediaApplicationId, User user){
@@ -46,8 +51,8 @@ public class MediaApplicationService {
         List<MediaApplicationResponse.MediaApplicationInfo> infos = new ArrayList<>();
         mediaApplicationIds.forEach(applyid -> {
             MediaApplication mediaApplication = mediaApplicationRepository.findById(applyid).orElseThrow(() -> new IllegalArgumentException("Invalid applyId"));
-            boolean available = mediaApplicationRepository.hasOverlappingApplications(mediaApplication.getStartDate(), mediaApplication.getEndDate(),mediaApplication.getLocation());
-            if(available) throw new IllegalArgumentException("해당 날짜와 장소에는 이미 광고가 등록되어있습니다");
+//            boolean available = mediaApplicationRepository.hasOverlappingApplications(mediaApplication.getStartDate(), mediaApplication.getEndDate(),mediaApplication.getLocation());
+//            if(available) throw new IllegalArgumentException("해당 날짜와 장소에는 이미 광고가 등록되어있습니다");
             mediaApplication.updateStatus(status);
             mediaApplicationRepository.save(mediaApplication);
             MediaApplicationResponse.MediaApplicationInfo mediaApplicationInfo = new MediaApplicationResponse.MediaApplicationInfo(mediaApplication);
@@ -61,8 +66,8 @@ public class MediaApplicationService {
         return mediaApplication;
     }
 
-    public List<MediaApplication> findAllApplications(){
-        List<MediaApplication> mediaApplications = mediaApplicationRepository.findAll();
+    public List<MediaApplication> findAllApplications(Pageable pageable){
+        List<MediaApplication> mediaApplications = mediaApplicationRepository.findAllByOrderByCreateDateDesc(pageable);
         return mediaApplications;
     }
 
@@ -79,6 +84,7 @@ public class MediaApplicationService {
      */
     public MediaApplication findByCameraIdAndDate(int cameraId, LocalDateTime today){
         Location getLocation = locationRepository.findByCameraId(cameraId).orElseThrow(() -> new IllegalArgumentException("Invalid cameraId"));
+// 플레이리스트 중에 true인걸 찾는다
         MediaApplication mediaApplication = playListRepository.findMediaApplicationsByLocationAndCreateDate(getLocation, today).orElseThrow(() -> new IllegalArgumentException("광고가 걸려있지 않습니다"));
 
         return mediaApplication;
@@ -93,10 +99,11 @@ public class MediaApplicationService {
 
     public void deleteVerify(MediaApplication mediaApplication, User user){
         verifyUser(mediaApplication,user);
-        // media_application user 권한 검증 메소드의 재사용을 위해 아래의 라인 수정함
-        // ACCEPT 인 경우에 아래의 throw acception 을 뱉지 않도록 수정하는 것이 verify 의 목적에 맞다고 판단함. -
-        // > accept의 경우 삭제되면 안되기때문에 해당 verify는 삭제방지용으로 했던것 , accept가 된 상태에서 Return해버리면 accept가 된 신청목록 삭제됨
         if(!mediaApplication.getStatus().equals(WAITING)) throw new ForbiddenException("신청 대기일때만 삭제 가능합니다");
+    }
+    private void verifyDuplicateMediaInSameLocation(MediaApplication mediaApplication){
+        if(mediaApplicationRepository.existsByMediaBetweenDate(mediaApplication.getMedia(), mediaApplication.getStartDate(), mediaApplication.getEndDate(), mediaApplication.getLocation()))
+            throw new IllegalArgumentException("이미 해당 장소와 날짜에 신청한 이력이 있습니다, 다른날짜에 신청해주세요");
     }
 
     public List<MediaApplication> findMediaAppsByLocation(Location location) {
@@ -105,5 +112,17 @@ public class MediaApplicationService {
 
     public void deleteAll() {
         mediaApplicationRepository.deleteAll();
+    }
+
+    public List<MediaApplication> findByDashBoards(List<Dashboard> dashboards,Status status,Pageable pageable) {
+        List<Media> mediaList = new ArrayList<>();
+        dashboards.forEach(dashboard -> {
+            mediaList.add(dashboard.getMedia());
+        });
+        if(status == null ) {
+            return mediaApplicationRepository.findByMediaInOrderByCreateDateDesc(mediaList,pageable).orElse(Collections.emptyList());
+        }
+        LocalDate currentDate = LocalDate.now();
+        return mediaApplicationRepository.findByMediaInAndDashboardData(mediaList,currentDate,status,pageable).orElse(Collections.emptyList());
     }
 }

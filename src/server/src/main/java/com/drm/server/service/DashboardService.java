@@ -47,7 +47,7 @@ public class DashboardService {
 
 
     public List<Dashboard> findByUser(User user){
-        List<Dashboard> dashboards = dashboardRepository.findByUser(user).orElse(Collections.emptyList());
+        List<Dashboard> dashboards = dashboardRepository.findByUserOrderByCreateDateDesc(user).orElse(Collections.emptyList());
         return dashboards;
     }
 

@@ -1,69 +1,51 @@
-spring:
-  jackson:
-    time-zone: Asia/Seoul
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3308/advt?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
-    username: root
-    password: root
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-  jpa:
-    show-sql: true
-    hibernate:
-      format-sql: true
-      highlight-sql: true
-      ddl-auto: update
-
-      dialect: org.hibernate.dialect.MySQLDialect # ??? ??
-    properties:
+  spring:
+    jackson:
+      time-zone: Asia/Seoul
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3308/advt?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+      username: root
+      password: root
+    mvc:
+      pathmatch:
+        matching-strategy: ant_path_matcher
+    jpa:
+      show-sql: true
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect # ?? ?? ??
-    generate-ddl: true
+        format-sql: true
+        highlight-sql: true
+        ddl-auto: update
+        dialect: org.hibernate.dialect.MySQLDialect # ??? ??
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQLDialect # ?? ?? ??
+      generate-ddl: true
 
-  sql:
-    init:
-      mode: always
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${mail-account}
-    password: ${mail-password}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
-    auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30?
+    sql:
+      init:
+        mode: always
 
-springdoc:
-  swagger-ui:
-    groups-order: desc
-    tags-sorter: alpha
-    operations-sorter: method
-    disable-swagger-default-url: true
-    display-request-duration: true
-    default-models-expand-depth: 2
-    default-model-expand-depth: 2
-    display-operation-id: false
-    show-extensions: false
-  show-actuator: true
-  default-consumes-media-type: application/json
-  default-produces-media-type: application/json
-  writer-with-default-pretty-printer: true
-  model-and-view-allowed: true
-#  paths-to-match:
-#    - /**
+  springdoc:
+    swagger-ui:
+      groups-order: desc
+      tags-sorter: alpha
+      operations-sorter: method
+      disable-swagger-default-url: true
+      display-request-duration: true
+      default-models-expand-depth: 2
+      default-model-expand-depth: 2
+      display-operation-id: false
+      show-extensions: false
+    show-actuator: true
+    default-consumes-media-type: application/json
+    default-produces-media-type: application/json
+    writer-with-default-pretty-printer: true
+    model-and-view-allowed: true
+  #  paths-to-match:
+  #    - /**
 
-s3:
-  access-key: ${access-key}
-  secret-key: ${secret-key}
-#server:
-#  port: 80
-
+  s3:
+    access-key: ${access-key}
+    secret-key: ${secret-key}
+  #server:
+  #  port: 80
