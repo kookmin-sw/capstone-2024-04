@@ -20,7 +20,7 @@ public class MultipleMediaConsumer {
     private final PlayListRepository playListRepository;
     @KafkaListener(topics = "drm-advt-topic")
     public void updateQty(String kafkaMessage) {
-        log.info("Kafka Message: ->" + kafkaMessage);
+        log.info("송출 광고 Kafka Message: ->" + kafkaMessage);
 
         Map<Object, Object> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
