@@ -29,6 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_TYPE = "Bearer";
+    private static String REFRESHTOKEN = "RefreshToken:";
 
     private final RedisTemplate redisTemplate;
     private final JwtTokenProvider jwtTokenProvider;
@@ -46,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if(jwtTokenProvider.validateToken(token)) {
                     // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가져와서 SecurityContext에 저장
                     Authentication authentication = jwtTokenProvider.getAuthentication(token);
-                    String refreshToken = (String)redisTemplate.opsForValue().get("RT:" + authentication.getName());
+                    String refreshToken = (String)redisTemplate.opsForValue().get(REFRESHTOKEN + authentication.getName());
                     log.warn(refreshToken);
                     if( !(refreshToken == null || refreshToken.isBlank())){
                         SecurityContextHolder.getContext().setAuthentication(authentication);
