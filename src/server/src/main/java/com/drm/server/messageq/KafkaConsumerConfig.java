@@ -19,8 +19,8 @@ public class KafkaConsumerConfig {
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> properties = new HashMap<>();
-        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
-//        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "3.35.141.194:29092");
+//        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
+        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "http://3.35.141.194:29092"); // 배포 환경 설정
 //        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "175.45.203.201:9092"); // 배포 환경 설정
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "consumerGroupId");
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);

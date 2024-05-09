@@ -132,7 +132,8 @@ public class DashboardService {
             // 집행 단위별 일별 보드 조회
             for(DailyMediaBoard board : boards){
                 // 일별 데이터 집계하여 dto 리턴
-                boardInfo.updateDtoWithBoardData(board.getTotalPeopleCount(), board.getHourlyPassedCount(), board.getHourlyInterestedCount(),
+                boardInfo.updateDtoWithBoardData(board.getTotalPeopleCount(), board.getInterestedAgeRangeCount(),
+                        board.getHourlyPassedCount(), board.getHourlyInterestedCount(),
                         board.getHourlyAvgStaringTime(), board.getAvgAge(), board.getAvgStaringTime(),
                         board.getMaleInterestCnt(), board.getFemaleInterestCnt(), board.getMaleCnt());
             }
