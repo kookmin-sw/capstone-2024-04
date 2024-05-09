@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PlayListRepository extends JpaRepository<PlayList,Long> {
-    @Query("SELECT DISTINCT p.mediaApplication FROM PlayList p WHERE p.location = :location AND DATE(p.createDate) = DATE(:createDate)")
+    @Query("SELECT DISTINCT p.mediaApplication" +
+            " FROM PlayList p WHERE p.location = :location" +
+            " AND DATE(p.createDate) = DATE(:createDate)" +
+            "AND p.posting = true")
     Optional<MediaApplication> findMediaApplicationsByLocationAndCreateDate(@Param("location") Location location, @Param("createDate") LocalDateTime createDate);
 
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM PlayList p WHERE DATE(p.createDate) = DATE(:date) AND p.mediaApplication = :mediaApplications")

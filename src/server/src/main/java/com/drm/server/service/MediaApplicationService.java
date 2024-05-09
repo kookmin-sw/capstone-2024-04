@@ -81,6 +81,7 @@ public class MediaApplicationService {
      */
     public MediaApplication findByCameraIdAndDate(int cameraId, LocalDateTime today){
         Location getLocation = locationRepository.findByCameraId(cameraId).orElseThrow(() -> new IllegalArgumentException("Invalid cameraId"));
+// 플레이리스트 중에 true인걸 찾는다
         MediaApplication mediaApplication = playListRepository.findMediaApplicationsByLocationAndCreateDate(getLocation, today).orElseThrow(() -> new IllegalArgumentException("광고가 걸려있지 않습니다"));
 
         return mediaApplication;
