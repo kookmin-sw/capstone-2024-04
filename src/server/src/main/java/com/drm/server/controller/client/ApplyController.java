@@ -22,6 +22,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -128,10 +130,10 @@ public class ApplyController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    public ResponseEntity<APIResponse<List<MediaApplicationResponse.TotalApplicationInfo>>> getAllApplications(@RequestParam(value = "filter",required = false) Status status, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<APIResponse<List<MediaApplicationResponse.TotalApplicationInfo>>> getAllApplications(@RequestParam(value = "filter",required = false) Status status, @PageableDefault(size = 6) Pageable pageable,@AuthenticationPrincipal CustomUserDetails userDetails){
         User getUser = userService.getUser(userDetails.getUsername());
         List<Dashboard> dashboards = dashboardService.findByUser(getUser);
-        List<MediaApplication> mediaApplications = mediaApplicationService.findByDashBoards(dashboards,status);
+        List<MediaApplication> mediaApplications = mediaApplicationService.findByDashBoards(dashboards,status,pageable);
         List<MediaApplicationResponse.TotalApplicationInfo> totalApplicationInfos = mediaApplications.stream().map(MediaApplicationResponse.TotalApplicationInfo::new).collect(Collectors.toList());
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, totalApplicationInfos);
         return new ResponseEntity<>(response, HttpStatus.OK);

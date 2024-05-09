@@ -70,8 +70,12 @@ public class DailyMediaBoard extends BaseTimeEntity {
         this.hourlyInterestedCount.set(hour, this.hourlyInterestedCount.get(hour) + 1);
     }
 //    시간별 평균 시선시간
-    public void updateHourlyAvgStaringTime(int hour, float staringTime) {
-        this.hourlyAvgStaringTime.set(hour, ((this.hourlyAvgStaringTime.get(hour) *  this.getHourlyInterestedCount().get(hour) + staringTime ) / (this.getHourlyInterestedCount().get(hour) + 1)  ));
+// fps > 1 인 상황에 대응하기 위해 CaptureCount * (1/fps) 를 곱해주는 것으로 수정
+// ex: fps = 25 인 경우 -> CaptureCount 10 일시 -> 10 * (1/25) = 0.4초 응시
+    public void updateHourlyAvgStaringTime(int hour, float staringTime, int fps) {
+        float staringCalculatedTime = staringTime * (1/fps);
+        this.hourlyAvgStaringTime.set(hour, ((this.hourlyAvgStaringTime.get(hour) *  this.getHourlyInterestedCount().get(hour) + staringCalculatedTime)
+                / (this.getHourlyInterestedCount().get(hour) + 1)  ));
     }
 
 //    연령대별 관심 수
@@ -98,9 +102,12 @@ public class DailyMediaBoard extends BaseTimeEntity {
     public void addTotalPeopleCount() {
         this.totalPeopleCount +=1;
     }
-//    평균응시시간은 전체 관심있는 인원으로 평균값설정
-    public void updateAvgStaringTime(int faceCaptureCount) {
-        this.avgStaringTime = ((this.getAvgStaringTime() * (this.maleInterestCnt + this.femaleInterestCnt))+faceCaptureCount) / ((this.maleInterestCnt + this.femaleInterestCnt)+ 1);
+    // 평균응시시간은 전체 관심있는 인원으로 평균값설정
+    // fps > 1 인 상황에 대응하기 위해 CaptureCount * (1/fps) 를 곱해주는 것으로 수정
+    // ex: fps = 25 인 경우 -> CaptureCount 10 일시 -> 10 * (1/25) = 0.4초 응시
+    public void updateAvgStaringTime(int faceCaptureCount, int fps) {
+        float faceCaptureSec = faceCaptureCount * (1/fps);
+        this.avgStaringTime = ((this.getAvgStaringTime() * (this.maleInterestCnt + this.femaleInterestCnt))+faceCaptureSec) / ((this.maleInterestCnt + this.femaleInterestCnt)+ 1);
     }
 
     public void updateAvgAge(int age) {

@@ -14,6 +14,7 @@ import com.drm.server.domain.user.User;
 import com.drm.server.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,7 +50,7 @@ public class MediaService {
         return mediaRepository.save(media);
     }
 
-    public List<MediaResponse.MediaInfo> findByDashboard(List<Dashboard> dashboards, Status status){
+    public List<MediaResponse.MediaInfo> findByDashboard(List<Dashboard> dashboards, Status status, Pageable pageable){
         if (status == null ){
             return dashboards.stream().map(MediaResponse.MediaInfo::new).collect(Collectors.toList());
         }

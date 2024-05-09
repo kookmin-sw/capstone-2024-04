@@ -31,7 +31,8 @@ public class WebSecurityConfig {
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     private static final String[] AUTH_WHITELIST ={
-            "/","/swagger-ui/index.html","/api/v2/auth/**","/api/v1/auth/**","**/index.html","/api/docs/v2/**","/v3/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**"
+            "/","/swagger-ui/index.html","/api/v2/auth/**","/api/v1/auth/**","**/index.html","/api/docs/v2/**","/v3/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**",
+            "none/api/**"
     };
     private final RedisTemplate redisTemplate;
 

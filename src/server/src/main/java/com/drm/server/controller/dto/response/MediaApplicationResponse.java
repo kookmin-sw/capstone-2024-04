@@ -33,8 +33,8 @@ public class MediaApplicationResponse {
     @Getter
     @Setter
     public static class TotalApplicationInfo{
-        private MediaResponse.MediaInfo media;
         private MediaApplicationInfo application;
+        private MediaResponse.MediaInfo media;
 
         public TotalApplicationInfo(MediaApplication mediaApplication) {
             this.media = new MediaResponse.MediaInfo(mediaApplication.getMedia());

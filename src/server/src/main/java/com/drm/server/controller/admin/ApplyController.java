@@ -6,7 +6,6 @@ import com.drm.server.common.enums.SuccessCode;
 import com.drm.server.controller.dto.request.ApplyRequest;
 import com.drm.server.controller.dto.response.MediaApplicationResponse;
 import com.drm.server.domain.mediaApplication.MediaApplication;
-import com.drm.server.domain.user.CustomUserDetails;
 import com.drm.server.service.MediaApplicationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,13 +13,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,8 +60,8 @@ public class ApplyController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    public ResponseEntity<APIResponse<List<MediaApplicationResponse.TotalApplicationInfo>>> getApplications(){
-        List<MediaApplication> mediaApplications = mediaApplicationService.findAllApplications();
+    public ResponseEntity<APIResponse<List<MediaApplicationResponse.TotalApplicationInfo>>> getApplications(@PageableDefault(size = 6) Pageable pageable){
+        List<MediaApplication> mediaApplications = mediaApplicationService.findAllApplications(pageable);
         List<MediaApplicationResponse.TotalApplicationInfo> mediaApplicationInfos = mediaApplications.stream().map(MediaApplicationResponse.TotalApplicationInfo::new).collect(Collectors.toList());
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, mediaApplicationInfos);
         return new ResponseEntity<>(response, HttpStatus.OK);

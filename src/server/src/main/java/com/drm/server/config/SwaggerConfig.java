@@ -43,6 +43,13 @@ public class SwaggerConfig {
                 .pathsToMatch("/api/v2/**")
                 .build();
     }
+    @Bean
+    public GroupedOpenApi group3() {
+        return GroupedOpenApi.builder()
+                .group("none")
+                .pathsToMatch("/none/api/**")
+                .build();
+    }
 
     private Info apiInfo() {
         return new Info()

@@ -20,6 +20,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -67,7 +69,7 @@ public class DashBoardController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    ResponseEntity<APIResponse<List<DashboardResponse.RegisteredMediaAppInfo>>> getBoards(@PathVariable Long dashboardId, @AuthenticationPrincipal CustomUserDetails userDetails){
+    ResponseEntity<APIResponse<List<DashboardResponse.RegisteredMediaAppInfo>>> getBoards(@PathVariable Long dashboardId,@AuthenticationPrincipal CustomUserDetails userDetails){
         Long userId = userDetails.getCustomUserInfo().getUserId();
         List<DashboardResponse.RegisteredMediaAppInfo> boards = dashboardService.getRegisteredBoardsById(userId, dashboardId);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, boards);
