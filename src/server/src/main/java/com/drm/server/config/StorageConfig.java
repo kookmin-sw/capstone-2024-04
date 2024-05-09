@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class StorageConfig {
     final String endPoint = "https://kr.object.ncloudstorage.com";
-    final String regionName = "kr-standard";
+    final String regionName = "ap-northeast-2";
     @Value("${s3.access-key}")
     private String accessKey;
 
@@ -25,7 +25,8 @@ public class StorageConfig {
         BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(accessKey, secretKey);
         return (AmazonS3Client) AmazonS3ClientBuilder
                 .standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, regionName))
+                .withRegion(regionName)
+//                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, regionName))
                 .withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
                 .build();
     }
