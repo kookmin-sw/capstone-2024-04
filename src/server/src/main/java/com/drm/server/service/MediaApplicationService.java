@@ -96,9 +96,6 @@ public class MediaApplicationService {
 
     public void deleteVerify(MediaApplication mediaApplication, User user){
         verifyUser(mediaApplication,user);
-        // media_application user 권한 검증 메소드의 재사용을 위해 아래의 라인 수정함
-        // ACCEPT 인 경우에 아래의 throw acception 을 뱉지 않도록 수정하는 것이 verify 의 목적에 맞다고 판단함. -
-        // > accept의 경우 삭제되면 안되기때문에 해당 verify는 삭제방지용으로 했던것 , accept가 된 상태에서 Return해버리면 accept가 된 신청목록 삭제됨
         if(!mediaApplication.getStatus().equals(WAITING)) throw new ForbiddenException("신청 대기일때만 삭제 가능합니다");
     }
 

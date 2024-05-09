@@ -25,18 +25,16 @@ public interface PlayListRepository extends JpaRepository<PlayList,Long> {
     @Query("SELECT p FROM PlayList p WHERE p.location = :location AND DATE(p.createDate) = Date(:today)")
     Optional<List<PlayList>> findByLocationAndCreateDateContaining(@Param("location") Location location, @Param("today") LocalDateTime today);
 
-    @Query("SELECT CASE WHEN COUNT(pl) > 0 THEN true ELSE false END " +
+    @Query("SELECT COUNT(pl) " +
             "FROM PlayList pl " +
             "WHERE pl.location = :location " +
             "AND DATE(pl.createDate) = Date(:today)"+
             "AND pl.posting = true")
-    boolean existsByLocationAndPostingIsTrue(@Param("location") Location location, @Param("today") LocalDateTime today);
+    int existsByLocationAndPostingIsTrue(@Param("location") Location location, @Param("today") LocalDateTime today);
 
     @Query("SELECT pl FROM PlayList pl " +
             "WHERE pl.location = :location " +
-            "AND DATE(pl.createDate) = Date(:today) " +
-            "AND pl.posting = false " +
-            "ORDER BY pl.createDate ASC")
+            "AND DATE(pl.createDate) = Date(:today) ")
     Optional<List<PlayList>> findFirstFalseByLocationAndCreateDateOrderByCreateDateAsc(
             @Param("location") Location location,
             @Param("today") LocalDateTime today);
@@ -44,6 +42,7 @@ public interface PlayListRepository extends JpaRepository<PlayList,Long> {
             "WHERE DATE(pl.createDate) = Date(:today) " +
             "AND pl.posting = true " )
     List<PlayList> findByBroadCasting(@Param("today") LocalDateTime today);
+
     @Query("SELECT pl FROM PlayList pl " +
             "WHERE pl.location = :location " +
             "AND DATE(pl.createDate) = Date(:today) " +

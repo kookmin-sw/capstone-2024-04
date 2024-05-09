@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisService {
     private final RedisTemplate redisTemplate;
+    private static String REFRESHTOKEN = "RefreshToken:";
 
     public void setValuesWithDuration(String key, String value, Duration duration){
         redisTemplate.opsForValue().set(key,
@@ -24,6 +25,6 @@ public class RedisService {
         redisTemplate.opsForValue().set(key, value,expirationTime ,timeUnit);
     }
     public String getRefrestToken(String userId){
-        return  (String)redisTemplate.opsForValue().get("RT:" + userId);
+        return  (String)redisTemplate.opsForValue().get(REFRESHTOKEN + userId);
     }
 }

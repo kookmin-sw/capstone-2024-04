@@ -75,18 +75,28 @@ public class PlayListService {
         LocalDate currentDate = LocalDate.now();
         List<Location> locations = locationRepository.findAll();
         locations.forEach(location -> {
-//            플레이리스트가 실행중인게 없을 경우
-            boolean isposting = playListRepository.existsByLocationAndPostingIsTrue(location, currentDate.atStartOfDay());
-            List<PlayList> playLists = playListRepository.findFirstFalseByLocationAndCreateDateOrderByCreateDateAsc(location, currentDate.atStartOfDay()).orElse(Collections.emptyList());
-            log.info(String.valueOf(isposting));
+//            위치, 오늘날짜의 플레이리스트면서 실행중인 개수
+            int broadCastingCount = playListRepository.existsByLocationAndPostingIsTrue(location, currentDate.atStartOfDay());
+//            위치, 오늘날짜의 플레이리스트들 조회
+            List<PlayList> playLists = playListRepository.findByLocationAndCreateDateContaining(location, currentDate.atStartOfDay()).orElse(Collections.emptyList());
+            log.info("{} : {}  장소 광고 실행 여부 =  {}개 송출중",location.getLocationId(),location.getAddress(),broadCastingCount);
+//            한 장소에 실행중인 광고가 하나 이상인 경우 전부 초기화 시키고 제일 먼저 있는 것만 true
+            if(broadCastingCount > 1) {
+                verifySingleBroadCast(playLists);
 //            실행중인 플레이리스트도 없으면서 플레이리스타 존재하는 경우
-            if(!isposting && playLists.size() != 0) {
-
+            }else if(broadCastingCount == 0 && playLists.size() != 0) {
                 PlayList unBroadCasting = playLists.get(0);
                 unBroadCasting.brodCasting();
                 playListRepository.save(unBroadCasting);
             }
         });
         return playListRepository.findByBroadCasting(currentDate.atStartOfDay());
+    }
+    public void verifySingleBroadCast(List<PlayList> todayList){
+            todayList.forEach(playList -> playList.unBroadCasting());
+            todayList.get(0).brodCasting();
+            playListRepository.saveAll(todayList);
+
+
     }
 }

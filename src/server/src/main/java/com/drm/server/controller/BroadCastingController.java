@@ -44,7 +44,7 @@ public class BroadCastingController {
         return ResponseEntity.ok(response);
     }
     @PutMapping("broadcast")
-    @Operation(summary = "방송 송출 수동 등록",description = "해당 장소에 아무것도 틀어져있다면 실행")
+    @Operation(summary = "방송 송출 수동 등록",description = " 아무것도 틀어져있다면 실행")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "성공"),
             @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
