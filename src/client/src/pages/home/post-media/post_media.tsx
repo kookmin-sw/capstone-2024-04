@@ -12,6 +12,7 @@ import {
 } from "../../../api/client/media";
 import { toast } from "react-hot-toast";
 import moment from "moment";
+import { postApply } from "../../../api/client/apply";
 
 const PostMediaScreen = () => {
   const enum PostMode {
@@ -26,7 +27,9 @@ const PostMediaScreen = () => {
   const [options, setOptions] = useState<SelectProps["options"]>([]);
   const [locationId, setLocationId] = useState<number>(-1);
   const [date, setDate] = useState<string[]>([]);
-  const [selectedHistory, setSelectedHistory] = useState<number | null>(null);
+  const [selectedHistory, setSelectedHistory] = useState<MediaInfo | null>(
+    null
+  );
   const { RangePicker } = DatePicker;
   const [histories, setHistories] = useState<MediaInfo[]>([]);
 
@@ -36,6 +39,32 @@ const PostMediaScreen = () => {
     setVideo(null);
     setLocationId(-1);
     setDate([]);
+    setSelectedHistory(null);
+  };
+
+  const requestPostMediaWithHistory = async () => {
+    if (selectedHistory === null) {
+      toast.error("히스토리는 필수로 선택되어야 합니다.");
+      return false;
+    }
+
+    const result = await postApply({
+      mediaId: selectedHistory,
+      requestBody: {
+        advertisementTitle: selectedHistory?.title,
+        advertisementDescription: selectedHistory?.description,
+        locationId: locationId,
+        startDate: date[0],
+        endDate: date[1],
+      },
+    });
+
+    if (result && result.status === 201) {
+      toast.success("성공적으로 광고가 등록되었습니다.");
+      resetForm();
+    } else {
+      toast.error("광고 등록에 실패하였습니다.");
+    }
   };
 
   const requestPostMedia = async () => {
@@ -61,7 +90,7 @@ const PostMediaScreen = () => {
     }
     const result = await postMedia(formData);
 
-    if (result && result.status === 201) {
+    if (result && result.status === 200) {
       // 사용자 입력 정보 초기화
       toast.success("성공적으로 광고가 등록되었습니다.");
       resetForm();
@@ -178,11 +207,11 @@ const PostMediaScreen = () => {
                 return (
                   <div
                     onClick={() => {
-                      setSelectedHistory(info.mediaId);
+                      setSelectedHistory(info);
                     }}
                     key={info.mediaId}
                     className={`flex p-2 gap-2 ${
-                      info.mediaId === selectedHistory
+                      info.mediaId === selectedHistory?.mediaId
                         ? "bg-white_sub"
                         : "bg-white"
                     }`}
@@ -201,7 +230,13 @@ const PostMediaScreen = () => {
 
         <button
           className="w-[120px] py-3 text-white bg-main text-sm rounded-[3px]"
-          onClick={requestPostMedia}
+          onClick={() => {
+            if (postMode === PostMode.UPLOAD) {
+              requestPostMedia();
+            } else if (postMode === PostMode.HISTORY) {
+              requestPostMediaWithHistory();
+            }
+          }}
         >
           광고 등록하기
         </button>

@@ -25,7 +25,7 @@ export const getApply = async ({mediaId}: any) => {
 }
 
 /** 광고 신청 */
-export const postApply = async ({mediaId}: any) => {
+export const postApply = async ({mediaId, requestBody}: any) => {
     const response  = await privateApi.post(`/api/v1/media/${mediaId}/apply`).catch((err) => {
         return err.response;
     })
