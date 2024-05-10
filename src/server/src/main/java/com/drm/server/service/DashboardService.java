@@ -47,7 +47,7 @@ public class DashboardService {
 
 
     public List<Dashboard> findByUser(User user){
-        List<Dashboard> dashboards = dashboardRepository.findByUser(user).orElse(Collections.emptyList());
+        List<Dashboard> dashboards = dashboardRepository.findByUserOrderByCreateDateDesc(user).orElse(Collections.emptyList());
         return dashboards;
     }
 
@@ -126,39 +126,39 @@ public class DashboardService {
     // 일별로 저장되어 있는 광고 결과 데이터를 합치기
     public DashboardResponse.DashboardDataInfo calculateDataPerDashboard(List<MediaApplication> mediaAppList){
         DashboardResponse.DashboardDataInfo boardInfo = new DashboardResponse.DashboardDataInfo();
-
+        // 광고별 집행 단위들 조회
         for (MediaApplication mediaApp : mediaAppList){
             List<DailyMediaBoard> boards = dailyMediaBoardService.findDailyBoardByMediaApplication(mediaApp);
+            // 집행 단위별 일별 보드 조회
             for(DailyMediaBoard board : boards){
-                // 시간별 관심 데이터 합치기
-                // 시간별 유동인구 데이터 합치기
-                boardInfo.addHourlyPassedCount(board.getHourlyPassedCount());
-                boardInfo.addHourlyInterestedCount(board.getHourlyInterestedCount());
-                // 수치 합치기
-                boardInfo.setFemaleInterestCnt(boardInfo.getFemaleInterestCnt() + board.getFemaleInterestCnt());
-                boardInfo.setMaleCnt(boardInfo.getMaleCnt()+ board.getMaleCnt());
-                boardInfo.setMaleInterestCnt(boardInfo.getMaleInterestCnt() + board.getMaleInterestCnt());
-                // 평균값 계산 및 합치기
-                Long newTotalPeopleCnt = boardInfo.getTotalPeopleCount() + board.getTotalPeopleCount();
-                if(newTotalPeopleCnt > 0) {
-                    boardInfo.setAvgAge((boardInfo.getAvgAge() * boardInfo.getTotalPeopleCount() + board.getAvgAge() * board.getTotalPeopleCount()) /
-                            newTotalPeopleCnt);
-                    boardInfo.setAvgStaringTime((boardInfo.getAvgStaringTime() * boardInfo.getTotalPeopleCount() + board.getAvgStaringTime() * board.getTotalPeopleCount())
-                            / newTotalPeopleCnt);
-                }
-                boardInfo.setTotalPeopleCount(newTotalPeopleCnt);
+                // 일별 데이터 집계하여 dto 리턴
+                boardInfo.updateDtoWithBoardData(board.getTotalPeopleCount(), board.getInterestedAgeRangeCount(),
+                        board.getHourlyPassedCount(), board.getHourlyInterestedCount(),
+                        board.getHourlyAvgStaringTime(), board.getAvgAge(), board.getAvgStaringTime(),
+                        board.getMaleInterestCnt(), board.getFemaleInterestCnt(), board.getMaleCnt());
             }
         }
         return boardInfo;
     }
 
     public DashboardResponse.LocationDataInfo getDashboardPerLocation(Long locationId) {
-        // 구현 가능한 방법
-        // 1. media_daily_board 를 조회해서, 일별 데이터로 가공한다.
-        // 2. detected_face 로우 데이터에서 used = true 인 것들의 locationId 로 식별, 조회해서 가공한다.
-        // 시간별 나이대를 제공하려면, detected_face 로우 데이터를 참고해야 한다.
-        // 하지만 로우 데이터를 가공하는데는 더 많은 반환 시간이 소요된다.
-        DashboardResponse.LocationDataInfo info = null;
+        // Location -> 집행된 광고 리스트(mediaApplication) 을 조회한다.
+        DashboardResponse.LocationDataInfo info = new DashboardResponse.LocationDataInfo();
+        Location location = locationService.findById(locationId);
+        List<MediaApplication> mediaApps = mediaApplicationService.findMediaAppsByLocation(location);
+        // media Application 과 대응되는 데이터를 media_daily_board 에서 조회해서 dto 에 반영
+        for(MediaApplication app : mediaApps){
+                List<DailyMediaBoard> boards = dailyMediaBoardService.findDailyBoardByMediaApplication(app);
+                // board (전체 집계 인원 수, 시간대별 집계 사람 수, 전체 남성 수) -> dto 에 반영
+                for(DailyMediaBoard board : boards){
+                    info.updateDtoWithBoardData(board.getTotalPeopleCount(), board.getHourlyInterestedCount(), board.getTotalAgeRangeCount(), board.getMaleCnt());
+                }
+        }
+        log.info("DASHBOARD PER LOCATION SUCCESSFULLY SEARCHED : " + locationId);
         return info;
+    }
+
+    public void deleteAll() {
+        dashboardRepository.deleteAll();
     }
 }

@@ -1,7 +1,5 @@
-package com.drm.server.domain.detectedface;
+package com.drm.server.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +11,7 @@ import java.util.List;
 
 @Slf4j
 @Converter
-public class DataConverter implements AttributeConverter<List<Long>, String> {
+public class LongConverter implements AttributeConverter<List<Long>, String> {
 
     @Override
     public String convertToDatabaseColumn(List<Long> list) {

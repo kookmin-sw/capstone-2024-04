@@ -42,7 +42,7 @@ public class DetectedDataService {
             boolean interestBool = checkPeopleInterest(modelRequest.getInterestFrameCnt());
             // mediaRepository 여러번 쿼리 던지는 것 리팩토링 해야됨.
             LocalDateTime time = modelRequest.getArriveTime();
-            MediaApplication currentMedia = playListService.getMediaAplicationFromPlaylist(modelRequest.getCameraId(), time);
+            MediaApplication currentMedia = playListService.  getMediaAplicationFromPlaylist(modelRequest.getCameraId(), time);
 //            dailyMediaBoardService.updateMediaData(currentMedia, modelRequest, interestBool);
             useThisData = true;
         }

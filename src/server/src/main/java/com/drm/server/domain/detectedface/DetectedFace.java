@@ -3,6 +3,7 @@ package com.drm.server.domain.detectedface;
 import com.drm.server.common.BaseTimeEntity;
 import com.drm.server.common.KoreaLocalDateTime;
 import com.drm.server.domain.mediaApplication.MediaApplication;
+import com.drm.server.handler.LongConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +29,8 @@ public class DetectedFace extends BaseTimeEntity {
     private LocalDateTime leaveAt;
 
 
-    @Convert(converter = DataConverter.class)
+    @Convert(converter = LongConverter.class)
+    @Column(length = 4000)
     private List<Boolean> staring;
 
     private int faceCaptureCnt;
@@ -52,8 +54,8 @@ public class DetectedFace extends BaseTimeEntity {
         LocalDateTime leaveAt = KoreaLocalDateTime.datTimeListToLocalDateTime(arriveTimeList);
 
         DetectedFace detectedFace = DetectedFace.builder()
-                .faceCaptureCnt((Integer) modelRequest.get("interestPeopleCnt"))
-                .entireCaptureCnt((Integer) modelRequest.get("passedPeopleCnt"))
+                .faceCaptureCnt((Integer) modelRequest.get("interestFrameCnt"))
+                .entireCaptureCnt((Integer) modelRequest.get("passedFrameCnt"))
                 .staring((List<Boolean>) modelRequest.get("staringData"))
                 .arriveAt(arriveAt)
                 .leaveAt(leaveAt)

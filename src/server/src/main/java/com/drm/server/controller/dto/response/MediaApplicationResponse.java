@@ -27,14 +27,14 @@ public class MediaApplicationResponse {
             this.endDate = mediaApplication.getEndDate().toString();
             this.status = mediaApplication.getStatus();
             this.location = new LocationResponse.LocationInfo(mediaApplication.getLocation());
-            this.user = new UserResponse.UserInfo(mediaApplication.getMedia().getDashboard().getUser().getUserId(), "", mediaApplication.getMedia().getDashboard().getUser().getCompany());
+            this.user = new UserResponse.UserInfo(mediaApplication.getMedia().getDashboard().getUser());
         }
     }
     @Getter
     @Setter
     public static class TotalApplicationInfo{
-        private MediaResponse.MediaInfo media;
         private MediaApplicationInfo application;
+        private MediaResponse.MediaInfo media;
 
         public TotalApplicationInfo(MediaApplication mediaApplication) {
             this.media = new MediaResponse.MediaInfo(mediaApplication.getMedia());

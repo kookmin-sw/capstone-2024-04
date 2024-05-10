@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface DashboardRepository extends JpaRepository<Dashboard, Long> {
-    Optional<List<Dashboard>> findByUser(User user);
+    Optional<List<Dashboard>> findByUserOrderByCreateDateDesc(User user);
     Optional<List<Dashboard>> findAllByUser(User user);
 
 
