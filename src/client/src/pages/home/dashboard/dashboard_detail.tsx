@@ -3,6 +3,7 @@ import { DashboardDataInfo } from "../../../interfaces/interface";
 import { InterestPeopleChart } from "./pie";
 import { InterestBar } from "./interestBar";
 import { TotalBar } from "./totalBar";
+import MixedChart from "./mixedChart";
 
 const DashBoardDetail = () => {
   const dummy: DashboardDataInfo = {
@@ -138,6 +139,12 @@ const DashBoardDetail = () => {
             광고 관심도는 디스플레이 앞을 지나간 모든 사람 중 관심을 가진 사람이
             얼마나 많았는지를 알려주는 지표예요.
           </p>
+          <MixedChart
+            total={[6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}
+            interest={[
+              6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+            ]}
+          />
         </div>
       </div>
     </div>
