@@ -4,8 +4,12 @@ import upload from "../../../assets/icons/Upload.svg";
 import { DatePicker, Select, Input, SelectProps } from "antd";
 import { Body1, Subtitle1 } from "../../../components/text";
 import { getLocation } from "../../../api/client/location";
-import { LocationInfo } from "../../../interfaces/interface";
-import { PostMediaRequest, postMedia } from "../../../api/client/media";
+import { LocationInfo, MediaInfo } from "../../../interfaces/interface";
+import {
+  PostMediaRequest,
+  getMedia,
+  postMedia,
+} from "../../../api/client/media";
 import { toast } from "react-hot-toast";
 import moment from "moment";
 
@@ -22,7 +26,9 @@ const PostMediaScreen = () => {
   const [options, setOptions] = useState<SelectProps["options"]>([]);
   const [locationId, setLocationId] = useState<number>(-1);
   const [date, setDate] = useState<string[]>([]);
+  const [selectedHistory, setSelectedHistory] = useState<number | null>(null);
   const { RangePicker } = DatePicker;
+  const [histories, setHistories] = useState<MediaInfo[]>([]);
 
   const resetForm = () => {
     setTitle("");
@@ -95,8 +101,17 @@ const PostMediaScreen = () => {
     }
   };
 
+  const loadHistory = async () => {
+    const result = await getMedia();
+    console.log(result);
+    if (result.status === 200) {
+      setHistories(result.data.data);
+    }
+  };
+
   useEffect(() => {
     loadLocationList();
+    loadHistory();
   }, []);
 
   return (
@@ -116,7 +131,10 @@ const PostMediaScreen = () => {
               새로운 광고 등록
             </button>
             <button
-              onClick={() => setPostMode(PostMode.HISTORY)}
+              onClick={() => {
+                setPostMode(PostMode.HISTORY);
+                setSelectedHistory(null);
+              }}
               className={`${
                 postMode === PostMode.HISTORY
                   ? "text-main border-[1px] border-main"
@@ -155,8 +173,28 @@ const PostMediaScreen = () => {
             )
           ) : (
             // 히스토리 모드
-            <div className="border-gray2 border-[1px] mb-12 min-h-[420px]">
-              {/* 히스토리가 존재하지 않은 경우에도 스크린이 필요 */}
+            <div className="border-gray2 divide-y border-[1px] mb-12 min-h-[420px] overflow-y-scroll">
+              {histories.map((info) => {
+                return (
+                  <div
+                    onClick={() => {
+                      setSelectedHistory(info.mediaId);
+                    }}
+                    key={info.mediaId}
+                    className={`flex p-2 gap-2 ${
+                      info.mediaId === selectedHistory
+                        ? "bg-white_sub"
+                        : "bg-white"
+                    }`}
+                  >
+                    <img
+                      className="w-12 h-12 border-[1px] border-gray rounded bg-white"
+                      src={info.mediaLink}
+                    />
+                    <p>{info.title}</p>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
