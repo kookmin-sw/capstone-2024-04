@@ -9,8 +9,8 @@ export interface PostMediaRequest {
     endDate: string,
 }
 
-export const getMedia = async () => {
-    const response = await privateApi.get('/api/v1/media').catch((err) => {
+export const getMedia = async (filter = {}) => {
+    const response = await privateApi.get('/api/v1/media', {params: {...filter}}).catch((err) => {
         return err.response;
     });
     return response;
