@@ -9,8 +9,8 @@ export const deleteApply = async ({mediaId, applyId}: any) => {
 }
 
 /** 신청 리스트 조회 */
-export const getApplies = async () => {
-    const response = await privateApi.get('/api/v1/media/applies').catch((err) => {
+export const getApplies = async (filter={}) => {
+    const response = await privateApi.get('/api/v1/media/applies', {params: {...filter}}).catch((err) => {
         return err.response;
     })
     return response;
