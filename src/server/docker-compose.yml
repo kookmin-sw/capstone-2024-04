@@ -12,7 +12,10 @@ services:
       - "6379:6379"
     networks:
       - app-net
-
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
   app:
     container_name: spring-boot-app
     build:
@@ -29,7 +32,10 @@ services:
         SPRING_DATASOURCE_PASSWORD: ${MYSQL_PW}
     networks:
       - app-net
-
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
 networks:
   app-net:
 
