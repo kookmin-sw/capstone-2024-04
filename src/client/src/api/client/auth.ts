@@ -1,6 +1,6 @@
 import Cookies from "universal-cookie";
-import { SignInAPIProps, SignUpAPIProps } from "../interfaces/interface";
-import publicApi from "./public_api";
+import { SignInAPIProps, SignUpAPIProps } from "../../interfaces/interface";
+import publicApi from "../public_api";
 
 
 export const signup = async ({email, password, company}: SignUpAPIProps) => {

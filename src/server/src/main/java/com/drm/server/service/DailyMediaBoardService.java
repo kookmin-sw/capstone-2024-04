@@ -55,7 +55,7 @@ public class DailyMediaBoardService {
         dailyMediaBoard.addTotalPeopleCount(); // 통유동인구
 
         dailyMediaBoardRepository.save(dailyMediaBoard);
-        log.info("{} dailyboard 수정",dailyMediaBoard.getModifiedDate());
+        log.info(" {} : 광고 dailyboard 업데이트 ",dailyMediaBoard.getMediaApplication().getMediaApplicationId());
     }
     private void validateDailyMediaBoard(DailyMediaBoard prevBoard) {
         if(prevBoard.getHourlyPassedCount() == null){

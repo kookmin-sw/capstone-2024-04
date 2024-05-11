@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.mapping.ToOne;
 
 @Entity
 @Builder
@@ -33,8 +32,15 @@ public class PlayList extends BaseTimeEntity {
     @JoinColumn(name = "media_application_id")
     private MediaApplication mediaApplication;
 
-    public PlayList(MediaApplication mediaApplication) {
+    public void brodCasting() {
         this.posting = true;
+    }
+    public void unBroadCasting() {
+        this.posting = false;
+    }
+
+    public PlayList(MediaApplication mediaApplication) {
+        this.posting = false;
         this.location = mediaApplication.getLocation();
         this.mediaApplication = mediaApplication;
     }

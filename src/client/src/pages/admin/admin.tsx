@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import SettingScreen from "../home/setting/setting";
 import { UserInfo } from "../../interfaces/interface";
+import AdminApplyPage from "./apply/apply";
+import AdminHistoryPage from "./history/history";
 
 const AdminPage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -27,6 +29,9 @@ const AdminPage = () => {
     // 인증 관련 토큰 제거
     cookies.remove("accessToken");
     cookies.remove("refreshToken");
+    // 사용자 정보 관련 토큰 제거
+    cookies.remove("userInfo");
+    cookies.remove("role");
     // 자동 로그인 설정 제거
     cookies.remove("autoLogin");
 
@@ -45,18 +50,18 @@ const AdminPage = () => {
 
   const menuButtons = [
     {
-      title: "광고승인",
-      description: "전체 광고 히스토리를 확인할 수 있어요.",
+      title: "광고 승인",
+      description: "전체 고객사의 광고를 승인하거나 거절할 수 있어요.",
       iconWhiteSrc: listboxWhite,
       iconBlackSrc: listboxBlack,
-      component: <>광고승인(어드민)</>,
+      component: <AdminApplyPage />,
     },
     {
       title: "히스토리",
       description: "전체 고객사의 광고 히스토리를 볼 수 있어요.",
       iconWhiteSrc: clipboardTextClockWhitesub,
       iconBlackSrc: clipboardTextClockBlacksub,
-      component: <>히스토리(어드민)</>,
+      component: <AdminHistoryPage />,
     },
     {
       title: "설정",

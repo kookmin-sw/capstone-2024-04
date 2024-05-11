@@ -37,6 +37,9 @@ const HomePage = () => {
     // 인증 관련 토큰 제거
     cookies.remove("accessToken");
     cookies.remove("refreshToken");
+    // 사용자 정보 관련 토큰 제거
+    cookies.remove("userInfo");
+    cookies.remove("role");
     // 자동 로그인 설정 제거
     cookies.remove("autoLogin");
 
@@ -86,7 +89,9 @@ const HomePage = () => {
       description: "",
       iconWhiteSrc: cogWhitesub,
       iconBlackSrc: cogBlacksub,
-      component: <SettingScreen userInfo={currInfo} setUserInfo={setCurrInfo} />,
+      component: (
+        <SettingScreen userInfo={currInfo} setUserInfo={setCurrInfo} />
+      ),
     },
   ];
 

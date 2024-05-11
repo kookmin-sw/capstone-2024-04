@@ -32,6 +32,7 @@ public class TokenService {
     private  JwtTokenProvider jwtTokenProvider;
     private final RedisService redisService;
     private final AdminRepository adminRepository;
+    private static String REFRESHTOKEN = "RefreshToken:";
     public UserResponse.TokenInfo createToken(UserRequest.SignIn signIn){
         User getUser = userRepository.findByEmail(signIn.getEmail()).orElseThrow(() -> new IllegalArgumentException("이메일 정보가 없습니다"));
         if(!passwordEncoder.matches(signIn.getPassword(),getUser.getPassword())) throw new IllegalArgumentException("잘못된 비밀번호 입니다");
@@ -39,7 +40,7 @@ public class TokenService {
         UserResponse.TokenInfo  tokenInfo = jwtTokenProvider.generateToken(userInfo);
         tokenInfo.setUserInfo(new UserResponse.UserInfo(getUser));
         //RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
-        redisService.setValuesWithTimeUnit("RT:" + getUser.getUserId(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(),TimeUnit.MILLISECONDS);
+        redisService.setValuesWithTimeUnit(REFRESHTOKEN + getUser.getUserId(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(),TimeUnit.MILLISECONDS);
         return tokenInfo;
     }
     public UserResponse.TokenInfo createAdminToken(UserRequest.SignIn signIn){
@@ -48,7 +49,7 @@ public class TokenService {
         CustomUserInfoDto userInfo = CustomUserInfoDto.builder().userId(getAdmin.getAdminId()).authority(getAdmin.getAuthority()).deleted(false).build();
         UserResponse.TokenInfo  tokenInfo = jwtTokenProvider.generateToken(userInfo);
         //RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
-        redisService.setValuesWithTimeUnit("RT:" +getAdmin.getAdminId(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(),TimeUnit.MILLISECONDS);
+        redisService.setValuesWithTimeUnit(REFRESHTOKEN +getAdmin.getAdminId(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(),TimeUnit.MILLISECONDS);
         return tokenInfo;
     }
 
@@ -77,7 +78,7 @@ public class TokenService {
         tokenInfo.setUserInfo(new UserResponse.UserInfo(getUser));
 
         // 5. RefreshToken Redis 업데이트
-        redisService.setValuesWithTimeUnit("RT:" + authentication.getName(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(),TimeUnit.MILLISECONDS);
+        redisService.setValuesWithTimeUnit(REFRESHTOKEN + authentication.getName(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(),TimeUnit.MILLISECONDS);
 
         return tokenInfo;
     }

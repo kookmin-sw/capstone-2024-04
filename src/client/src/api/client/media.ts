@@ -1,4 +1,4 @@
-import privateApi from "./private_api"
+import privateApi from "../private_api"
 
 
 export interface PostMediaRequest {

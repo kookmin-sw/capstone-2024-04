@@ -12,6 +12,8 @@ const Insight = () => {
   const [mode, setMode] = useState(InsightMode.LIST);
   const [detailInfo, setDetailInfo] = useState<MediaInfo | null>(null);
 
+  console.log(detailInfo);
+
   const data: MediaInfo[] = [
     {
       mediaId: 1,
@@ -19,7 +21,7 @@ const Insight = () => {
         "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
       title: "광고 테스트 1",
       description: "광고 테스트 1에 대한 설명이에요.",
-      dashboard: [],
+      dashboardId: 1,
     },
     {
       mediaId: 2,
@@ -27,7 +29,7 @@ const Insight = () => {
         "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
       title: "광고 테스트 2",
       description: "광고 테스트 2에 대한 설명이에요.",
-      dashboard: [],
+      dashboardId: 2,
     },
   ];
 

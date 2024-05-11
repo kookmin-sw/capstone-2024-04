@@ -45,4 +45,8 @@ public class User extends BaseTimeEntity {
     public void updatePassword(String password) {
         this.password = password;
     }
+
+    public void withdrwal() {
+        this.deleted = true;
+    }
 }

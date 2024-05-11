@@ -1,4 +1,4 @@
-import privateApi from "./private_api"
+import privateApi from "../private_api"
 
 interface patchPasswordProps {
     password: string,
@@ -19,6 +19,7 @@ export const patchPassword = async ({password, updatePassword}: patchPasswordPro
 
 export const verifyPassword = async (password: string) => {
     const response = await privateApi.post('/api/v1/user/verify-password', {password}).catch((err) => {
+        console.log(err);
         throw new Error("비밀번호가 일치하지 않습니다.");
     });
     return response;
