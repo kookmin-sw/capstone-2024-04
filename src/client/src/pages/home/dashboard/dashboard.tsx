@@ -5,6 +5,7 @@ import DashBoardDetail from "./dashboard_detail";
 import { getApplies } from "../../../api/client/apply";
 import { TotalApplicationInfo } from "../../../interfaces/interface";
 import StatusBadge from "../../../components/status_badge";
+import defaultImageRectangle from "../../../assets/images/default_rectangle.svg";
 
 export enum DashBoardMode {
   LIST,
@@ -23,7 +24,6 @@ export interface TableItem {
 
 const DashBoard = () => {
   const [mode, setMode] = useState(DashBoardMode.LIST);
-  // const [detailInfo, setDetailInfo] = useState<MediaCardProps | null>(null);
   const [applies, setApplies] = useState<TableItem[]>([]);
 
   const columns: TableColumnsType<TableItem> = [
@@ -31,7 +31,14 @@ const DashBoard = () => {
       title: "",
       dataIndex: "mediaLink",
       render: (mediaLink) => (
-        <img className="w-[50px] h-[50px]" src={mediaLink} />
+        <img
+          className="w-[50px] h-[50px]"
+          src={mediaLink}
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            const target = e.target as HTMLImageElement;
+            target.src = defaultImageRectangle;
+          }}
+        />
       ),
     },
     {

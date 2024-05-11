@@ -9,6 +9,7 @@ import dashboardIconWhite from "../../../assets/icons/view-dashboard-whitesub.sv
 import chartIconMain from "../../../assets/icons/chart-timeline-main.svg";
 import { getMedia } from "../../../api/client/media";
 import { toast } from "react-hot-toast";
+import defaultImageRectangle from "../../../assets/images/default_rectangle.svg";
 
 dayjs.extend(customParseFormat);
 const dateFormat = "YYYY-MM-DD";
@@ -19,7 +20,14 @@ const HistoryScreen = () => {
       title: "",
       dataIndex: "mediaLink",
       render: (mediaLink) => (
-        <img className="w-[50px] h-[50px]" src={mediaLink} />
+        <img
+          className="w-[50px] h-[50px]"
+          src={mediaLink}
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            const target = e.target as HTMLImageElement;
+            target.src = defaultImageRectangle;
+          }}
+        />
       ),
     },
     {
@@ -93,6 +101,10 @@ const HistoryScreen = () => {
             className="w-full aspect-video object-cover rounded-[5px] mb-4"
             src={selectedMedia?.mediaLink}
             alt="광고 썸네일"
+            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+              const target = e.target as HTMLImageElement;
+              target.src = defaultImageRectangle;
+            }}
           />
           <Subtitle1 text="광고 등록일" color="text-black" />
           <DatePicker.RangePicker

@@ -4,6 +4,7 @@ import { InterestPeopleChart } from "./pie";
 import { InterestBar } from "./interestBar";
 import { TotalBar } from "./totalBar";
 import MixedChart from "./mixedChart";
+import defaultImageVideo from "../../../assets/images/default_video.svg";
 
 const DashBoardDetail = () => {
   const dummy: DashboardDataInfo = {
@@ -49,6 +50,10 @@ const DashBoardDetail = () => {
         <img
           className="border-[1px] rounded h-full aspect-video"
           alt="광고 썸네일"
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            const target = e.target as HTMLImageElement;
+            target.src = defaultImageVideo;
+          }}
           src=""
         />
       </div>

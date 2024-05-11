@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Subtitle1, Subtitle2 } from "../../../components/text";
 import GridViewMedia from "../gridview-media/gridview_media";
 import { MediaInfo } from "../../../interfaces/interface";
-import { getInsightMedia, getMedia } from "../../../api/client/media";
+import { getMedia } from "../../../api/client/media";
 
 export enum InsightMode {
   LIST,
