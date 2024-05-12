@@ -6,9 +6,9 @@ spring:
 #    url: jdbc:mysql://43.201.57.42:3306/advt?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
 #    username: root
 #    password: root
-  redis:
-    host : 172.17.0.1
-    port : 6379
+#  redis:
+#    host : 172.17.0.1
+#    port : 6379
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -54,8 +54,8 @@ spring:
   #  paths-to-match:
   #    - /**
 
-  s3:
-    access-key: ${access-key}
-    secret-key: ${secret-key}
+#  s3:
+#    access-key: 12
+#    secret-key: 12
   #server:
   #  port: 80
