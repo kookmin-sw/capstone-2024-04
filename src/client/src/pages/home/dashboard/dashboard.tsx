@@ -101,7 +101,7 @@ const DashBoard = () => {
         columns={columns}
         dataSource={applies}
         pagination={{ pageSize: 8, position: ["bottomCenter"] }}
-        onRow={(record) => ({
+        onRow={() => ({
           onClick: () => {
             setMode(DashBoardMode.DETAIL);
           },
