@@ -19,9 +19,7 @@ public class RedisRepositoryConfig {
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        String redisDockerHost = "docker-redis";
-//        redisDockerHost = redisProperties.getHost();
-        return new LettuceConnectionFactory(redisDockerHost, redisProperties.getPort());
+        return new LettuceConnectionFactory(redisProperties.getHost(), redisProperties.getPort());
     }
 
     @Bean
