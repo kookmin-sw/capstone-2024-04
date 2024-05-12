@@ -6,6 +6,9 @@ spring:
 #    url: jdbc:mysql://43.201.57.42:3306/advt?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
 #    username: root
 #    password: root
+  redis:
+    host : redis-docker
+    port : 6379
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
