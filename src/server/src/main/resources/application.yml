@@ -9,6 +9,9 @@
     mvc:
       pathmatch:
         matching-strategy: ant_path_matcher
+    redis:
+      host : redis-docker
+      port : 6379
     jpa:
       show-sql: true
       hibernate:
