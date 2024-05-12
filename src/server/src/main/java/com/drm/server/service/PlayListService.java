@@ -1,5 +1,6 @@
 package com.drm.server.service;
 
+import com.drm.server.domain.dailyMediaBoard.DailyMediaBoard;
 import com.drm.server.domain.location.Location;
 import com.drm.server.domain.location.LocationRepository;
 import com.drm.server.domain.mediaApplication.MediaApplication;
@@ -27,6 +28,7 @@ public class PlayListService {
     private final LocationRepository locationRepository;
 
     private final DailyMediaBoardService dailyMediaBoardService;
+    private final DailyDetailBoardService dailyDetailBoardService;
 
     @Scheduled(cron = "0 0 0 * * ?")
 //    @Scheduled(cron = "0/5 * * * * ?")
@@ -37,9 +39,13 @@ public class PlayListService {
 //        추가 안된 광고 추가
         List<MediaApplication> unUploadPlayList = unUploadPlayList(today,mediaApplications);
         List<PlayList> playLists = unUploadPlayList.stream()
-                .peek(mediaApplication -> dailyMediaBoardService.createDailyBoard(mediaApplication,today))
+                .peek(mediaApplication ->{
+                    DailyMediaBoard dailyMediaBoard =  dailyMediaBoardService.createDailyBoard(mediaApplication,today);
+                    dailyDetailBoardService.createDetailBoard(dailyMediaBoard);
+                })
                 .map(PlayList::new).collect(Collectors.toList());
         List<PlayList> newPlayList = playListRepository.saveAll(playLists);
+        updateBroadCasting();
         return newPlayList;
     }
     public List<PlayList> todayList(Long locationId){
