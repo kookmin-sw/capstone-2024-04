@@ -8,7 +8,7 @@ import cogWhitesub from "../../assets/icons/cog-whitesub.svg";
 import listboxWhite from "../../assets/icons/list-box-whitesub.svg";
 import listboxBlack from "../../assets/icons/list-box-blacksub.svg";
 import MenuButton from "../../components/menu_button";
-
+import defaultImageRectangle from "../../assets/images/default_rectangle.svg";
 import { Body1, Headline1 } from "../../components/text";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
@@ -89,6 +89,10 @@ const AdminPage = () => {
             <img
               className="w-20 h-20 rounded-full bg-white"
               src={currInfo?.profileImage}
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                const target = e.target as HTMLImageElement;
+                target.src = defaultImageRectangle;
+              }}
             />
             <p className="font-medium text-base text-white pt-5 pb-2">
               {currInfo?.company}

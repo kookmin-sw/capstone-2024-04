@@ -1,6 +1,5 @@
 import StatusBadge from "./status_badge";
-import imageErrorVideo from "../assets/images/default_video.svg";
-import { useState } from "react";
+import defaultImageVideo from "../assets/images/default_video.svg";
 
 export interface MediaCardProps {
   img: string;
@@ -10,8 +9,6 @@ export interface MediaCardProps {
 }
 
 const MediaCard = ({ img, title, description, onClick }: MediaCardProps) => {
-  const [image, setImage] = useState<string>(img);
-
   return (
     <div
       onClick={onClick}
@@ -19,8 +16,11 @@ const MediaCard = ({ img, title, description, onClick }: MediaCardProps) => {
     >
       <img
         className="w-full aspect-video object-cover"
-        src={image}
-        onError={() => setImage(imageErrorVideo)}
+        src={img}
+        onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+          const target = e.target as HTMLImageElement;
+          target.src = defaultImageVideo;
+        }}
       />
       <div className="flex flex-col p-5 gap-3">
         <h3 className="text-base font-medium text-black">{title}</h3>
