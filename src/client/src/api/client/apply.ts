@@ -9,8 +9,8 @@ export const deleteApply = async ({mediaId, applyId}: any) => {
 }
 
 /** 신청 리스트 조회 */
-export const getApplies = async () => {
-    const response = await privateApi.get('/api/v1/media/applies').catch((err) => {
+export const getApplies = async (filter={}) => {
+    const response = await privateApi.get('/api/v1/media/applies', {params: {...filter}}).catch((err) => {
         return err.response;
     })
     return response;
@@ -25,8 +25,8 @@ export const getApply = async ({mediaId}: any) => {
 }
 
 /** 광고 신청 */
-export const postApply = async ({mediaId}: any) => {
-    const response  = await privateApi.post(`/api/v1/media/${mediaId}/apply`).catch((err) => {
+export const postApply = async ({mediaId, requestBody}: any) => {
+    const response  = await privateApi.post(`/api/v1/media/${mediaId}/apply`, requestBody).catch((err) => {
         return err.response;
     })
     return response;
