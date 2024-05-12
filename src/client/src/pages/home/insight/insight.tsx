@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Subtitle1, Subtitle2 } from "../../../components/text";
 import GridViewMedia from "../gridview-media/gridview_media";
 import { MediaInfo } from "../../../interfaces/interface";
+import { getMedia } from "../../../api/client/media";
 
 export enum InsightMode {
   LIST,
@@ -11,33 +12,28 @@ export enum InsightMode {
 const Insight = () => {
   const [mode, setMode] = useState(InsightMode.LIST);
   const [detailInfo, setDetailInfo] = useState<MediaInfo | null>(null);
+  const [medias, setMedias] = useState<MediaInfo[]>([]);
 
   console.log(detailInfo);
 
-  const data: MediaInfo[] = [
-    {
-      mediaId: 1,
-      mediaLink:
-        "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
-      title: "광고 테스트 1",
-      description: "광고 테스트 1에 대한 설명이에요.",
-      dashboardId: 1,
-    },
-    {
-      mediaId: 2,
-      mediaLink:
-        "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
-      title: "광고 테스트 2",
-      description: "광고 테스트 2에 대한 설명이에요.",
-      dashboardId: 2,
-    },
-  ];
+  useEffect(() => {
+    loadInsightList();
+  }, []);
+
+  const loadInsightList = async () => {
+    const response = await getMedia({ filter: "ACCEPT" });
+
+    if (response.status === 200) {
+      console.log(response);
+      setMedias(response.data.data);
+    }
+  };
 
   return mode === InsightMode.LIST ? (
     <div className="flex flex-col h-full min-w-[920px] w-full px-[30px] gap-7 overflow-y-scroll">
       <Subtitle2 text="광고 목록" color="text-black" />
       <GridViewMedia
-        mediaList={data}
+        mediaList={medias}
         setMode={setMode}
         setDetailInfo={setDetailInfo}
       />

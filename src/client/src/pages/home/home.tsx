@@ -24,6 +24,7 @@ import Cookies from "universal-cookie";
 import Insight from "./insight/insight";
 import HistoryScreen from "./history/history";
 import { UserInfo } from "../../interfaces/interface";
+import defaultImageRectangle from "../../assets/images/default_rectangle.svg";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -120,6 +121,10 @@ const HomePage = () => {
             <img
               className="w-20 h-20 rounded-full bg-white"
               src={currInfo?.profileImage}
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                const target = e.target as HTMLImageElement;
+                target.src = defaultImageRectangle;
+              }}
             />
             <p className="font-medium text-base text-white pt-5 pb-2">
               {currInfo?.company}
