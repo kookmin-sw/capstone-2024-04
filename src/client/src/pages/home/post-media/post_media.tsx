@@ -49,7 +49,7 @@ const PostMediaScreen = () => {
     }
 
     const result = await postApply({
-      mediaId: selectedHistory,
+      mediaId: selectedHistory.mediaId,
       requestBody: {
         advertisementTitle: selectedHistory?.title,
         advertisementDescription: selectedHistory?.description,
@@ -59,7 +59,9 @@ const PostMediaScreen = () => {
       },
     });
 
-    if (result && result.status === 201) {
+    console.log(result);
+
+    if (result.status === 201) {
       toast.success("성공적으로 광고가 등록되었습니다.");
       resetForm();
     } else {
@@ -90,7 +92,7 @@ const PostMediaScreen = () => {
     }
     const result = await postMedia(formData);
 
-    if (result && result.status === 200) {
+    if (result && result.status === 201) {
       // 사용자 입력 정보 초기화
       toast.success("성공적으로 광고가 등록되었습니다.");
       resetForm();
