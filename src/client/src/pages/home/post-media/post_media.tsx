@@ -16,6 +16,8 @@ import moment from "moment";
 import { postApply } from "../../../api/client/apply";
 import { TextAreaRef } from "antd/lib/input/TextArea";
 import dayjs from "dayjs";
+import defaultImageRectangle from "../../../assets/images/default_rectangle.svg";
+import defaultImageVideo from "../../../assets/images/default_video.svg";
 
 const PostMediaScreen = () => {
   const enum PostMode {
@@ -253,6 +255,12 @@ const PostMediaScreen = () => {
                     <img
                       className="w-12 h-12 border-[1px] border-gray rounded bg-white"
                       src={info.mediaLink}
+                      onError={(
+                        e: React.SyntheticEvent<HTMLImageElement, Event>
+                      ) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = defaultImageRectangle;
+                      }}
                     />
                     <p>{info.title}</p>
                   </div>
@@ -323,7 +331,14 @@ const PostMediaScreen = () => {
         ) : (
           <div className="flex flex-col">
             <Subtitle1 text="광고 미리보기" color="text-black" />
-            <div className="w-full mt-2 aspect-video border-gray2 border-[1px] rounded-lg" />
+            <img
+              src={selectedHistory?.mediaLink}
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                const target = e.target as HTMLImageElement;
+                target.src = defaultImageVideo;
+              }}
+              className="w-full mt-2 aspect-video border-[1px] rounded-lg"
+            />
           </div>
         )}
       </div>
