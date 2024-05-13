@@ -62,4 +62,7 @@ public class DailyDetailBoardService {
 
         return dailyDetailBoardRepository.findByDailyMediaBoardAndAgeRangeAndMaleAndCreateDateBetween(dailyMediaBoard, ageRange * 10, male,startOfDay, endOfDay).orElseThrow(()-> new IllegalArgumentException("DailyMediaboard is Null"));
     }
+    public List<DailyDetailBoard> findDetailBoardByDailyBoard(DailyMediaBoard dailyMediaBoard, int ageRange, boolean male){
+        return dailyDetailBoardRepository.findByDailyMediaBoardAndAgeRangeAndMale(dailyMediaBoard, ageRange * 10, male);
+    }
 }
