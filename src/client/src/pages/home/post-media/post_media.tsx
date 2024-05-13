@@ -15,6 +15,7 @@ import { toast } from "react-hot-toast";
 import moment from "moment";
 import { postApply } from "../../../api/client/apply";
 import { TextAreaRef } from "antd/lib/input/TextArea";
+import dayjs from "dayjs";
 
 const PostMediaScreen = () => {
   const enum PostMode {
@@ -282,6 +283,10 @@ const PostMediaScreen = () => {
             return current && current < moment(customDate, "YYYY-MM-DD");
           }}
           format="YYYY-MM-DD"
+          value={[
+            date[0] ? dayjs(date[0]) : null,
+            date[1] ? dayjs(date[1]) : null,
+          ]}
           onChange={(_, dateStrings) => setDate(dateStrings)}
           className="mt-2 mb-7"
           style={{ width: "100%" }}
