@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "kafkajs": "^2.2.4",
     "react-player": "^2.16.0",
     "react-toastify": "^10.0.5"
   },
