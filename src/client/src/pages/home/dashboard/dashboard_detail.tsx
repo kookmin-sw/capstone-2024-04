@@ -5,8 +5,18 @@ import { InterestBar } from "./interestBar";
 import { TotalBar } from "./totalBar";
 import MixedChart from "./mixedChart";
 import defaultImageVideo from "../../../assets/images/default_video.svg";
+import { useEffect, useState } from "react";
 
-const DashBoardDetail = () => {
+const DashBoardDetail = ({ DashboardDataInfo: info }: any) => {
+  const [data, setData] = useState(info);
+
+  useEffect(() => {
+    console.log("대시보드 초기 데이터 수신");
+    setData(info);
+  }, []);
+
+  console.log(data);
+
   const dummy: DashboardDataInfo = {
     mediaAppsCnt: 25,
     hourlyInterestedCount: [
