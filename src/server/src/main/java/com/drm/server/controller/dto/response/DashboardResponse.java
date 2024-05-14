@@ -1,7 +1,10 @@
 package com.drm.server.controller.dto.response;
 
+import com.drm.server.domain.dailyDetailBoard.DailyDetailBoard;
 import com.drm.server.domain.dailyMediaBoard.DailyMediaBoard;
 import com.drm.server.domain.dashboard.Dashboard;
+import com.drm.server.domain.location.Location;
+import com.drm.server.domain.mediaApplication.MediaApplication;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,6 +39,59 @@ public class DashboardResponse {
             this.description = description;
             this.dashboardId = dashboardId;
             this.mediaUrl = mediaUrl;
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class DashboardDetailDataInfo {
+        @Schema(description = "필터링된 인원 중 전체 포착된 사람 수", example = "254")
+        private Long totalPeopleCount;
+
+        @Schema(description = "필터링된 인원 중 관심을 표현한 인원 수", example = "104")
+        private Long InterestPeopleCnt;
+
+        @Schema(description = "필터링된 인원 중 해당 광고 평균 시청 시간", example = "3.1")
+        private float avgStaringTime;
+
+        @Schema(description = "필터링된 인원의 광고 관심도", example = "12.1")
+        private float attentionRatio;
+
+        @Builder
+        public DashboardDetailDataInfo(){
+            this.totalPeopleCount = 0L;
+            this.InterestPeopleCnt = 0L;
+            this.avgStaringTime = 0F;
+            this.attentionRatio = 0F;
+        }
+
+        public void addDetailDataInfo(DashboardDetailDataInfo inputInfo){
+            // divide by 0 를 막기 위해 우선적으로 더해주는 것이 좋음.
+            this.totalPeopleCount += inputInfo.getTotalPeopleCount();
+            this.InterestPeopleCnt += inputInfo.getInterestPeopleCnt();
+            this.avgStaringTime = calculateStaringTime(inputInfo.getAvgStaringTime(), inputInfo.getInterestPeopleCnt());
+            this.attentionRatio = calculateAttentionRatio();
+        }
+        public void addDetailData(DailyDetailBoard board){
+            this.totalPeopleCount += board.getTotalPeopleCount();
+            this.InterestPeopleCnt += board.getInterestCount();
+            this.avgStaringTime = calculateStaringTime(board.getAvgStaringTime(), board.getInterestCount());
+            this.attentionRatio = calculateAttentionRatio();
+
+        }
+        private float calculateStaringTime(float staringTime, Long inputInterestCnt){
+            return (this.avgStaringTime * (this.InterestPeopleCnt - inputInterestCnt) + staringTime) / this.InterestPeopleCnt;
+        }
+        private float calculateAttentionRatio(){
+            if(totalPeopleCount == 0) {
+                return 0F;
+            }
+            else if(totalPeopleCount < 0) {
+                throw new IllegalArgumentException("ERR : TOTAL PEOPLE CNT IS NEGATIVE");
+            }
+            else{
+                return this.InterestPeopleCnt / this.totalPeopleCount;
+            }
         }
     }
 
@@ -78,7 +134,7 @@ public class DashboardResponse {
             this.hourlyInterestedCount = new ArrayList<>(Collections.nCopies(24, 0L));
             this.hourlyPassedCount =  new ArrayList<>(Collections.nCopies(24, 0L));
             this.hourlyAvgStaringTime = new ArrayList<>(Collections.nCopies(24,0F));
-            this.interestedPeopleAgeRangeCount = new ArrayList<>(Collections.nCopies(10, 0L));
+            this.interestedPeopleAgeRangeCount = new ArrayList<>(Collections.nCopies(9, 0L));
             this.totalPeopleCount = 0L;
             this.avgStaringTime = 0;
             this.avgAge = 0;
@@ -103,19 +159,19 @@ public class DashboardResponse {
             this.mediaAppsCnt++;
         }
         public void addHourlyAvgStaringTime(List<Float> boardList){
-            List<Float> summedList = DashboardCalculator.calculateHourListDataPerHour(this.hourlyAvgStaringTime, boardList);
+            List<Float> summedList = DashboardCalculator.sumHourListDataPerHour(this.hourlyAvgStaringTime, boardList);
             this.hourlyAvgStaringTime = DashboardCalculator.divideHourListData(summedList, this.mediaAppsCnt);
 
         }
         public void addHourlyPassedCount(List<Long> boardList){
-            this.hourlyPassedCount = DashboardCalculator.calculateHourListDataPerHour(this.hourlyPassedCount, boardList);
+            this.hourlyPassedCount = DashboardCalculator.sumHourListDataPerHour(this.hourlyPassedCount, boardList);
         }
 
         public void addHourlyInterestedCount(List<Long> boardList) {
-            this.hourlyInterestedCount = DashboardCalculator.calculateHourListDataPerHour(this.hourlyInterestedCount, boardList);
+            this.hourlyInterestedCount = DashboardCalculator.sumHourListDataPerHour(this.hourlyInterestedCount, boardList);
         }
         public void addHourlyInterestedPeopleAgeRange(List<Long> boardList){
-            this.interestedPeopleAgeRangeCount = DashboardCalculator.calculateHourListDataPerHour(this.interestedPeopleAgeRangeCount, boardList);
+            this.interestedPeopleAgeRangeCount = DashboardCalculator.sumHourListDataPerHour(this.interestedPeopleAgeRangeCount, boardList);
         }
         public void updateDtoWithBoardData(Long totalPeopleCntData, List<Long> interestedPeopleAgeListData, List<Long> hourlyPassedData, List<Long> hourlyInterestData,
                                      List<Float> avgStaringTimeListData, Float avgAgeData, Float avgStaringData,
@@ -167,7 +223,7 @@ public class DashboardResponse {
         public LocationDataInfo(){
             this.mediaAppsCnt = 0L;
             this.passedPeopleCntPerDay = 0L;
-            this.passedPeopleListPerHour = new ArrayList<>(asList(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0));
+            this.passedPeopleListPerHour = new ArrayList<>(Collections.nCopies(24, 0L));
             this.avgMaleRatio = 0L;
         }
 
@@ -182,7 +238,7 @@ public class DashboardResponse {
 
         // 평균이므로 나눠주는 연산 필요함 -> 전체 일 수 덧셈 이후에 나누기
         public void addPassedPeopleCntPerHour(List<Long> boardList){
-            List<Long> summedList = DashboardCalculator.calculateHourListDataPerHour(this.passedPeopleListPerHour, boardList);
+            List<Long> summedList = DashboardCalculator.sumHourListDataPerHour(this.passedPeopleListPerHour, boardList);
             this.passedPeopleListPerHour = DashboardCalculator.divideHourListData(summedList, this.mediaAppsCnt);
         }
 
@@ -192,7 +248,7 @@ public class DashboardResponse {
             this.avgMaleRatio = (this.avgMaleRatio * (this.mediaAppsCnt - 1) + avgMaleNum) / this.mediaAppsCnt;
         }
         private void addTotalAveRangeCnt(List<Long> visitorAgeList) {
-            this.totalAgeRangeCount = DashboardCalculator.calculateHourListDataPerHour(this.totalAgeRangeCount, visitorAgeList);
+            this.totalAgeRangeCount = DashboardCalculator.sumHourListDataPerHour(this.totalAgeRangeCount, visitorAgeList);
         }
         public void updateDtoWithBoardData(Long totalCnt, List<Long> boardList, List<Long> visitorAgeList, Long maleCnt){
             if(totalCnt == 0) {
@@ -216,7 +272,6 @@ public class DashboardResponse {
 
     @Getter
     @Setter
-    @Builder
     public static class RegisteredMediaAppInfo {
         @Schema(description = "광고 집행 위치", example = "미래관 4층 디스플레이")
         private String address;
@@ -226,6 +281,20 @@ public class DashboardResponse {
 
         @Schema(description = "광고 집행 Id")
         private Long mediaApplicationId;
+
+        @Schema(description = "광고 집행 시작일", example = "2024-03-21")
+        private String startDate;
+
+        @Schema(description = "광고 집행 종료일", example = "2024-04-11")
+        private String endDate;
+
+        public RegisteredMediaAppInfo(MediaApplication mediaApplication){
+            this.address = mediaApplication.getLocation().getAddress();
+            this.description = mediaApplication.getMedia().getDescription();
+            this.startDate = mediaApplication.getStartDate().toString();
+            this.endDate = mediaApplication.getEndDate().toString();
+            this.mediaApplicationId = mediaApplication.getMediaApplicationId();
+        }
     }
 
 }

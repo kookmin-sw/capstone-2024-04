@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Valid
 public class DashboardRequest {
     @Getter
@@ -20,5 +22,14 @@ public class DashboardRequest {
         private String date;
         public dataPerDay(){
         }
+    }
+
+    @Getter
+    @Setter
+    public static class dataFilter {
+        private boolean male;
+        private boolean female;
+        @Schema(description = "필터링 나이대(10대 이하, 10대, 20대, 30대, 40대, 50대, 60대 이상) 총 7개 분류", example = "[true, false, false, false, false, false, true]")
+        private List<Boolean> ageRanges; // Add this field for age ranges
     }
 }

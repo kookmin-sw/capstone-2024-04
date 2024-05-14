@@ -20,13 +20,13 @@ public class DailyMediaBoardService {
 
 //    private final MediaApplicationService mediaApplicationService;
     private final DailyMediaBoardRepository dailyMediaBoardRepository;
-    public void createDailyBoard(MediaApplication mediaApplication, LocalDate date) {
+    public DailyMediaBoard createDailyBoard(MediaApplication mediaApplication, LocalDate date) {
         DailyMediaBoard initBoard = DailyMediaBoard.toEntity(mediaApplication);
 
-        dailyMediaBoardRepository.save(initBoard);
         log.info("CREATE DAILY DATA : " + date);
+        return dailyMediaBoardRepository.save(initBoard);
     }
-    public void updateDailyBoard(DetectedFace detectedFace) {
+    public DailyMediaBoard updateDailyBoard(DetectedFace detectedFace) {
         // 광고의 집행 정보 application 이 Param 으로 들어온다.
         DailyMediaBoard dailyMediaBoard = findDailyBoardByDateAndApplication(detectedFace.getMediaApplication(), detectedFace.getArriveAt().toLocalDate());
 
@@ -39,6 +39,7 @@ public class DailyMediaBoardService {
 //        관심이 있다
         if(detectedFace.getFaceCaptureCnt() > 0){
             dailyMediaBoard.updateAvgStaringTime(detectedFace.getFaceCaptureCnt(), detectedFace.getFps()); //평균시선 시간
+            log.info(">>>>>>{}",dailyMediaBoard.getAvgStaringTime());
             dailyMediaBoard.updateInterestedAgeRangeCount(ageRange); //연령대별 관심인구수
             dailyMediaBoard.updateHourlyAvgStaringTime(dataHour, detectedFace.getFaceCaptureCnt(), detectedFace.getFps()); //시간별 평균시선
             dailyMediaBoard.addHourlyInterestedCount(dataHour); // 시간별 관심인구
@@ -54,8 +55,8 @@ public class DailyMediaBoardService {
         dailyMediaBoard.addHourlyPassedCount(dataHour); //시간별 유동인구
         dailyMediaBoard.addTotalPeopleCount(); // 통유동인구
 
-        dailyMediaBoardRepository.save(dailyMediaBoard);
         log.info(" {} : 광고 dailyboard 업데이트 ",dailyMediaBoard.getMediaApplication().getMediaApplicationId());
+        return dailyMediaBoardRepository.save(dailyMediaBoard);
     }
     private void validateDailyMediaBoard(DailyMediaBoard prevBoard) {
         if(prevBoard.getHourlyPassedCount() == null){
