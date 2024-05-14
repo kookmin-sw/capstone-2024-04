@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getDailyPlayList } from "../../api/none/broadcasting";
 import { LocationInfo, MediaInfo } from "../../interfaces/interface";
-import ReactPlayer from "react-player/lazy";
+import { default as _ReactPlayer } from "react-player/lazy";
+import { ReactPlayerProps } from "react-player/types/lib";
+const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 import { Kafka } from "kafkajs";
 
 interface TodayList {
