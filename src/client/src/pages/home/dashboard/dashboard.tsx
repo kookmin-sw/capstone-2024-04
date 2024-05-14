@@ -35,14 +35,16 @@ const DashBoard = () => {
   const [selectedData, setSelectedData] = useState<DashboardDataInfo | null>(
     null
   );
+  const [currDashboardId, setCurrDashboardId] = useState<number | null>(null);
 
   const loadDetailData = async ({ dashboardId }: GetAdUnitDashboardProps) => {
-    setMode(DashBoardMode.DETAIL);
     const result = await getAdUnitDashboard({ dashboardId });
     console.log(result);
-    if (result === 200) {
+    if (result.status === 200) {
+      setCurrDashboardId(dashboardId);
       result.data.data as DashboardDataInfo;
       setSelectedData(result.data.data);
+      setMode(DashBoardMode.DETAIL);
       return true;
     }
     return false;
@@ -94,7 +96,7 @@ const DashBoard = () => {
   }, []);
 
   const loadDashboardData = async () => {
-    const response = await getApplies({ filter: "ACCEPT" });
+    const response = await getApplies();
     if (response.status === 200) {
       const totalApplications: TotalApplicationInfo[] = response.data.data;
 
@@ -131,7 +133,10 @@ const DashBoard = () => {
       />
     </div>
   ) : (
-    <DashBoardDetail info={selectedData} />
+    <DashBoardDetail
+      dashboardData={selectedData!}
+      dashboardId={currDashboardId!}
+    />
   );
 };
 

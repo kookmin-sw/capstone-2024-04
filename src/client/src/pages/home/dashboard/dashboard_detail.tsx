@@ -6,14 +6,53 @@ import { TotalBar } from "./totalBar";
 import MixedChart from "./mixedChart";
 import defaultImageVideo from "../../../assets/images/default_video.svg";
 import { useEffect, useState } from "react";
+import { getDashboardListByAdUnit } from "../../../api/client/dashboard";
+import { SelectProps } from "antd/lib";
 
-const DashBoardDetail = ({ DashboardDataInfo: info }: any) => {
-  const [data, setData] = useState(info);
+export interface DashboardDetailProps {
+  dashboardData: DashboardDataInfo;
+  dashboardId: number;
+}
+
+export interface DashboardSelectInfo {
+  address: string;
+  description: null | string;
+  mediaApplicationId: number;
+}
+
+const DashBoardDetail = ({
+  dashboardData,
+  dashboardId,
+}: DashboardDetailProps) => {
+  const [data, setData] = useState<DashboardDataInfo>(dashboardData);
+  const [dashboardList, setDashboardList] = useState([]); // 신청 단위(광고 + 집행 시간) 별 대시보드 리스트
+  const [description, setDescription] = useState<string | null>(null);
+  const [options, setOptions] = useState<SelectProps["options"]>([]);
+
+  const loadDashboardList = async () => {
+    const result = await getDashboardListByAdUnit({ dashboardId: dashboardId });
+    if (result.status === 200) {
+      setDashboardList(result.data);
+    }
+    const newOptions = result.data.data.map(
+      (dashboard: DashboardSelectInfo) => ({
+        label: dashboard.address,
+        value: dashboard.mediaApplicationId,
+        description: dashboard.description,
+      })
+    );
+    setOptions(newOptions);
+
+    console.log("--------------");
+    console.log(dashboardList);
+    console.log("--------------");
+  };
 
   useEffect(() => {
     console.log("대시보드 초기 데이터 수신");
-    setData(info);
-  }, []);
+    setData(dashboardData);
+    loadDashboardList();
+  }, [dashboardData, dashboardId]);
 
   console.log(data);
 
@@ -46,10 +85,16 @@ const DashBoardDetail = ({ DashboardDataInfo: info }: any) => {
           <h1 className="text-2xl font-medium text-black text-ellipsis">
             치킨만 포함된 치킨광고 대시보드
           </h1>
-          <h2 className=" text-base font-normal text-black text-ellipsis">
-            연예인이 포함된 치킨광고와 치킨만 포함된 광고 A/B 테스트
+          <h2 className="text-base h-5 font-normal text-black text-ellipsis ">
+            {description}
           </h2>
-          <Select />
+          <Select
+            placeholder="-를 선택해주세요"
+            options={options}
+            onSelect={(_, record) => {
+              setDescription(record.description);
+            }}
+          />
           <button
             className="w-min text-nowrap p-4 border-[1px] border-main rounded-[3px] bg-white text-main"
             type="button"
