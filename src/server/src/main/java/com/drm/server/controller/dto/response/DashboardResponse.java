@@ -3,6 +3,8 @@ package com.drm.server.controller.dto.response;
 import com.drm.server.domain.dailyDetailBoard.DailyDetailBoard;
 import com.drm.server.domain.dailyMediaBoard.DailyMediaBoard;
 import com.drm.server.domain.dashboard.Dashboard;
+import com.drm.server.domain.location.Location;
+import com.drm.server.domain.mediaApplication.MediaApplication;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -270,7 +272,6 @@ public class DashboardResponse {
 
     @Getter
     @Setter
-    @Builder
     public static class RegisteredMediaAppInfo {
         @Schema(description = "광고 집행 위치", example = "미래관 4층 디스플레이")
         private String address;
@@ -280,6 +281,20 @@ public class DashboardResponse {
 
         @Schema(description = "광고 집행 Id")
         private Long mediaApplicationId;
+
+        @Schema(description = "광고 집행 시작일", example = "2024-03-21")
+        private String startDate;
+
+        @Schema(description = "광고 집행 종료일", example = "2024-04-11")
+        private String endDate;
+
+        public RegisteredMediaAppInfo(MediaApplication mediaApplication){
+            this.address = mediaApplication.getLocation().getAddress();
+            this.description = mediaApplication.getMedia().getDescription();
+            this.startDate = mediaApplication.getStartDate().toString();
+            this.endDate = mediaApplication.getEndDate().toString();
+            this.mediaApplicationId = mediaApplication.getMediaApplicationId();
+        }
     }
 
 }
