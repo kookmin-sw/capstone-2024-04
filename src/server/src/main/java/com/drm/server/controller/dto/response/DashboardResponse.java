@@ -132,7 +132,7 @@ public class DashboardResponse {
             this.hourlyInterestedCount = new ArrayList<>(Collections.nCopies(24, 0L));
             this.hourlyPassedCount =  new ArrayList<>(Collections.nCopies(24, 0L));
             this.hourlyAvgStaringTime = new ArrayList<>(Collections.nCopies(24,0F));
-            this.interestedPeopleAgeRangeCount = new ArrayList<>(Collections.nCopies(10, 0L));
+            this.interestedPeopleAgeRangeCount = new ArrayList<>(Collections.nCopies(9, 0L));
             this.totalPeopleCount = 0L;
             this.avgStaringTime = 0;
             this.avgAge = 0;
@@ -221,7 +221,7 @@ public class DashboardResponse {
         public LocationDataInfo(){
             this.mediaAppsCnt = 0L;
             this.passedPeopleCntPerDay = 0L;
-            this.passedPeopleListPerHour = new ArrayList<>(asList(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0));
+            this.passedPeopleListPerHour = new ArrayList<>(Collections.nCopies(24, 0L));
             this.avgMaleRatio = 0L;
         }
 
