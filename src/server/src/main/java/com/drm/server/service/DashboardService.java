@@ -88,10 +88,7 @@ public class DashboardService {
         List<MediaApplication> mediaAppList = findMediaApplicationByDashboardId(userId, dashboardId);
         List<DashboardResponse.RegisteredMediaAppInfo> registeredMediaAppInfos = new ArrayList<>();
         for (MediaApplication app : mediaAppList) {
-            Location location = app.getLocation();
-            String address = location.getAddress();
-            DashboardResponse.RegisteredMediaAppInfo info = DashboardResponse.RegisteredMediaAppInfo.builder().address(address)
-                    .mediaApplicationId(app.getMediaApplicationId()).build();
+            DashboardResponse.RegisteredMediaAppInfo info = new DashboardResponse.RegisteredMediaAppInfo(app);
             registeredMediaAppInfos.add(info);
         }
         return registeredMediaAppInfos;
