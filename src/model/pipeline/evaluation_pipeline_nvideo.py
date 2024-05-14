@@ -9,9 +9,11 @@ from collections import defaultdict
 import pandas as pd
 import numpy as np
 import cv2
+import torch
 
 import os
 import json
+import time
 
 from tqdm import tqdm
 
@@ -220,13 +222,27 @@ class Pipeline:
 def process_videos(video_paths):
     pipeline = Pipeline()
     all_results = {}
+
+    start_time = time.time()  # 전체 시작 시간 기록
     
     for video_path in tqdm(video_paths):
         video_name = os.path.basename(video_path)
         video_id = int(video_name.split('_')[1])
         all_results[video_id] = pipeline.run(video_path, visualize=False)
+        
+    end_time = time.time()  # 전체 종료 시간 기록
+
+    # GPU 정보 출력
+    if torch.cuda.is_available():
+        gpu_name = torch.cuda.get_device_name(torch.cuda.current_device())
+        print(f"Using GPU: {gpu_name}")
+    else:
+        print("CUDA is not available. Running on CPU.")
+
+    total_time = end_time - start_time
+    print(f"Total processing time for all videos: {total_time:.2f} seconds.")
     
-    with open('results_for_eval.json', 'w') as f: ############################ 실행할 때 마다 이름 바꿔야 함
+    with open('results_for_eval_timetest.json', 'w') as f: ############################ 실행할 때 마다 이름 바꿔야 함
         json.dump(all_results, f, indent=4)
 
     return all_results
@@ -276,4 +292,4 @@ if __name__ == '__main__':
 
     ]
     results = process_videos(video_paths)
-    print(results)
+    # print(results)
