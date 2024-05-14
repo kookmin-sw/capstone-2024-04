@@ -5,7 +5,6 @@ import { LocationInfo, MediaInfo } from "../../interfaces/interface";
 import { default as _ReactPlayer } from "react-player/lazy";
 import { ReactPlayerProps } from "react-player/types/lib";
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
-import { Kafka } from "kafkajs";
 
 interface TodayList {
   playListId: number;
@@ -13,57 +12,21 @@ interface TodayList {
   location: LocationInfo;
   media: MediaInfo;
 }
-const KAFKA_BROKER = import.meta.env.VITE_APP_KAFKA_BROKER;
-const kafka = new Kafka({
-  clientId: "my-app",
-  brokers: [KAFKA_BROKER],
-});
 
-const producer = kafka.producer();
-
-const getCurrentTimeList = () => {
-  const now = new Date();
-  return [
-    now.getFullYear(),
-    now.getMonth() + 1,
-    now.getDate(),
-    now.getHours(),
-    now.getMinutes(),
-    now.getSeconds(),
-    now.getMilliseconds(),
-    0,
-    0,
-  ];
-};
-
-const sendAdChange = async (playlist_index: number) => {
-  const currentTimeList = getCurrentTimeList();
-
-  try {
-    await producer.connect();
-
-    const messagePayload = {
-      playlist_index,
-      broadcast_time: currentTimeList,
-    };
-
-    await producer.send({
-      topic: "drm-advt-topic",
-      messages: [
-        {
-          key: String(playlist_index),
-          value: JSON.stringify(messagePayload),
-        },
-      ],
-    });
-
-    console.log("Message sent successfully");
-  } catch (error) {
-    console.error("Failed to send message:", error);
-  } finally {
-    await producer.disconnect();
-  }
-};
+// const getCurrentTimeList = () => {
+//   const now = new Date();
+//   return [
+//     now.getFullYear(),
+//     now.getMonth() + 1,
+//     now.getDate(),
+//     now.getHours(),
+//     now.getMinutes(),
+//     now.getSeconds(),
+//     now.getMilliseconds(),
+//     0,
+//     0,
+//   ];
+// };
 
 const PlayListScreen = () => {
   const { locationId } = useParams();
@@ -98,7 +61,7 @@ const PlayListScreen = () => {
 
   useEffect(() => {
     if (videoList.length > 0) {
-      sendAdChange(currentVideoIndex).catch(console.error);
+      // 서버 측에 다음 동영상으로 넘어갔음을 알림
     }
   }, [currentVideoIndex, videoList]);
 
@@ -111,7 +74,7 @@ const PlayListScreen = () => {
           url={videoList[currentVideoIndex].media.mediaLink}
           controls
           playing
-          onEnded={handleVideoEnded} // Typo correction: "onEmded" -> "onEnded"
+          onEnded={handleVideoEnded}
         />
       ) : (
         <></>
