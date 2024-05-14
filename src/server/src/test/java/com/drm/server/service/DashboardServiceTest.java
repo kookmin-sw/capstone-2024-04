@@ -139,12 +139,11 @@ public class DashboardServiceTest {
 
     }
 
-
     @Test
 //    @Disabled
     @Transactional
-    public void getDashBoardsTest() throws IOException {
-//        SetupManually();
+    // 특정 광고에 대한 요약 데이터 조회하는 테스트
+    public void getBoardPerAdSummaryTest() throws IOException {
         // given
         // 회원 가입 세팅
         String email = "test@email";
@@ -164,49 +163,44 @@ public class DashboardServiceTest {
                 "image/png",
                 new FileInputStream("/Users/dongguk/Desktop/동국자료/해외여행/CES/translate.png"));
 
-        locationService.createLocation(1, "2호선 1번 칸");
-        locationService.createLocation(2, "2호선 2번 칸");
-        locationService.createLocation(3, "2호선 3번 칸");
+//        locationService.createLocation(1, "2호선 1번 칸");
+//        locationService.createLocation(2, "2호선 2번 칸");
+//        locationService.createLocation(3, "2호선 3번 칸");
 
-//        Location location = locationService.findById(1L);
-//        Location location2 = locationService.findById(2L);
-//        Location location3 = locationService.findById(3L);
+        Location location = locationService.findById(1L);
+        Location location2 = locationService.findById(2L);
+        Location location3 = locationService.findById(3L);
+//        String title = LocalDateTime.now() + " maxmax chicken board";
 
-//        // when
-//        List<DashboardResponse.DashboardDataInfo> dashboardList = dashboardService.findDashboardsByUser(user.getUserId());
-//        DashboardResponse.DashboardDataInfo dashboard = dashboardService.findDashboardById(user.getUserId(), ds.getDashboardId());
-//
-//        // then
-//        // 개별 findDashboardById 작동 확인
-//        assertEquals(dashboard.getTitle(), testMediaList.get(testMediaList.size()-1).getDashboardTitle());
-//        assertEquals(dashboard.getDescription(), testMediaList.get(testMediaList.size()-1).getDashboardDescription());
-//        // 하나씩 Loop 돌면서 확인
-//        for(int i=1; i<= testMediaList.size(); i++){
-//            DashboardResponse.DashboardDataInfo info = dashboardList.get(dashboardList.size()-i);
-//            assertEquals(info.getTitle(), testMediaList.get(testMediaList.size() - i).getDashboardTitle());
-//            assertEquals(info.getDescription(), testMediaList.get(testMediaList.size() - i).getDashboardDescription());
-//        }
+        String title = "maxmax bb chicken num1 board";
+        LocalDate endDate = LocalDate.now().plusDays(2);
+        String formatEndDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));        // 미디어 / 대시보드  -> 세팅 및 생성
 
-//        // remove
-//        for(MediaRequest.Create testMedia : testMediaList){
-//            dashboardService.deleteDashboardByTitle(testMedia.getDashboardTitle());
-//        }
-    }
+        MediaRequest.Create mediaRequest = MediaRequest.Create.builder().advertisementDescription("this is awesome").advertisementTitle("Good Fish")
+                .startDate("2024-04-07").endDate(formatEndDate).locationId(1L).build();
 
-    @Test
-//    @Disabled
-    @Transactional
-    // 특정 광고에 대한 요약 데이터 조회하는 테스트
-    // 로직 자체는 동작
-    // 카프카 데이터 넣어서 잘 계산, 조회하는지만 검증 필요
-    public void getBoardPerAdSummaryTest() throws IOException {
-        // when
-        // 해당 유저가 집행한 광고 데이터 모아서 조회
-//        DashboardResponse.DashboardDataInfo info = dashboardService.getDashboardWithDataById(user.getUserId(), ds.getDashboardId());
+        Dashboard ds = dashboardService.createDashboard(user);
 
-        // then
-        // 조회된 대시보드 값 확인
-//        assertEquals(info.getMaleCnt(), 0L);
+        Media media =  mediaService.createMedia(mediaRequest, ds, file);
+        log.info("CREATED MEDIA URL : " + media.getMediaLink());
+
+        // 여러개의 광고 집행 단위가 존재 가정
+        MediaApplication mediaApplication = mediaApplicationService.createMediaApplication(media, location ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
+        MediaApplication mediaApplication2 = mediaApplicationService.createMediaApplication(media, location2 ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
+        MediaApplication mediaApplication3 = mediaApplicationService.createMediaApplication(media, location3 ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
+
+        // 광고 승락
+        List<MediaApplication> mediaApps = mediaApplicationService.findByMedia(media);
+        List<Long> mediaAppIds = mediaApps.stream().map(mediaApplication1 -> mediaApplication1.getMediaApplicationId()).collect(Collectors.toList());
+
+
+        mediaApplicationService.updateStatus(mediaAppIds, Status.ACCEPT);
+
+        playListService.testUpdatePlayList();
+
+        DashboardResponse.DashboardDataInfo info = dashboardService.getDashboardWithDataById(user.getUserId(), ds.getDashboardId());
+        assertEquals(3, info.getMediaAppsCnt());
+
     }
 
     @Test
@@ -319,21 +313,13 @@ public class DashboardServiceTest {
         MediaRequest.Create mediaRequest = MediaRequest.Create.builder().advertisementDescription("this is awesome").advertisementTitle("Good Fish")
                 .startDate("2024-04-07").endDate(formatEndDate).locationId(1L).build();
 
-//        MediaRequest.Create mediaRequest2 = MediaRequest.Create.builder().advertisementDescription("No Way").advertisementTitle("Chagne to Rap Concert")
-//                .startDate("2024-04-07").endDate(formatEndDate).locationId(1L).build();
-
-
         Dashboard ds = dashboardService.createDashboard(user);
-        Dashboard ds2 = dashboardService.createDashboard(user);
 
         Media media =  mediaService.createMedia(mediaRequest, ds, file);
         log.info("CREATED MEDIA URL : " + media.getMediaLink());
-//        Media media =  mediaService.createMockMedia(mediaRequest, ds, file);
-//        Media media2 =  mediaService.createMockMedia(mediaRequest2, ds2, file);
 
         // 여러개의 광고 집행 단위가 존재 가정
         MediaApplication mediaApplication = mediaApplicationService.createMediaApplication(media, location ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
-//        MediaApplication mediaApplication2_sec = mediaApplicationService.createMediaApplication(media2, location ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
 
         MediaApplication mediaApplication2 = mediaApplicationService.createMediaApplication(media, location2 ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
         MediaApplication mediaApplication3 = mediaApplicationService.createMediaApplication(media, location3 ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
@@ -342,8 +328,6 @@ public class DashboardServiceTest {
         List<MediaApplication> mediaApps = mediaApplicationService.findByMedia(media);
         List<Long> mediaAppIds = mediaApps.stream().map(mediaApplication1 -> mediaApplication1.getMediaApplicationId()).collect(Collectors.toList());
 
-//        List<MediaApplication> mediaApps2 = mediaApplicationService.findByMedia(media2);
-//        List<Long> mediaAppIds2 = mediaApps2.stream().map(mediaApplication1 -> mediaApplication1.getMediaApplicationId()).collect(Collectors.toList());
 
         mediaApplicationService.updateStatus(mediaAppIds, Status.ACCEPT);
 //        mediaApplicationService.updateStatus(mediaAppIds2, Status.ACCEPT);
