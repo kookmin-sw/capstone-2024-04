@@ -1,4 +1,4 @@
-import { Select } from "antd";
+import { DatePicker, Select } from "antd";
 import { DashboardDataInfo } from "../../../interfaces/interface";
 import { InterestPeopleChart } from "./pie";
 import { InterestBar } from "./interestBar";
@@ -8,9 +8,11 @@ import defaultImageVideo from "../../../assets/images/default_video.svg";
 import { useEffect, useState } from "react";
 import { getDashboardListByAdUnit } from "../../../api/client/dashboard";
 import { SelectProps } from "antd/lib";
+import dayjs from "dayjs";
 
 export interface DashboardDetailProps {
   dashboardData: DashboardDataInfo;
+  dashboardTitle: string;
   dashboardId: number;
 }
 
@@ -18,34 +20,35 @@ export interface DashboardSelectInfo {
   address: string;
   description: null | string;
   mediaApplicationId: number;
+  startDate: string;
+  endDate: string;
 }
 
 const DashBoardDetail = ({
+  dashboardTitle,
   dashboardData,
   dashboardId,
 }: DashboardDetailProps) => {
   const [data, setData] = useState<DashboardDataInfo>(dashboardData);
-  const [dashboardList, setDashboardList] = useState([]); // 신청 단위(광고 + 집행 시간) 별 대시보드 리스트
+  const [date, setDate] = useState<string[]>([]); // 신청 단위의 시작 일자, 종료 일자가 담긴 리스트
+  const [selectedDate, setSelectedDate] = useState<string | null>(null); // 일별 조회 시
   const [description, setDescription] = useState<string | null>(null);
   const [options, setOptions] = useState<SelectProps["options"]>([]);
 
   const loadDashboardList = async () => {
     const result = await getDashboardListByAdUnit({ dashboardId: dashboardId });
     if (result.status === 200) {
-      setDashboardList(result.data);
+      const newOptions = result.data.data.map(
+        (dashboard: DashboardSelectInfo) => ({
+          label: `${dashboard.address} (${dashboard.startDate}~${dashboard.endDate})`,
+          value: dashboard.mediaApplicationId,
+          description: dashboard.description,
+          startDate: dashboard.startDate,
+          endDate: dashboard.endDate,
+        })
+      );
+      setOptions(newOptions);
     }
-    const newOptions = result.data.data.map(
-      (dashboard: DashboardSelectInfo) => ({
-        label: dashboard.address,
-        value: dashboard.mediaApplicationId,
-        description: dashboard.description,
-      })
-    );
-    setOptions(newOptions);
-
-    console.log("--------------");
-    console.log(dashboardList);
-    console.log("--------------");
   };
 
   useEffect(() => {
@@ -83,16 +86,17 @@ const DashBoardDetail = ({
       <div className="flex justify-between items-start">
         <div className="flex flex-col gap-4">
           <h1 className="text-2xl font-medium text-black text-ellipsis">
-            치킨만 포함된 치킨광고 대시보드
+            {`${dashboardTitle} 대시보드`}
           </h1>
           <h2 className="text-base h-5 font-normal text-black text-ellipsis ">
             {description}
           </h2>
           <Select
-            placeholder="-를 선택해주세요"
+            placeholder={"상세보기를 원하는 광고를 선택해주세요."}
             options={options}
             onSelect={(_, record) => {
               setDescription(record.description);
+              setDate([record.startDate, record.endDate]);
             }}
           />
           <button
@@ -114,7 +118,13 @@ const DashBoardDetail = ({
       </div>
       <div className="flex justify-between mt-10 mb-3">
         <p className="text-base">광고 관심도 분석 결과</p>
-        <Select />
+        <DatePicker
+          minDate={dayjs(date[0])}
+          maxDate={dayjs(date[1])}
+          onChange={(_, dateString) => {
+            setSelectedDate(dateString as string);
+          }}
+        />
       </div>
       <div className="flex flex-col gap-6">
         <div className="grid grid-cols-4 gap-6">

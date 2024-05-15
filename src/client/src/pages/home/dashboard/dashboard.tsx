@@ -35,6 +35,7 @@ const DashBoard = () => {
   const [selectedData, setSelectedData] = useState<DashboardDataInfo | null>(
     null
   );
+  const [dashboardTitle, setDashboardTitle] = useState<string>("");
   const [currDashboardId, setCurrDashboardId] = useState<number | null>(null);
 
   const loadDetailData = async ({ dashboardId }: GetAdUnitDashboardProps) => {
@@ -127,6 +128,7 @@ const DashBoard = () => {
         pagination={{ pageSize: 8, position: ["bottomCenter"] }}
         onRow={(record) => ({
           onClick: () => {
+            setDashboardTitle(record.title);
             loadDetailData({ dashboardId: record.key });
           },
         })}
@@ -134,6 +136,7 @@ const DashBoard = () => {
     </div>
   ) : (
     <DashBoardDetail
+      dashboardTitle={dashboardTitle}
       dashboardData={selectedData!}
       dashboardId={currDashboardId!}
     />
