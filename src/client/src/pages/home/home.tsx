@@ -16,7 +16,6 @@ import viewDashboardWhitesub from "../../assets/icons/view-dashboard-whitesub.sv
 import MenuButton from "../../components/menu_button";
 import PostMediaScreen from "./post-media/post_media";
 import { Body1, Headline1 } from "../../components/text";
-import CompareMediaScreen from "./compare-media/compare_media";
 import SettingScreen from "./setting/setting";
 import DashBoard from "./dashboard/dashboard";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +24,7 @@ import Insight from "./insight/insight";
 import HistoryScreen from "./history/history";
 import { UserInfo } from "../../interfaces/interface";
 import defaultImageRectangle from "../../assets/images/default_rectangle.svg";
+import FootTrafficInfo from "./foot-traffic-info/foot_traffic_info";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -64,12 +64,12 @@ const HomePage = () => {
       component: <Insight />,
     },
     {
-      title: "위치정보비교",
+      title: "유동인구정보",
       description:
         "각 위치별로 유동인구 정보를 비교할 수 있어요. 집행할 디스플레이 선택시 참고하면 좋아요.",
       iconWhiteSrc: fileCompareWhitesub,
       iconBlackSrc: fileCompareBlacksub,
-      component: <CompareMediaScreen />,
+      component: <FootTrafficInfo />,
     },
     {
       title: "광고 등록",
