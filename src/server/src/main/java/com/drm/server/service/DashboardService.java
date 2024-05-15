@@ -73,6 +73,7 @@ public class DashboardService {
 
     // 특정 광고 - 대시보드에 들어가는 데이터 반환 로직
     public DashboardResponse.DashboardDataInfo getDashboardWithDataById(Long userId, Long dashboardId) {
+        verifyUser(userId, dashboardId);
         // 해당 광고(media) 를 집행한 광고 집행 이벤트들을 모두 조회
         List<MediaApplication> mediaAppList = findMediaApplicationByDashboardId(userId, dashboardId);
         // 조회된 광고 집행 이벤트들에서 Daily 별 수집된 데이터를 합산하여 Dto Response 리턴
@@ -85,6 +86,7 @@ public class DashboardService {
 
     // 특정 광고에 대해 광고 집행된 이벤트들 반환
     public List<DashboardResponse.RegisteredMediaAppInfo> getRegisteredBoardsById(Long userId, Long dashboardId) {
+        verifyUser(userId, dashboardId);
         List<MediaApplication> mediaAppList = findMediaApplicationByDashboardId(userId, dashboardId);
         List<DashboardResponse.RegisteredMediaAppInfo> registeredMediaAppInfos = new ArrayList<>();
         for (MediaApplication app : mediaAppList) {
@@ -95,10 +97,10 @@ public class DashboardService {
     }
 
     // 특정 광고 + 특정 일에 대한 집행 결과 데이터 반환
-    public DashboardResponse.DashboardDataInfo getDayBoards(Long userId, Long mediaAplicationId, LocalDate date) {
+    public DashboardResponse.DashboardDataInfo getDayBoards(Long userId, Long mediaApplicationId, LocalDate date) {
         // 광고 집행 단위가 유저의 것인지 확인
         User user = userService.getUser(userId);
-        MediaApplication mediaApplication = mediaApplicationService.findById(mediaAplicationId);
+        MediaApplication mediaApplication = mediaApplicationService.findById(mediaApplicationId);
         mediaApplicationService.deleteVerify(mediaApplication, user);
         // 일별 데이터 조회
         DailyMediaBoard board = dailyMediaBoardService.findDailyBoardByDateAndApplication(mediaApplication, date);
