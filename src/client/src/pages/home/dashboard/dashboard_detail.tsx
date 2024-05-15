@@ -6,7 +6,11 @@ import { TotalBar } from "./totalBar";
 import MixedChart from "./mixedChart";
 import defaultImageVideo from "../../../assets/images/default_video.svg";
 import { useEffect, useState } from "react";
-import { getDashboardListByAdUnit } from "../../../api/client/dashboard";
+import {
+  createDailyDashboard,
+  createLocationDashboard,
+  getDashboardListByAdUnit,
+} from "../../../api/client/dashboard";
 import { SelectProps } from "antd/lib";
 import dayjs from "dayjs";
 
@@ -34,6 +38,8 @@ const DashBoardDetail = ({
   const [selectedDate, setSelectedDate] = useState<string | null>(null); // 일별 조회 시
   const [description, setDescription] = useState<string | null>(null);
   const [options, setOptions] = useState<SelectProps["options"]>([]);
+  const [boardId, setBoardId] = useState<number | null>(null);
+  const [locationId, setLocationId] = useState<number | null>(null);
 
   const loadDashboardList = async () => {
     const result = await getDashboardListByAdUnit({ dashboardId: dashboardId });
@@ -51,13 +57,35 @@ const DashBoardDetail = ({
     }
   };
 
+  const loadDashboardWithLocation = async () => {
+    if (locationId) {
+      const result = await createLocationDashboard({ locationId: locationId });
+      if (result.status === 200) {
+        setData(result.data.data);
+      }
+    }
+  };
+
+  const loadDashboardWithDate = async () => {
+    if (selectedDate && boardId) {
+      const result = await createDailyDashboard({
+        dashboardId: dashboardId,
+        boardId: boardId,
+        date: selectedDate,
+      });
+    }
+  };
+
   useEffect(() => {
     console.log("대시보드 초기 데이터 수신");
     setData(dashboardData);
     loadDashboardList();
   }, [dashboardData, dashboardId]);
 
-  console.log(data);
+  useEffect(() => {
+    setSelectedDate(null);
+    loadDashboardWithLocation();
+  }, [locationId]);
 
   const dummy: DashboardDataInfo = {
     mediaAppsCnt: 25,
@@ -96,6 +124,7 @@ const DashBoardDetail = ({
             options={options}
             onSelect={(_, record) => {
               setDescription(record.description);
+              setLocationId(record.value as number);
               setDate([record.startDate, record.endDate]);
             }}
           />
