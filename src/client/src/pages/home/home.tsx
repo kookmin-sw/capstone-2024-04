@@ -7,8 +7,8 @@ import chartTimelineBlacksub from "../../assets/icons/chart-timeline-blacksub.sv
 import chartTimelineWhitesub from "../../assets/icons/chart-timeline-whitesub.svg";
 import cogBlacksub from "../../assets/icons/cog-blacksub.svg";
 import cogWhitesub from "../../assets/icons/cog-whitesub.svg";
-import fileCompareBlacksub from "../../assets/icons/file-compare-blacksub.svg";
-import fileCompareWhitesub from "../../assets/icons/file-compare-whitesub.svg";
+import peopleBlacksub from "../../assets/icons/people-blacksub.svg";
+import peopleWhitesub from "../../assets/icons/people-whitesub.svg";
 import uploadBlacksub from "../../assets/icons/upload-blacksub.svg";
 import uploadWhitesub from "../../assets/icons/upload-whitesub.svg";
 import viewDashboardBlacksub from "../../assets/icons/view-dashboard-blacksub.svg";
@@ -67,8 +67,8 @@ const HomePage = () => {
       title: "유동인구정보",
       description:
         "각 위치별로 유동인구 정보를 비교할 수 있어요. 집행할 디스플레이 선택시 참고하면 좋아요.",
-      iconWhiteSrc: fileCompareWhitesub,
-      iconBlackSrc: fileCompareBlacksub,
+      iconWhiteSrc: peopleWhitesub,
+      iconBlackSrc: peopleBlacksub,
       component: <FootTrafficInfo />,
     },
     {
