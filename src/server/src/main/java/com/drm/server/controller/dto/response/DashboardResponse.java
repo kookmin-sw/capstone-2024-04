@@ -282,6 +282,9 @@ public class DashboardResponse {
         @Schema(description = "광고 집행 Id")
         private Long mediaApplicationId;
 
+        @Schema(description = "위치 Id")
+        private Long locationId;
+
         @Schema(description = "광고 집행 시작일", example = "2024-03-21")
         private String startDate;
 
@@ -294,6 +297,7 @@ public class DashboardResponse {
             this.startDate = mediaApplication.getStartDate().toString();
             this.endDate = mediaApplication.getEndDate().toString();
             this.mediaApplicationId = mediaApplication.getMediaApplicationId();
+            this.locationId = mediaApplication.getLocation().getLocationId();
         }
     }
 

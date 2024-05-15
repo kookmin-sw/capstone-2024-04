@@ -74,7 +74,7 @@ public class DashBoardController {
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, boards);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    @PostMapping("{dashboardId}/board/{boardId}")
+    @PostMapping("{dashboardId}/mediaApplication/{mediaApplicationId}")
     @Operation(summary = "날짜 별(광고 + 집행기간 + 일(day)) 단위 대시보드")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
@@ -84,12 +84,12 @@ public class DashBoardController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    ResponseEntity<APIResponse<List<DashboardResponse.DashboardDataInfo>>> getBoardPerDay(@PathVariable Long dashboardId, @PathVariable Long boardId, @Valid @RequestBody DashboardRequest.dataPerDay dayData, @AuthenticationPrincipal CustomUserDetails userDetails){
+    ResponseEntity<APIResponse<List<DashboardResponse.DashboardDataInfo>>> getBoardPerDay(@PathVariable Long mediaApplicationId, @Valid @RequestBody DashboardRequest.dataPerDay dayData, @AuthenticationPrincipal CustomUserDetails userDetails){
         Long userId = userDetails.getCustomUserInfo().getUserId();
         // Define the date format  & Parse the string to LocalDate
         LocalDate localDate = LocalDate.parse(dayData.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        DashboardResponse.DashboardDataInfo boards = dashboardService.getDayBoards(userId, dashboardId, localDate);
+        DashboardResponse.DashboardDataInfo boards = dashboardService.getDayBoards(userId, mediaApplicationId, localDate);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, boards);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -126,7 +126,7 @@ public class DashBoardController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("{dashboardId}/board/{boardId}/detail")
+    @PostMapping("{dashboardId}/detail")
     @Operation(summary = "나이 + 성별 단위로 필터링된 세부 대시보드")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
@@ -136,12 +136,10 @@ public class DashBoardController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    ResponseEntity<APIResponse<List<DashboardResponse.DashboardDetailDataInfo>>> getFilteredBoard(@PathVariable Long dashboardId, @PathVariable Long boardId, @Valid @RequestBody DashboardRequest.dataFilter dataFilter, @AuthenticationPrincipal CustomUserDetails userDetails){
+    ResponseEntity<APIResponse<List<DashboardResponse.DashboardDetailDataInfo>>> getFilteredBoard(@PathVariable Long dashboardId, @Valid @RequestBody DashboardRequest.dataFilter dataFilter, @AuthenticationPrincipal CustomUserDetails userDetails){
         Long userId = userDetails.getCustomUserInfo().getUserId();
         // userId 검증 포함
-        dashboardService.getDashboardFiltered(userId, dashboardId, dataFilter.isMale(), dataFilter.isFemale(), dataFilter.getAgeRanges());
-
-        DashboardResponse.DashboardDetailDataInfo board = null;
+        DashboardResponse.DashboardDetailDataInfo board = dashboardService.getDashboardFiltered(userId, dashboardId, dataFilter.isMale(), dataFilter.isFemale(), dataFilter.getAgeRanges());
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, board);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
