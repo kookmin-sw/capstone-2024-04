@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import logoWhite from "../../assets/images/LogoWhite.svg";
-import infoCircle from "../../assets/icons/InfoCircle.svg";
+import leftArrow from "../../assets/icons/left-arrow.svg";
 import clipboardTextClockBlacksub from "../../assets/icons/clipboard-text-clock-blacksub.svg";
 import clipboardTextClockWhitesub from "../../assets/icons/clipboard-text-clock-whitesub.svg";
 import chartTimelineBlacksub from "../../assets/icons/chart-timeline-blacksub.svg";
@@ -17,10 +17,10 @@ import MenuButton from "../../components/menu_button";
 import PostMediaScreen from "./post-media/post_media";
 import { Body1, Headline1 } from "../../components/text";
 import SettingScreen from "./setting/setting";
-import DashBoard from "./dashboard/dashboard";
+import DashBoard, { DashBoardMode } from "./dashboard/dashboard";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
-import Insight from "./insight/insight";
+import Insight, { InsightMode } from "./insight/insight";
 import HistoryScreen from "./history/history";
 import { UserInfo } from "../../interfaces/interface";
 import defaultImageRectangle from "../../assets/images/default_rectangle.svg";
@@ -47,13 +47,16 @@ const HomePage = () => {
     navigate("/");
   };
 
+  const [dashboardMode, setDashboardMode] = useState(DashBoardMode.LIST);
+  const [insightMode, setInsightMode] = useState(InsightMode.LIST);
+
   const menuButtons = [
     {
       title: "대시보드",
       description: "해당 기간에 집행한 광고에 대한 통계를 확인할 수 있어요.",
       iconWhiteSrc: viewDashboardWhitesub,
       iconBlackSrc: viewDashboardBlacksub,
-      component: <DashBoard />,
+      component: <DashBoard mode={dashboardMode} setMode={setDashboardMode} />,
     },
     {
       title: "인사이트",
@@ -61,7 +64,7 @@ const HomePage = () => {
         "하나의 광고에 대해 전체 기간의 통계를 한눈에 확인할 수 있어요.",
       iconWhiteSrc: chartTimelineWhitesub,
       iconBlackSrc: chartTimelineBlacksub,
-      component: <Insight />,
+      component: <Insight mode={insightMode} setMode={setInsightMode} />,
     },
     {
       title: "유동인구정보",
@@ -141,7 +144,17 @@ const HomePage = () => {
                 iconBlackSrc={button.iconBlackSrc}
                 iconWhiteSrc={button.iconWhiteSrc}
                 isActive={index === currMenuIdx}
-                onClick={() => setCurrMenuIdx(index)}
+                onClick={() => {
+                  if (index !== 0) {
+                    // 대시보드가 아닌 메뉴 클릭 시 리스트 뷰로 초기화
+                    setDashboardMode(DashBoardMode.LIST);
+                  }
+                  if (index !== 1) {
+                    // 인사이트가 아닌 메뉴 클릭 시 리스트 뷰로 초기화
+                    setInsightMode(InsightMode.LIST);
+                  }
+                  setCurrMenuIdx(index);
+                }}
               />
             ))}
           </div>
@@ -186,7 +199,24 @@ const HomePage = () => {
               color="text-white_sub"
             />
           </div>
-          <img className="w-4 h-4 cursor-pointer" src={infoCircle} />
+          {currMenuIdx === 0 && dashboardMode === DashBoardMode.DETAIL && (
+            <div
+              className="flex gap-2 px-3 py-2 bg-white rounded-lg cursor-pointer"
+              onClick={() => setDashboardMode(DashBoardMode.LIST)}
+            >
+              <img src={leftArrow} />
+              <p className="text-xs">광고목록</p>
+            </div>
+          )}
+          {currMenuIdx === 1 && insightMode === InsightMode.DETAIL && (
+            <div
+              className="flex gap-2 px-3 py-2 bg-white rounded-lg cursor-pointer"
+              onClick={() => setInsightMode(InsightMode.LIST)}
+            >
+              <img src={leftArrow} />
+              <p className="text-xs">광고목록</p>
+            </div>
+          )}
         </div>
         <div className="h-full rounded-[10px] py-[50px] px-[30px] mt-6 mb-[60px] bg-white overflow-hidden">
           {/* 스크린 내부 */}

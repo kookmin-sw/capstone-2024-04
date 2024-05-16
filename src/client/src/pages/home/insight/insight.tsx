@@ -9,8 +9,7 @@ export enum InsightMode {
   DETAIL,
 }
 
-const Insight = () => {
-  const [mode, setMode] = useState(InsightMode.LIST);
+const Insight = ({mode, setMode}: any) => {
   const [detailInfo, setDetailInfo] = useState<MediaInfo | null>(null);
   const [medias, setMedias] = useState<MediaInfo[]>([]);
 

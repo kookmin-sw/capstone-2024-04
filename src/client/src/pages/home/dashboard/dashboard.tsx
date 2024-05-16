@@ -29,8 +29,8 @@ export interface TableItem {
   status: string;
 }
 
-const DashBoard = () => {
-  const [mode, setMode] = useState(DashBoardMode.LIST);
+const DashBoard = ({ mode, setMode }: any) => {
+  // const [mode, setMode] = useState(DashBoardMode.LIST);
   const [applies, setApplies] = useState<TableItem[]>([]);
   const [selectedData, setSelectedData] = useState<DashboardDataInfo | null>(
     null
