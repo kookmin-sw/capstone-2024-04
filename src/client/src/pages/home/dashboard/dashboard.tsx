@@ -30,7 +30,6 @@ export interface TableItem {
 }
 
 const DashBoard = ({ mode, setMode }: any) => {
-  // const [mode, setMode] = useState(DashBoardMode.LIST);
   const [applies, setApplies] = useState<TableItem[]>([]);
   const [selectedData, setSelectedData] = useState<DashboardDataInfo | null>(
     null
@@ -97,7 +96,7 @@ const DashBoard = ({ mode, setMode }: any) => {
   }, []);
 
   const loadDashboardData = async () => {
-    const response = await getApplies();
+    const response = await getApplies({ filter: "ACCEPT" });
     if (response.status === 200) {
       const totalApplications: TotalApplicationInfo[] = response.data.data;
 
