@@ -10,6 +10,9 @@ import chartIconMain from "../../../assets/icons/chart-timeline-main.svg";
 import { toast } from "react-hot-toast";
 import defaultImageRectangle from "../../../assets/images/default_rectangle.svg";
 import { getApplies } from "../../../api/client/apply";
+import { getAdUnitDashboard } from "../../../api/client/dashboard";
+import { DashBoardMode } from "../dashboard/dashboard";
+import { InsightMode } from "../insight/insight";
 
 dayjs.extend(customParseFormat);
 const dateFormat = "YYYY-MM-DD";
@@ -25,7 +28,11 @@ export interface HistoryTableItem {
   origin: TotalApplicationInfo;
 }
 
-const HistoryScreen = () => {
+const HistoryScreen = ({
+  setMenuIndex,
+  setDashboardMode,
+  setInsightMode,
+}: any) => {
   const columns: TableColumnsType<HistoryTableItem> = [
     {
       title: "",
@@ -164,8 +171,12 @@ const HistoryScreen = () => {
           <div className="flex gap-2">
             <button
               className="flex gap-3 w-full justify-center items-center py-3 rounded-[3px] bg-main"
-              onClick={() => {
-                console.log("대시보드 버튼 클릭");
+              onClick={async () => {
+                const result = await getAdUnitDashboard({
+                  dashboardId: selectedMedia?.application.applicationId!,
+                });
+                setDashboardMode(DashBoardMode.DETAIL);
+                setMenuIndex(0);
                 setOpenModal(false);
               }}
             >
@@ -176,6 +187,8 @@ const HistoryScreen = () => {
               className="flex gap-3 w-full justify-center border-[1px] items-center border-main py-3 rounded-[3px]"
               onClick={() => {
                 console.log("인사이트 버튼 클릭");
+                setInsightMode(InsightMode.DETAIL);
+                setMenuIndex(1);
                 setOpenModal(false);
               }}
             >

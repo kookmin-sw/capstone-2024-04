@@ -86,7 +86,7 @@ const HomePage = () => {
       description: "전체 광고 히스토리를 확인할 수 있어요.",
       iconWhiteSrc: clipboardTextClockWhitesub,
       iconBlackSrc: clipboardTextClockBlacksub,
-      component: <HistoryScreen />,
+      component: <HistoryScreen setMenuIndex={setCurrMenuIdx} setDashboardMode={setDashboardMode} setInsightMode={setInsightMode} />,
     },
     {
       title: "설정",
