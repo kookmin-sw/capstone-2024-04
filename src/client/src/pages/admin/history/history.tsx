@@ -4,6 +4,7 @@ import StatusBadge from "../../../components/status_badge";
 import { useEffect, useState } from "react";
 import { getApply } from "../../../api/admin/apply";
 import { TotalApplicationInfo } from "../../../interfaces/interface";
+import defaultImageRectangle from "../../../assets/images/default_rectangle.svg";
 
 interface ApplyTableItem {
   key: number;
@@ -45,7 +46,14 @@ const AdminHistoryPage = () => {
       title: "",
       dataIndex: "mediaLink",
       render: (mediaLink) => (
-        <img className="w-[50px] h-[50px]" src={mediaLink} />
+        <img
+          className="w-[50px] h-[50px]"
+          src={mediaLink}
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            const target = e.target as HTMLImageElement;
+            target.src = defaultImageRectangle;
+          }}
+        />
       ),
     },
     {

@@ -5,6 +5,8 @@ import { Key, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import dayjs from "dayjs";
 import { TotalApplicationInfo } from "../../../interfaces/interface";
+import defaultImageRectangle from "../../../assets/images/default_rectangle.svg";
+import defaultImageVideo from "../../../assets/images/default_video.svg";
 
 interface ApplyTableItem {
   key: number;
@@ -30,6 +32,10 @@ const AdminApplyDetail = ({
           <img
             className="w-full aspect-video bg-black mt-3"
             src={application.media.mediaLink}
+            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+              const target = e.target as HTMLImageElement;
+              target.src = defaultImageVideo;
+            }}
           />
         </div>
 
@@ -149,7 +155,14 @@ const AdminApplyPage = () => {
       title: "",
       dataIndex: "mediaLink",
       render: (mediaLink) => (
-        <img className="w-[50px] h-[50px]" src={mediaLink} />
+        <img
+          className="w-[50px] h-[50px]"
+          src={mediaLink}
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            const target = e.target as HTMLImageElement;
+            target.src = defaultImageRectangle;
+          }}
+        />
       ),
     },
     {
