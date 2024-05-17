@@ -29,7 +29,7 @@ export interface TableItem {
   status: string;
 }
 
-const DashBoard = ({ mode, setMode }: any) => {
+const DashBoard = ({ mode, setMode, detailProps }: any) => {
   const [applies, setApplies] = useState<TableItem[]>([]);
   const [selectedData, setSelectedData] = useState<DashboardDataInfo | null>(
     null
@@ -135,9 +135,9 @@ const DashBoard = ({ mode, setMode }: any) => {
     </div>
   ) : (
     <DashBoardDetail
-      dashboardTitle={dashboardTitle}
-      dashboardData={selectedData!}
-      dashboardId={currDashboardId!}
+      dashboardTitle={dashboardTitle || detailProps.dashboardTitle}
+      dashboardData={selectedData! || detailProps.dashboardData}
+      dashboardId={currDashboardId! || detailProps.dashboardId}
     />
   );
 };

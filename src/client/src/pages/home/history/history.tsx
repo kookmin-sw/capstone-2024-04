@@ -1,6 +1,9 @@
 import { DatePicker, Modal, Select, Table, TableColumnsType } from "antd";
 import { Subtitle1, Subtitle2 } from "../../../components/text";
-import { TotalApplicationInfo } from "../../../interfaces/interface";
+import {
+  DashboardDataInfo,
+  TotalApplicationInfo,
+} from "../../../interfaces/interface";
 import StatusBadge from "../../../components/status_badge";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
@@ -32,6 +35,7 @@ const HistoryScreen = ({
   setMenuIndex,
   setDashboardMode,
   setInsightMode,
+  setDashboardDetailProps,
 }: any) => {
   const columns: TableColumnsType<HistoryTableItem> = [
     {
@@ -175,9 +179,16 @@ const HistoryScreen = ({
                 const result = await getAdUnitDashboard({
                   dashboardId: selectedMedia?.application.applicationId!,
                 });
-                setDashboardMode(DashBoardMode.DETAIL);
-                setMenuIndex(0);
-                setOpenModal(false);
+                if (result.status === 200) {
+                  setDashboardDetailProps({
+                    dashboardTitle: selectedMedia?.media.title,
+                    dashboardData: result.data.data as DashboardDataInfo,
+                    dashboardId: selectedMedia?.application.applicationId,
+                  });
+                  setDashboardMode(DashBoardMode.DETAIL);
+                  setMenuIndex(0);
+                  setOpenModal(false);
+                }
               }}
             >
               <img src={dashboardIconWhite} />

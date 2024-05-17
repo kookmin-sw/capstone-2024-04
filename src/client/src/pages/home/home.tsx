@@ -25,6 +25,7 @@ import HistoryScreen from "./history/history";
 import { UserInfo } from "../../interfaces/interface";
 import defaultImageRectangle from "../../assets/images/default_rectangle.svg";
 import FootTrafficInfo from "./foot-traffic-info/foot_traffic_info";
+import { DashboardDetailProps } from "./dashboard/dashboard_detail";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -32,6 +33,10 @@ const HomePage = () => {
   const [divHeight, setDivHeight] = useState(0);
   const [currMenuIdx, setCurrMenuIdx] = useState(0);
   const [currInfo, setCurrInfo] = useState<UserInfo | undefined | null>(null);
+
+  // 페이지 별 이동을 위한 state <- 리팩토링 필요
+  const [dashboardDetailProps, setDashboardDetailProps] =
+    useState<DashboardDetailProps | null>(null);
 
   const logout = () => {
     const cookies = new Cookies();
@@ -56,7 +61,13 @@ const HomePage = () => {
       description: "해당 기간에 집행한 광고에 대한 통계를 확인할 수 있어요.",
       iconWhiteSrc: viewDashboardWhitesub,
       iconBlackSrc: viewDashboardBlacksub,
-      component: <DashBoard mode={dashboardMode} setMode={setDashboardMode} />,
+      component: (
+        <DashBoard
+          mode={dashboardMode}
+          setMode={setDashboardMode}
+          detailProps={dashboardDetailProps}
+        />
+      ),
     },
     {
       title: "인사이트",
@@ -86,7 +97,14 @@ const HomePage = () => {
       description: "전체 광고 히스토리를 확인할 수 있어요.",
       iconWhiteSrc: clipboardTextClockWhitesub,
       iconBlackSrc: clipboardTextClockBlacksub,
-      component: <HistoryScreen setMenuIndex={setCurrMenuIdx} setDashboardMode={setDashboardMode} setInsightMode={setInsightMode} />,
+      component: (
+        <HistoryScreen
+          setMenuIndex={setCurrMenuIdx}
+          setDashboardMode={setDashboardMode}
+          setInsightMode={setInsightMode}
+          setDashboardDetailProps={setDashboardDetailProps}
+        />
+      ),
     },
     {
       title: "설정",
