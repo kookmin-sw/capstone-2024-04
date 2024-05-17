@@ -36,6 +36,7 @@ const HistoryScreen = ({
   setDashboardMode,
   setInsightMode,
   setDashboardDetailProps,
+  setInsightDetailProps,
 }: any) => {
   const columns: TableColumnsType<HistoryTableItem> = [
     {
@@ -198,6 +199,7 @@ const HistoryScreen = ({
               className="flex gap-3 w-full justify-center border-[1px] items-center border-main py-3 rounded-[3px]"
               onClick={() => {
                 console.log("인사이트 버튼 클릭");
+                setInsightDetailProps(selectedMedia?.media);
                 setInsightMode(InsightMode.DETAIL);
                 setMenuIndex(1);
                 setOpenModal(false);

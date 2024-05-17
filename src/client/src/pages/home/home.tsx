@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import Insight, { InsightMode } from "./insight/insight";
 import HistoryScreen from "./history/history";
-import { UserInfo } from "../../interfaces/interface";
+import { MediaInfo, UserInfo } from "../../interfaces/interface";
 import defaultImageRectangle from "../../assets/images/default_rectangle.svg";
 import FootTrafficInfo from "./foot-traffic-info/foot_traffic_info";
 import { DashboardDetailProps } from "./dashboard/dashboard_detail";
@@ -37,6 +37,8 @@ const HomePage = () => {
   // 페이지 별 이동을 위한 state <- 리팩토링 필요
   const [dashboardDetailProps, setDashboardDetailProps] =
     useState<DashboardDetailProps | null>(null);
+  const [insightDetailProps, setInsightDetailProps] =
+    useState<MediaInfo | null>(null);
 
   const logout = () => {
     const cookies = new Cookies();
@@ -75,7 +77,13 @@ const HomePage = () => {
         "하나의 광고에 대해 전체 기간의 통계를 한눈에 확인할 수 있어요.",
       iconWhiteSrc: chartTimelineWhitesub,
       iconBlackSrc: chartTimelineBlacksub,
-      component: <Insight mode={insightMode} setMode={setInsightMode} />,
+      component: (
+        <Insight
+          mode={insightMode}
+          setMode={setInsightMode}
+          detailProps={insightDetailProps}
+        />
+      ),
     },
     {
       title: "유동인구정보",
@@ -103,6 +111,7 @@ const HomePage = () => {
           setDashboardMode={setDashboardMode}
           setInsightMode={setInsightMode}
           setDashboardDetailProps={setDashboardDetailProps}
+          setInsightDetailProps={setInsightDetailProps}
         />
       ),
     },

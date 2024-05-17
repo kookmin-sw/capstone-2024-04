@@ -10,7 +10,7 @@ export enum InsightMode {
   DETAIL,
 }
 
-const Insight = ({ mode, setMode }: any) => {
+const Insight = ({ mode, setMode, detailProps }: any) => {
   const [medias, setMedias] = useState<MediaInfo[]>([]);
   const [detailInfo, setDetailInfo] = useState<MediaInfo | null>(null);
 
@@ -37,7 +37,7 @@ const Insight = ({ mode, setMode }: any) => {
       />
     </div>
   ) : (
-    <InsightDetail detailInfo={detailInfo} />
+    <InsightDetail detailInfo={detailInfo || detailProps} />
   );
 };
 
