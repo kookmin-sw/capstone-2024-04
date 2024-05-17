@@ -22,6 +22,23 @@ export interface GetDashboardListByAdUnitProps {
     dashboardId: number;
 }
 
+export interface GetFilteredDashboardWithAgeAndGenderProps {
+    dashboardId: number;
+    requestBody: GetFilteredDashboardWithAgeAndGenderRequestBody
+}
+
+export interface GetFilteredDashboardWithAgeAndGenderRequestBody {
+    male: boolean;
+    female: boolean;
+    ageRanges: number[];
+}
+
+// 나이 + 성별 단위로 필터링된 세부 대시보드
+export const getFilteredDashboardWithAgeAndGender = async ({dashboardId, requestBody}: GetFilteredDashboardWithAgeAndGenderProps) => {
+    const response = await privateApi.post(`/api/v1/dashboard/${dashboardId}/detail`, requestBody).catch((err) => {return err.response});
+    return response;
+}
+
 // 날짜 별(광고 + 집행기간 + 일(day)) 단위 대시보드 생성
 export const createDailyDashboard = async ({dashboardId, mediaApplicationId, date}: CreateDailyDashboardProps) => {
     const response = await privateApi.post(`/api/v1/dashboard/${dashboardId}/mediaApplication/${mediaApplicationId}`, {date}).catch((err) => {return err.response});
