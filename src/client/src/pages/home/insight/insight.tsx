@@ -123,8 +123,8 @@ const Insight = ({ mode, setMode }: any) => {
           onCancel={() => setOpenModal(false)}
         >
           <div className="flex flex-col w-full p-15">
-            <h3 className="text-sm">광고 타겟층 설정</h3>
-            <h3 className="text-sm">성별</h3>
+            <h3 className="text-base mb-5">광고 타겟층 설정</h3>
+            <h3 className="text-base">성별</h3>
             <div className="grid grid-cols-3 gap-2">
               <div
                 onClick={() => setMale(!male)}
@@ -143,7 +143,7 @@ const Insight = ({ mode, setMode }: any) => {
                 여자
               </div>
             </div>
-            <h3 className="text-sm">나이대</h3>
+            <h3 className="text-base mt-11">나이대</h3>
             <div className="grid grid-cols-3 gap-2">
               {Array.from({ length: 6 }).map((_, index) => {
                 return (
@@ -163,6 +163,15 @@ const Insight = ({ mode, setMode }: any) => {
                   </div>
                 );
               })}
+            </div>
+            <div className="flex">
+              <button
+                type="button"
+                className="mt-[72px] bg-main text-white py-3 px-10 rounded"
+                onClick={() => {}}
+              >
+                설정하기
+              </button>
             </div>
           </div>
         </Modal>
