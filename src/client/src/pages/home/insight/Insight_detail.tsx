@@ -21,7 +21,7 @@ interface FilteredInfo {
 }
 
 const InsightDetail = ({ detailInfo }: any) => {
-  const [ageRanges, setAgeRanges] = useState<boolean[]>(Array(6).fill(false));
+  const [ageRanges, setAgeRanges] = useState<boolean[]>(Array(7).fill(false));
   const [ageRangesCount, setAgeRangesCount] = useState<number>(0);
   const [openModal, setOpenModal] = useState(false);
   const [male, setMale] = useState<boolean>(false);
@@ -109,7 +109,7 @@ const InsightDetail = ({ detailInfo }: any) => {
               <div
                 onClick={() => setMale(!male)}
                 className={`text-center border-[1px]
-              male ? "border-main text-main" : ""
+              ${male ? "border-main text-main" : ""}
               col-span-1 rounded py-4 px-7`}
               >
                 남자
@@ -159,6 +159,7 @@ const InsightDetail = ({ detailInfo }: any) => {
 
                     if (result.status === 200) {
                       setFilteredData(result.data.data);
+                      setOpenModal(false);
                     }
                   }
                 }}
@@ -175,7 +176,10 @@ const InsightDetail = ({ detailInfo }: any) => {
       <div className="relative px-[30px] py-4">
         <div className="flex">
           <p className="text-base">해당 광고의 타겟층은 </p>
-          <p className="text-base text-main font-semibold">
+          <p
+            className="text-base text-main font-semibold cursor-pointer"
+            onClick={() => setOpenModal(true)}
+          >
             10대 남자 10대 여자
           </p>
           <p className="text-base">입니다.</p>
