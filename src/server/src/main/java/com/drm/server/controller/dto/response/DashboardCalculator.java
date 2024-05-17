@@ -5,7 +5,7 @@ import java.util.List;
 // DashBoard 계산에 주로 사용되는 연산들
 // Template -> Long / Float 타입에 따라 세부 operator 구현 요구됨.
 public class DashboardCalculator {
-    public static <T extends Number> List<T> calculateHourListDataPerHour(List<T> updateList, List<T> inputList){
+    public static <T extends Number> List<T> sumHourListDataPerHour(List<T> updateList, List<T> inputList){
         if(updateList.size() != inputList.size()) throw new IllegalStateException("HOUR PASSED DATA LIST SIZE IS DIFFERENT");
         for(int i=0; i<inputList.size(); i++){
             updateList.set(i, sum(inputList.get(i), updateList.get(i)));
