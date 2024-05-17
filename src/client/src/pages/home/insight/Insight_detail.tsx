@@ -75,8 +75,12 @@ const InsightDetail = ({ detailInfo }: any) => {
     <div className="flex flex-col h-full min-w-[920px] w-full py-[30px] overflow-y-scroll">
       <div className="flex w-full justify-between items-center">
         <div className="flex flex-col gap-4 px-[30px]">
-          <h1 className="text-2xl font-medium">{`${detailInfo?.title} 인사이트`}</h1>
-          <h2 className="text-base font-normal">{detailInfo!.description}</h2>
+          <h1 className="text-2xl font-medium">{`${
+            detailInfo ? detailInfo.title : ""
+          } 인사이트`}</h1>
+          <h2 className="text-base font-normal">
+            {detailInfo ? detailInfo.description : ""}
+          </h2>
           <button
             className="border-[1px] border-main rounded-[3px] text-main text-sm px-4 py-3"
             type="button"
