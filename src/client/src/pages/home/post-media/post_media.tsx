@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import inbox from "../../../assets/icons/Inbox.svg";
 import upload from "../../../assets/icons/Upload.svg";
-import { DatePicker, Select, Input, SelectProps } from "antd";
+import { DatePicker, Select, Input, InputRef } from "antd";
+import { SelectProps } from "antd/lib/select";
 import { Body1, Subtitle1 } from "../../../components/text";
 import { getLocation } from "../../../api/client/location";
 import { LocationInfo, MediaInfo } from "../../../interfaces/interface";
@@ -13,6 +14,10 @@ import {
 import { toast } from "react-hot-toast";
 import moment from "moment";
 import { postApply } from "../../../api/client/apply";
+import { TextAreaRef } from "antd/lib/input/TextArea";
+import dayjs from "dayjs";
+import defaultImageRectangle from "../../../assets/images/default_rectangle.svg";
+import defaultImageVideo from "../../../assets/images/default_video.svg";
 
 const PostMediaScreen = () => {
   const enum PostMode {
@@ -20,12 +25,13 @@ const PostMediaScreen = () => {
     "HISTORY", // 히스토리에서 광고 선택
   }
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const titleRef = useRef<InputRef>(null);
+  const descriptionRef = useRef<TextAreaRef>(null);
+
+  const [locationId, setLocationId] = useState<number | null>(null);
   const [postMode, setPostMode] = useState<PostMode>(PostMode.UPLOAD);
   const [video, setVideo] = useState<File | null>(null);
   const [options, setOptions] = useState<SelectProps["options"]>([]);
-  const [locationId, setLocationId] = useState<number>(-1);
   const [date, setDate] = useState<string[]>([]);
   const [selectedHistory, setSelectedHistory] = useState<MediaInfo | null>(
     null
@@ -34,10 +40,14 @@ const PostMediaScreen = () => {
   const [histories, setHistories] = useState<MediaInfo[]>([]);
 
   const resetForm = () => {
-    setTitle("");
-    setDescription("");
+    if (titleRef.current?.input) {
+      titleRef.current.input.value = "";
+    }
+    if (descriptionRef.current?.resizableTextArea?.textArea.value) {
+      descriptionRef.current.resizableTextArea.textArea.value = "";
+    }
+    setLocationId(null);
     setVideo(null);
-    setLocationId(-1);
     setDate([]);
     setSelectedHistory(null);
   };
@@ -47,9 +57,17 @@ const PostMediaScreen = () => {
       toast.error("히스토리는 필수로 선택되어야 합니다.");
       return false;
     }
+    if (date.length === 0) {
+      toast.error("광고 등록일을 선택해주세요.");
+      return false;
+    }
+    if (locationId === -1) {
+      toast.error("디스플레이를 선택해주세요.");
+      return false;
+    }
 
     const result = await postApply({
-      mediaId: selectedHistory,
+      mediaId: selectedHistory.mediaId,
       requestBody: {
         advertisementTitle: selectedHistory?.title,
         advertisementDescription: selectedHistory?.description,
@@ -59,7 +77,7 @@ const PostMediaScreen = () => {
       },
     });
 
-    if (result && result.status === 201) {
+    if (result.status === 201) {
       toast.success("성공적으로 광고가 등록되었습니다.");
       resetForm();
     } else {
@@ -68,9 +86,27 @@ const PostMediaScreen = () => {
   };
 
   const requestPostMedia = async () => {
+    if (date.length === 0) {
+      toast.error("광고 등록일을 선택해주세요.");
+      return false;
+    }
+    if (!titleRef.current?.input?.value) {
+      toast.error("광고 타이틀을 입력해주세요.");
+      return false;
+    }
+    if (!descriptionRef.current?.resizableTextArea?.textArea.value) {
+      toast.error("광고 설명을 입력해주세요.");
+      return false;
+    }
+    if (!locationId) {
+      toast.error("디스플레이를 선택해주세요.");
+      return false;
+    }
+
     const request: PostMediaRequest = {
-      advertisementTitle: title,
-      advertisementDescription: description,
+      advertisementTitle: titleRef.current!.input!.value,
+      advertisementDescription:
+        descriptionRef.current!.resizableTextArea!.textArea.value,
       locationId: locationId,
       startDate: date[0],
       endDate: date[1],
@@ -90,7 +126,7 @@ const PostMediaScreen = () => {
     }
     const result = await postMedia(formData);
 
-    if (result && result.status === 200) {
+    if (result && result.status === 201) {
       // 사용자 입력 정보 초기화
       toast.success("성공적으로 광고가 등록되었습니다.");
       resetForm();
@@ -219,6 +255,12 @@ const PostMediaScreen = () => {
                     <img
                       className="w-12 h-12 border-[1px] border-gray rounded bg-white"
                       src={info.mediaLink}
+                      onError={(
+                        e: React.SyntheticEvent<HTMLImageElement, Event>
+                      ) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = defaultImageRectangle;
+                      }}
                     />
                     <p>{info.title}</p>
                   </div>
@@ -249,6 +291,10 @@ const PostMediaScreen = () => {
             return current && current < moment(customDate, "YYYY-MM-DD");
           }}
           format="YYYY-MM-DD"
+          value={[
+            date[0] ? dayjs(date[0]) : null,
+            date[1] ? dayjs(date[1]) : null,
+          ]}
           onChange={(_, dateStrings) => setDate(dateStrings)}
           className="mt-2 mb-7"
           style={{ width: "100%" }}
@@ -262,29 +308,37 @@ const PostMediaScreen = () => {
           onSelect={(value) => {
             setLocationId(value);
           }}
+          value={locationId}
         />
 
         {postMode === PostMode.UPLOAD ? (
           <div className="flex flex-col mt-4">
             <Subtitle1 text="광고 타이틀" color="text-black" />
             <Input
+              ref={titleRef}
               className="mt-2 mb-10"
               placeholder="해당 광고의 대시보드 타이틀을 입력해주세요"
-              onChange={(e) => setTitle(e.target.value)}
             />
             <Subtitle1 text="광고 설명" color="text-black" />
             <Input.TextArea
+              ref={descriptionRef}
               className="mt-2"
               style={{ resize: "none" }}
               rows={5}
               placeholder="해당 광고의 대시보드 설명을 입력해주세요"
-              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
         ) : (
           <div className="flex flex-col">
             <Subtitle1 text="광고 미리보기" color="text-black" />
-            <div className="w-full mt-2 aspect-video border-gray2 border-[1px] rounded-lg" />
+            <img
+              src={selectedHistory?.mediaLink}
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                const target = e.target as HTMLImageElement;
+                target.src = defaultImageVideo;
+              }}
+              className="w-full mt-2 aspect-video border-[1px] rounded-lg"
+            />
           </div>
         )}
       </div>

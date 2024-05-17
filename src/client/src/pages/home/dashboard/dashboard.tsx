@@ -3,9 +3,16 @@ import { Subtitle2 } from "../../../components/text";
 import { Table, TableColumnsType } from "antd";
 import DashBoardDetail from "./dashboard_detail";
 import { getApplies } from "../../../api/client/apply";
-import { TotalApplicationInfo } from "../../../interfaces/interface";
+import {
+  DashboardDataInfo,
+  TotalApplicationInfo,
+} from "../../../interfaces/interface";
 import StatusBadge from "../../../components/status_badge";
 import defaultImageRectangle from "../../../assets/images/default_rectangle.svg";
+import {
+  GetAdUnitDashboardProps,
+  getAdUnitDashboard,
+} from "../../../api/client/dashboard";
 
 export enum DashBoardMode {
   LIST,
@@ -22,9 +29,26 @@ export interface TableItem {
   status: string;
 }
 
-const DashBoard = () => {
-  const [mode, setMode] = useState(DashBoardMode.LIST);
+const DashBoard = ({ mode, setMode, detailProps }: any) => {
   const [applies, setApplies] = useState<TableItem[]>([]);
+  const [selectedData, setSelectedData] = useState<DashboardDataInfo | null>(
+    null
+  );
+  const [dashboardTitle, setDashboardTitle] = useState<string>("");
+  const [currDashboardId, setCurrDashboardId] = useState<number | null>(null);
+
+  const loadDetailData = async ({ dashboardId }: GetAdUnitDashboardProps) => {
+    const result = await getAdUnitDashboard({ dashboardId });
+    console.log(result);
+    if (result.status === 200) {
+      setCurrDashboardId(dashboardId);
+      result.data.data as DashboardDataInfo;
+      setSelectedData(result.data.data);
+      setMode(DashBoardMode.DETAIL);
+      return true;
+    }
+    return false;
+  };
 
   const columns: TableColumnsType<TableItem> = [
     {
@@ -78,7 +102,7 @@ const DashBoard = () => {
 
       setApplies(
         totalApplications.map((application) => ({
-          key: application.media.mediaId,
+          key: application.application.applicationId,
           mediaId: application.media.mediaId,
           mediaLink: application.media.mediaLink,
           title: application.media.title,
@@ -101,15 +125,20 @@ const DashBoard = () => {
         columns={columns}
         dataSource={applies}
         pagination={{ pageSize: 8, position: ["bottomCenter"] }}
-        onRow={() => ({
+        onRow={(record) => ({
           onClick: () => {
-            setMode(DashBoardMode.DETAIL);
+            setDashboardTitle(record.title);
+            loadDetailData({ dashboardId: record.key });
           },
         })}
       />
     </div>
   ) : (
-    <DashBoardDetail />
+    <DashBoardDetail
+      dashboardTitle={dashboardTitle || detailProps.dashboardTitle}
+      dashboardData={selectedData! || detailProps.dashboardData}
+      dashboardId={currDashboardId! || detailProps.dashboardId}
+    />
   );
 };
 

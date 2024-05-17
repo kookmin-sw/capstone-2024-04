@@ -29,7 +29,6 @@ const StatusBadge = ({ status, date }: StatusBadgeProps) => {
       setColor("bg-[#B3B3B3]");
       setText("등록대기");
     }
-    console.log(text);
   }, [color, text]);
 
   return (

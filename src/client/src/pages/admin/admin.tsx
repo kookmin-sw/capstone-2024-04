@@ -16,6 +16,7 @@ import SettingScreen from "../home/setting/setting";
 import { UserInfo } from "../../interfaces/interface";
 import AdminApplyPage from "./apply/apply";
 import AdminHistoryPage from "./history/history";
+import PlayListPage from "./playlist/playlist";
 
 const AdminPage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -62,6 +63,13 @@ const AdminPage = () => {
       iconWhiteSrc: clipboardTextClockWhitesub,
       iconBlackSrc: clipboardTextClockBlacksub,
       component: <AdminHistoryPage />,
+    },
+    {
+      title: "플레이리스트",
+      description: "디스플레이 별 플레이리스트를 조회하고 등록할 수 있어요.",
+      iconWhiteSrc: listboxWhite,
+      iconBlackSrc: listboxBlack,
+      component: <PlayListPage />,
     },
     {
       title: "설정",

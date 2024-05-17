@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
-import { Subtitle1, Subtitle2 } from "../../../components/text";
+import { Subtitle2 } from "../../../components/text";
 import GridViewMedia from "../gridview-media/gridview_media";
 import { MediaInfo } from "../../../interfaces/interface";
 import { getMedia } from "../../../api/client/media";
+import InsightDetail from "./Insight_detail";
 
 export enum InsightMode {
   LIST,
   DETAIL,
 }
 
-const Insight = () => {
-  const [mode, setMode] = useState(InsightMode.LIST);
-  const [detailInfo, setDetailInfo] = useState<MediaInfo | null>(null);
+const Insight = ({ mode, setMode, detailProps }: any) => {
   const [medias, setMedias] = useState<MediaInfo[]>([]);
-
-  console.log(detailInfo);
+  const [detailInfo, setDetailInfo] = useState<MediaInfo | null>(null);
 
   useEffect(() => {
     loadInsightList();
@@ -39,18 +37,7 @@ const Insight = () => {
       />
     </div>
   ) : (
-    <div className="flex flex-col h-full min-w-[920px] w-full px-[30px] overflow-y-scroll">
-      <div className="flex w-full justify-between items-center">
-        <div className="flex flex-col gap-4">
-          <h1>"광고 이름" 요약</h1>
-          <Subtitle1 text="광고 설명" color="text-black" />
-          <button onClick={() => console.log("대시보드 바로가기 클릭")}>
-            대시보드 바로가기
-          </button>
-        </div>
-        <img className="h-32 aspect-video" alt="광고 썸네일" />
-      </div>
-    </div>
+    <InsightDetail detailInfo={detailInfo || detailProps} />
   );
 };
 
