@@ -4,6 +4,7 @@ import HomePage from "./pages/home/home";
 import Cookies from "universal-cookie";
 import AdminPage from "./pages/admin/admin";
 import { QueryClient, QueryClientProvider } from "react-query";
+import PlayListScreen from "./pages/playlist/playlist";
 
 interface ProtectedRouteProps {
   isAuthenticated: boolean;
@@ -60,6 +61,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/playlist/:locationId" element={<PlayListScreen />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>

@@ -24,6 +24,7 @@ const GridViewMedia = ({
                 onClick={() => {
                   setDetailInfo(media);
                   setMode(InsightMode.DETAIL);
+                  
                 }}
                 key={`card-${index}`}
                 img={media.mediaLink}
