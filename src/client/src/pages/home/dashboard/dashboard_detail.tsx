@@ -44,6 +44,8 @@ const DashBoardDetail = ({
   );
   const [locationId, setLocationId] = useState<number | null>(null);
 
+  console.log(data);
+
   const loadDashboardList = async () => {
     const result = await getDashboardListByAdUnit({ dashboardId: dashboardId });
     if (result.status === 200) {
