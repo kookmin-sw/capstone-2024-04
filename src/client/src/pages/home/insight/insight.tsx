@@ -7,17 +7,48 @@ import defaultImageVideo from "../../../assets/images/default_video.svg";
 import { TargetInterestChart } from "./target_interest";
 import { TotalBar } from "../dashboard/totalBar";
 import { InterestPeopleChart } from "../dashboard/pie";
+import { Modal } from "antd";
+import { toast } from "react-hot-toast";
 
 export enum InsightMode {
   LIST,
   DETAIL,
 }
 
+interface UpdateAgeRangesWithIndexProps {
+  index: number;
+  status: boolean;
+}
+
 const Insight = ({ mode, setMode }: any) => {
   const [detailInfo, setDetailInfo] = useState<MediaInfo | null>(null);
   const [medias, setMedias] = useState<MediaInfo[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [male, setMale] = useState<boolean>(false);
+  const [female, setFemale] = useState<boolean>(false);
+  const [ageRanges, setAgeRanges] = useState<boolean[]>(Array(6).fill(false));
+  const [ageRangesCount, setAgeRangesCount] = useState<number>(0);
 
-  console.log(detailInfo);
+  const updateAgeRangesWithIndex = ({
+    index,
+    status,
+  }: UpdateAgeRangesWithIndexProps) => {
+    const newAgeRanges = [...ageRanges];
+
+    if (status && ageRangesCount === 2) {
+      toast.error("나이대는 최대 2개까지 선택 가능합니다.");
+      return false;
+    }
+
+    status
+      ? setAgeRangesCount(ageRangesCount + 1)
+      : setAgeRangesCount(ageRangesCount - 1);
+
+    newAgeRanges[index] = status;
+    setAgeRanges(newAgeRanges);
+
+    console.log(ageRanges);
+  };
 
   useEffect(() => {
     loadInsightList();
@@ -86,6 +117,55 @@ const Insight = ({ mode, setMode }: any) => {
             target.src = defaultImageVideo;
           }}
         />
+        <Modal
+          open={openModal}
+          footer={false}
+          onCancel={() => setOpenModal(false)}
+        >
+          <div className="flex flex-col w-full p-15">
+            <h3 className="text-sm">광고 타겟층 설정</h3>
+            <h3 className="text-sm">성별</h3>
+            <div className="grid grid-cols-3 gap-2">
+              <div
+                onClick={() => setMale(!male)}
+                className={`text-center border-[1px]
+                male ? "border-main text-main" : ""
+                col-span-1 rounded py-4 px-7`}
+              >
+                남자
+              </div>
+              <div
+                onClick={() => setFemale(!female)}
+                className={`text-center border-[1px] ${
+                  female ? "border-main text-main" : ""
+                } col-span-1 rounded py-4 px-7`}
+              >
+                여자
+              </div>
+            </div>
+            <h3 className="text-sm">나이대</h3>
+            <div className="grid grid-cols-3 gap-2">
+              {Array.from({ length: 6 }).map((_, index) => {
+                return (
+                  <div
+                    key={index}
+                    onClick={() =>
+                      updateAgeRangesWithIndex({
+                        index,
+                        status: !ageRanges[index],
+                      })
+                    }
+                    className={`${
+                      ageRanges[index] ? "border-main text-main" : ""
+                    } text-center border-[1px] col-span-1 rounded py-4 px-7 cursor-pointer`}
+                  >
+                    {index === 5 ? `60대 이상` : `${index + 1}0대`}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </Modal>
       </div>
       <h2 className="text-xl font-medium px-[30px] pt-4 pb-2">
         광고 타겟층 분석
@@ -138,6 +218,7 @@ const Insight = ({ mode, setMode }: any) => {
           <button
             className="py-5 px-[60px] bg-main text-white text-sm font-medium"
             type="button"
+            onClick={() => setOpenModal(true)}
           >
             광고 타겟층 설정하기
           </button>
