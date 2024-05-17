@@ -2,7 +2,7 @@ import privateApi from "../private_api"
 
 export interface CreateDailyDashboardProps {
     dashboardId: number;
-    boardId: number;
+    mediaApplicationId: number;
     date: string; // "YYYY-MM-DD"
 }
 
@@ -23,8 +23,8 @@ export interface GetDashboardListByAdUnitProps {
 }
 
 // 날짜 별(광고 + 집행기간 + 일(day)) 단위 대시보드 생성
-export const createDailyDashboard = async ({dashboardId, boardId, date}: CreateDailyDashboardProps) => {
-    const response = await privateApi.post(`/api/v1/dashboard/${dashboardId}/board/${boardId}`, {date}).catch((err) => {return err.response});
+export const createDailyDashboard = async ({dashboardId, mediaApplicationId, date}: CreateDailyDashboardProps) => {
+    const response = await privateApi.post(`/api/v1/dashboard/${dashboardId}/mediaApplication/${mediaApplicationId}`, {date}).catch((err) => {return err.response});
     return response;
 }
 

@@ -24,6 +24,7 @@ export interface DashboardSelectInfo {
   address: string;
   description: null | string;
   mediaApplicationId: number;
+  locationId: number;
   startDate: string;
   endDate: string;
 }
@@ -38,7 +39,9 @@ const DashBoardDetail = ({
   const [selectedDate, setSelectedDate] = useState<string | null>(null); // 일별 조회 시
   const [description, setDescription] = useState<string | null>(null);
   const [options, setOptions] = useState<SelectProps["options"]>([]);
-  const [boardId, setBoardId] = useState<number | null>(null);
+  const [mediaApplicationId, setMediaApplicationId] = useState<number | null>(
+    null
+  );
   const [locationId, setLocationId] = useState<number | null>(null);
 
   const loadDashboardList = async () => {
@@ -48,6 +51,7 @@ const DashBoardDetail = ({
         (dashboard: DashboardSelectInfo) => ({
           label: `${dashboard.address} (${dashboard.startDate}~${dashboard.endDate})`,
           value: dashboard.mediaApplicationId,
+          locationId: dashboard.locationId,
           description: dashboard.description,
           startDate: dashboard.startDate,
           endDate: dashboard.endDate,
@@ -66,13 +70,20 @@ const DashBoardDetail = ({
     }
   };
 
+  useEffect(() => {
+    loadDashboardWithDate();
+  }, [selectedDate]);
+
   const loadDashboardWithDate = async () => {
-    if (selectedDate && boardId) {
+    if (selectedDate && mediaApplicationId) {
       const result = await createDailyDashboard({
         dashboardId: dashboardId,
-        boardId: boardId,
+        mediaApplicationId: mediaApplicationId,
         date: selectedDate,
       });
+      if (result.status === 200) {
+        setDate(result.data.data);
+      }
     }
   };
 
@@ -124,7 +135,8 @@ const DashBoardDetail = ({
             options={options}
             onSelect={(_, record) => {
               setDescription(record.description);
-              setLocationId(record.value as number);
+              setLocationId(record.locationId as number);
+              setMediaApplicationId(record.value as number);
               setDate([record.startDate, record.endDate]);
             }}
           />
