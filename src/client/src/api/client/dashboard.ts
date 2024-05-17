@@ -24,18 +24,15 @@ export interface GetDashboardListByAdUnitProps {
 
 export interface GetFilteredDashboardWithAgeAndGenderProps {
     dashboardId: number;
-    requestBody: GetFilteredDashboardWithAgeAndGenderRequestBody
-}
-
-export interface GetFilteredDashboardWithAgeAndGenderRequestBody {
     male: boolean;
     female: boolean;
-    ageRanges: number[];
+    ageRanges: boolean[];
 }
 
+
 // 나이 + 성별 단위로 필터링된 세부 대시보드
-export const getFilteredDashboardWithAgeAndGender = async ({dashboardId, requestBody}: GetFilteredDashboardWithAgeAndGenderProps) => {
-    const response = await privateApi.post(`/api/v1/dashboard/${dashboardId}/detail`, requestBody).catch((err) => {return err.response});
+export const getFilteredDashboardWithAgeAndGender = async ({dashboardId, male, female, ageRanges}: GetFilteredDashboardWithAgeAndGenderProps) => {
+    const response = await privateApi.post(`/api/v1/dashboard/${dashboardId}/detail`, {male: male, femal: female, ageRanges: ageRanges}).catch((err) => {return err.response});
     return response;
 }
 

@@ -9,6 +9,7 @@ import { TotalBar } from "../dashboard/totalBar";
 import { InterestPeopleChart } from "../dashboard/pie";
 import { Modal } from "antd";
 import { toast } from "react-hot-toast";
+import { getFilteredDashboardWithAgeAndGender } from "../../../api/client/dashboard";
 
 export enum InsightMode {
   LIST,
@@ -20,6 +21,13 @@ interface UpdateAgeRangesWithIndexProps {
   status: boolean;
 }
 
+interface FilteredInfo {
+  totalPepleCount: number;
+  avgStaringTime: number;
+  attentionRatio: number;
+  interestPeopleCnt: number;
+}
+
 const Insight = ({ mode, setMode }: any) => {
   const [detailInfo, setDetailInfo] = useState<MediaInfo | null>(null);
   const [medias, setMedias] = useState<MediaInfo[]>([]);
@@ -28,6 +36,7 @@ const Insight = ({ mode, setMode }: any) => {
   const [female, setFemale] = useState<boolean>(false);
   const [ageRanges, setAgeRanges] = useState<boolean[]>(Array(6).fill(false));
   const [ageRangesCount, setAgeRangesCount] = useState<number>(0);
+  const [filteredData, setFilteredData] = useState<FilteredInfo | null>(null);
 
   const updateAgeRangesWithIndex = ({
     index,
@@ -103,7 +112,6 @@ const Insight = ({ mode, setMode }: any) => {
           <button
             className="border-[1px] border-main rounded-[3px] text-main text-sm px-4 py-3"
             type="button"
-            onClick={() => console.log("대시보드 바로가기 클릭")}
           >
             대시보드 바로가기
           </button>
@@ -168,7 +176,20 @@ const Insight = ({ mode, setMode }: any) => {
               <button
                 type="button"
                 className="mt-[72px] bg-main text-white py-3 px-10 rounded"
-                onClick={() => {}}
+                onClick={async () => {
+                  if (detailInfo) {
+                    const result = await getFilteredDashboardWithAgeAndGender({
+                      dashboardId: detailInfo?.dashboardId,
+                      male,
+                      female,
+                      ageRanges,
+                    });
+
+                    if (result.status === 200) {
+                      setFilteredData(result.data.data);
+                    }
+                  }
+                }}
               >
                 설정하기
               </button>
@@ -190,34 +211,54 @@ const Insight = ({ mode, setMode }: any) => {
         <div className="grid grid-rows-4 grid-cols-4 grid-flow-col gap-4">
           <div className="flex flex-col p-6 gap-3 border-[1px] row-span-2 col-span-2 rounded">
             <h3 className="text-base font-medium">전체 타겟층의 수</h3>
-            <p className="text-[40px] font-light">26,451명</p>
+            <p className="text-[40px] font-light">
+              {`${filteredData ? filteredData.totalPepleCount : 0}명`}
+            </p>
             <p className="text-[#6b6b6b] text-xs">
               해당 광고 앞을 지나간 사람이 광고 타겟층인 경우
             </p>
           </div>
           <div className="flex flex-col p-6 gap-3 border-[1px] row-span-2 col-span-1 rounded">
             <h3 className="text-base font-medium">관심을 가진 타겟층의 수</h3>
-            <p className="text-[40px] font-light">2,700명</p>
+            <p className="text-[40px] font-light">
+              {`${filteredData ? filteredData.interestPeopleCnt : 0}명`}
+            </p>
             <p className="text-[#6b6b6b] text-xs">
               해당 광고를 본 사람이 광고 타겟층인 경우
             </p>
           </div>
           <div className="flex flex-col p-6 gap-3 border-[1px] row-span-2 col-span-1 rounded">
             <h3 className="text-base font-medium">타겟층의 시선 고정 시간</h3>
-            <p className="text-[40px] font-light">5.1초</p>
+            <p className="text-[40px] font-light">
+              {`${filteredData ? filteredData.avgStaringTime : 0}초`}
+            </p>
             <p className="text-[#6b6b6b] text-xs">
               평균적으로 광고에 시선을 고정한 시간
             </p>
           </div>
           <div className="flex flex-col p-6 border-[1px] row-span-4 col-span-2 rounded">
             <h3 className="text-base font-medium">타겟층의 광고 관심도</h3>
-            <p className="text-[40px]">21%</p>
-            <TargetInterestChart />
+            <p className="text-[40px]">
+              {`${filteredData ? filteredData.attentionRatio : 0}%`}
+            </p>
+            <TargetInterestChart
+              series={
+                filteredData
+                  ? [
+                      filteredData?.interestPeopleCnt,
+                      filteredData?.totalPepleCount -
+                        filteredData?.interestPeopleCnt,
+                    ]
+                  : [10, 30]
+              }
+            />
           </div>
         </div>
         <div
           style={{ backdropFilter: "blur(10px)" }}
-          className="flex flex-col justify-center items-center absolute inset-0 z-10 w-full h-full gap-5"
+          className={`flex flex-col justify-center items-center absolute inset-0 z-10 w-full h-full gap-5 ${
+            filteredData ? "hidden" : ""
+          }`}
         >
           <p className="text-sm">
             해당 광고의 타겟층을 설정하면
