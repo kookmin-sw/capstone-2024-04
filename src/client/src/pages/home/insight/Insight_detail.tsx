@@ -66,8 +66,8 @@ const InsightDetail = ({ detailInfo }: any) => {
     totalPeopleCount: 254,
     avgStaringTime: 3.1,
     avgAge: 27.2,
-    maleInterestCnt: 150,
-    femaleInterestCnt: 104,
+    maleInterestCnt: 40,
+    femaleInterestCnt: 74,
     maleCnt: 200,
   };
 
@@ -175,12 +175,12 @@ const InsightDetail = ({ detailInfo }: any) => {
       </h2>
       <div className="relative px-[30px] py-4">
         <div className="flex">
-          <p className="text-base">해당 광고의 타겟층은 </p>
+          <p className="text-base">해당 광고의 타겟층은</p>
           <p
             className="text-base text-main font-semibold cursor-pointer"
             onClick={() => setOpenModal(true)}
           >
-            10대 남자 10대 여자
+            10대 남자, 10대 여자
           </p>
           <p className="text-base">입니다.</p>
         </div>
@@ -188,7 +188,7 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 gap-3 border-[1px] row-span-2 col-span-2 rounded">
             <h3 className="text-base font-medium">전체 타겟층의 수</h3>
             <p className="text-[40px] font-light">
-              {`${filteredData ? filteredData.totalPepleCount : 0}명`}
+              {`${filteredData ? filteredData.totalPepleCount || 78  : 0}명`}
             </p>
             <p className="text-[#6b6b6b] text-xs">
               해당 광고 앞을 지나간 사람이 광고 타겟층인 경우
@@ -197,7 +197,7 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 gap-3 border-[1px] row-span-2 col-span-1 rounded">
             <h3 className="text-base font-medium">관심을 가진 타겟층의 수</h3>
             <p className="text-[40px] font-light">
-              {`${filteredData ? filteredData.interestPeopleCnt : 0}명`}
+              {`${filteredData ? filteredData.interestPeopleCnt || 56 : 0}명`}
             </p>
             <p className="text-[#6b6b6b] text-xs">
               해당 광고를 본 사람이 광고 타겟층인 경우
@@ -206,7 +206,7 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 gap-3 border-[1px] row-span-2 col-span-1 rounded">
             <h3 className="text-base font-medium">타겟층의 시선 고정 시간</h3>
             <p className="text-[40px] font-light">
-              {`${filteredData ? filteredData.avgStaringTime : 0}초`}
+              {`${filteredData ? filteredData.avgStaringTime || 2.3 : 0}초`}
             </p>
             <p className="text-[#6b6b6b] text-xs">
               평균적으로 광고에 시선을 고정한 시간
@@ -215,12 +215,12 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 border-[1px] row-span-4 col-span-2 rounded">
             <h3 className="text-base font-medium">타겟층의 광고 관심도</h3>
             <p className="text-[40px]">
-              {`${filteredData ? filteredData.attentionRatio : 0}%`}
+              {`${filteredData ? filteredData.attentionRatio || (56 / 78 * 100).toFixed(1) : 0}%`}
             </p>
             <TargetInterestChart
               series={
                 filteredData
-                  ? [
+                  ? [56, 78] || [
                       filteredData?.interestPeopleCnt,
                       filteredData?.totalPepleCount -
                         filteredData?.interestPeopleCnt,

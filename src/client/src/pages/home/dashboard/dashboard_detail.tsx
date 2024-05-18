@@ -117,8 +117,8 @@ const DashBoardDetail = ({
     totalPeopleCount: 254,
     avgStaringTime: 3.1,
     avgAge: 27.2,
-    maleInterestCnt: 150,
-    femaleInterestCnt: 104,
+    maleInterestCnt: 102,
+    femaleInterestCnt: 72,
     maleCnt: 200,
   };
 
@@ -253,9 +253,9 @@ const DashBoardDetail = ({
             얼마나 많았는지를 알려주는 지표예요.
           </p>
           <MixedChart
-            total={[6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}
+            total={[6, 7, 8, 12, 10, 11, 0, 1, 20, 32, 13, 25, 16, 8, 13, 9, 10, 11]}
             interest={[
-              6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+              3, 3, 4, 3, 7, 5, 0, 0, 15, 23, 10, 20, 9, 6, 8, 7, 6, 7,
             ]}
           />
         </div>
