@@ -275,29 +275,7 @@ public class DashboardServiceTest {
 
     }
 
-    @Test
-    @Disabled
-    @Transactional
-    // 특정 유저가 집행한 광고 집행 단위 리스트 여러개 받아오는 테스트
-    // 작성 완료
-    public void getBoardListTest() throws IOException {
-        // when
-        // 해당 유저가 생성한 대시보드 조회
-//        List<DashboardResponse.DashboardInfo> dashboardList = dashboardService.getDashboardsByUserId(user.getUserId());
-//        List<DashboardResponse.RegisteredMediaAppInfo> infos = dashboardService.getRegisteredBoardsById(user.getUserId(), ds.getDashboardId());
-//
-//
-//        // then
-//        // 조회된 대시보드 값 확인
-//        assertEquals(infos.get(0).getAddress(), location.getAddress());
-//        assertEquals(infos.get(1).getAddress(), location2.getAddress());
-//        assertEquals(infos.get(2).getAddress(), location3.getAddress());
-//
-//
-//        assertEquals(infos.get(0).getMediaApplicationId(), mediaApplication.getMediaApplicationId());
-//        assertEquals(infos.get(1).getMediaApplicationId(), mediaApplication2.getMediaApplicationId());
-//        assertEquals(infos.get(2).getMediaApplicationId(), mediaApplication3.getMediaApplicationId());
-    }
+
 
 
     @Test
