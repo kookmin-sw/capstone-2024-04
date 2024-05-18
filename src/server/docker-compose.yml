@@ -28,10 +28,10 @@ services:
     depends_on:
       - redis-docker
     environment:
-#      - SPRING_PROFILES_ACTIVE=prod  # Set the active profile; adjust as necessary
-        SPRING_DATASOURCE_URL : ${MYSQL_URL}
-        SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
-        SPRING_DATASOURCE_PASSWORD: ${MYSQL_PW}
+      #      - SPRING_PROFILES_ACTIVE=prod  # Set the active profile; adjust as necessary
+      SPRING_DATASOURCE_URL : ${MYSQL_URL}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PW}
     networks:
       - app-net
     logging:
