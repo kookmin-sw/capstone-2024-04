@@ -29,7 +29,7 @@ public class DashboardRequest {
     public static class dataFilter {
         private boolean male;
         private boolean female;
-        @Schema(description = "필터링 나이대(10대 이하, 10대, 20대, 30대, 40대, 50대, 60대 이상) 총 7개 분류", example = "[true, false, false, false, false, false, true]")
+        @Schema(description = "필터링 나이대(10대, 20대, 30대, 40대, 50대, 60대 이상) 총 6개 분류", example = "[true, false, false, false, false, false]")
         private List<Boolean> ageRanges; // Add this field for age ranges
     }
 }
