@@ -31,7 +31,7 @@ def kafkaSend(cameraId, interestFrameCnt, passedFrameCnt, arriveTime, leaveTime,
     # 로컬 서버
     # bootstrap_servers=['localhost:9092'],
     # 클라우드 카프카 서버 -> 테스트시 가능하면 해당 서버로 보내주세요.
-    bootstrap_servers=['43.202.60.64:29092'],
+    bootstrap_servers=['3.34.47.236:29092'],
     value_serializer=lambda x:dumps(x).encode('utf-8') 
     )
     
