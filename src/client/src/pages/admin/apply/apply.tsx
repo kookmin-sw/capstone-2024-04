@@ -57,7 +57,7 @@ const AdminApplyDetail = ({
         </div>
       </div>
       <div className="flex-1 flex-col px-[30px]">
-        <Subtitle1 text="광고 등록일" color="text-black" />
+        <Subtitle1 text="광고 집행일" color="text-black" />
         <DatePicker.RangePicker
           defaultValue={[
             dayjs(application.application.startDate, "YYYY-MM-DD"),

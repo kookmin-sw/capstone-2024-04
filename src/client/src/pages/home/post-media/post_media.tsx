@@ -58,7 +58,7 @@ const PostMediaScreen = () => {
       return false;
     }
     if (date.length === 0) {
-      toast.error("광고 등록일을 선택해주세요.");
+      toast.error("광고 집행일을 선택해주세요.");
       return false;
     }
     if (locationId === -1) {
@@ -87,7 +87,7 @@ const PostMediaScreen = () => {
 
   const requestPostMedia = async () => {
     if (date.length === 0) {
-      toast.error("광고 등록일을 선택해주세요.");
+      toast.error("광고 집행일을 선택해주세요.");
       return false;
     }
     if (!titleRef.current?.input?.value) {
@@ -284,7 +284,7 @@ const PostMediaScreen = () => {
         </button>
       </div>
       <div className="flex-1 flex-col px-[30px]">
-        <Subtitle1 text="광고 등록일" color="text-black" />
+        <Subtitle1 text="광고 집행일" color="text-black" />
         <RangePicker
           disabledDate={(current) => {
             let customDate = moment().format("YYYY-MM-DD");
