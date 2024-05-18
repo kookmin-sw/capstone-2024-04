@@ -203,6 +203,7 @@ public class DashboardServiceTest {
 
     }
 
+
     @Test
 //    @Disabled
     @Transactional
@@ -283,16 +284,65 @@ public class DashboardServiceTest {
     // 광고 + 광고 집행 단위 + 날짜 형태로 데이터 조회하는 테스트
     // 작성 완료
     public void getBoardPerDaysTest() throws IOException {
-        // when
-        // 해당 유저가 생성한 대시보드 조회
-//        LocalDate date = LocalDate.now();
-//        DailyMediaBoard board = dailyMediaBoardService.findDailyBoardByDateAndApplication(testApp, date);
-//
-//        // then
-//        // 조회된 대시보드 값 확인
-//        assertEquals(0L, board.getMaleCnt());
-//        assertEquals(0F, board.getAvgAge());
+        // given
+        // 회원 가입 세팅
+        String email = "test@email";
+        Optional<User> userOptional = userService.getUserByEmail(email);
+        User user = null;
+        if(userOptional.isEmpty()){
+            log.info("USER NOT EXISTS, CREATING USER ");
+            UserResponse.UserInfo userInfo = userService.createUser(email, "1234", "drm");
+            user = userService.getUser(userInfo.getUserId());
+        }
+        else{
+            log.info("USER EXISTS");
+            user = userOptional.get();
+        }
 
+        log.info("DEBUG TEST USER ID : " + user.getUserId() + "  EMAIL " + user.getEmail());
+
+        // 미디어 생성 요청 세팅
+        MockMultipartFile file = new MockMultipartFile("image",
+                "translate.png",
+                "image/png",
+                new FileInputStream("/Users/dongguk/Desktop/동국자료/해외여행/CES/translate.png"));
+
+//        locationService.createLocation(1, "2호선 1번 칸");
+//        locationService.createLocation(2, "2호선 2번 칸");
+//        locationService.createLocation(3, "2호선 3번 칸");
+
+        Location location = locationService.findById(1L);
+        Location location2 = locationService.findById(2L);
+        Location location3 = locationService.findById(3L);
+//        String title = LocalDateTime.now() + " maxmax chicken board";
+
+        String title = "maxmax bb chicken num1 board";
+        LocalDate endDate = LocalDate.now().plusDays(2);
+        String formatEndDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));        // 미디어 / 대시보드  -> 세팅 및 생성
+
+        MediaRequest.Create mediaRequest = MediaRequest.Create.builder().advertisementDescription("this is awesome").advertisementTitle("Good Fish")
+                .startDate("2024-04-07").endDate(formatEndDate).locationId(1L).build();
+
+        Dashboard ds = dashboardService.createDashboard(user);
+        Media media =  mediaService.createMedia(mediaRequest, ds, file);
+        log.info("CREATED MEDIA URL : " + media.getMediaLink());
+
+        // 여러개의 광고 집행 단위가 존재 가정
+        MediaApplication mediaApplication = mediaApplicationService.createMediaApplication(media, location ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
+        MediaApplication mediaApplication2 = mediaApplicationService.createMediaApplication(media, location2 ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
+        MediaApplication mediaApplication3 = mediaApplicationService.createMediaApplication(media, location3 ,mediaRequest.getStartDate(),mediaRequest.getEndDate());
+
+        // 광고 승락
+        List<MediaApplication> mediaApps = mediaApplicationService.findByMedia(media);
+        List<Long> mediaAppIds = mediaApps.stream().map(mediaApplication1 -> mediaApplication1.getMediaApplicationId()).collect(Collectors.toList());
+
+
+        mediaApplicationService.updateStatus(mediaAppIds, Status.ACCEPT);
+
+        playListService.testUpdatePlayList();
+
+        LocalDate searchDate = LocalDate.now();
+        DashboardResponse.DashboardDataInfo info = dashboardService.getDayBoards(user.getUserId(),mediaApplication.getMediaApplicationId(), searchDate);
 
     }
 
@@ -366,7 +416,7 @@ public class DashboardServiceTest {
 
         playListService.testUpdatePlayList();
 
-        List<Boolean> testBool = new ArrayList<Boolean>(Collections.nCopies(7, false));
+        List<Boolean> testBool = new ArrayList<Boolean>(Collections.nCopies(6, true));
         testBool.set(0, true);
         testBool.set(1, true);
         DashboardResponse.DashboardDetailDataInfo info =  dashboardService.getDashboardFiltered(user.getUserId(), ds.getDashboardId(), true, true, testBool);

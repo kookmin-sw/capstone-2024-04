@@ -65,13 +65,13 @@ public class DashboardResponse {
             this.attentionRatio = 0F;
         }
 
-        public void addDetailDataInfo(DashboardDetailDataInfo inputInfo){
-            // divide by 0 를 막기 위해 우선적으로 더해주는 것이 좋음.
-            this.totalPeopleCount += inputInfo.getTotalPeopleCount();
-            this.InterestPeopleCnt += inputInfo.getInterestPeopleCnt();
-            this.avgStaringTime = calculateStaringTime(inputInfo.getAvgStaringTime(), inputInfo.getInterestPeopleCnt());
-            this.attentionRatio = calculateAttentionRatio();
-        }
+//        public void addDetailDataInfo(DashboardDetailDataInfo inputInfo){
+//            // divide by 0 를 막기 위해 우선적으로 더해주는 것이 좋음.
+//            this.totalPeopleCount += inputInfo.getTotalPeopleCount();
+//            this.InterestPeopleCnt += inputInfo.getInterestPeopleCnt();
+//            this.avgStaringTime = calculateStaringTime(inputInfo.getAvgStaringTime(), inputInfo.getInterestPeopleCnt());
+//            this.attentionRatio = calculateAttentionRatio();
+//        }
         public void addDetailData(DailyDetailBoard board){
             this.totalPeopleCount += board.getTotalPeopleCount();
             this.InterestPeopleCnt += board.getInterestCount();

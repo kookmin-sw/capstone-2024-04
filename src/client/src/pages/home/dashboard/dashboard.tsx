@@ -1,7 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Subtitle2 } from "../../../components/text";
 import { Table, TableColumnsType } from "antd";
 import DashBoardDetail from "./dashboard_detail";
+import { getApplies } from "../../../api/client/apply";
+import {
+  DashboardDataInfo,
+  TotalApplicationInfo,
+} from "../../../interfaces/interface";
+import StatusBadge from "../../../components/status_badge";
+import defaultImageRectangle from "../../../assets/images/default_rectangle.svg";
+import {
+  GetAdUnitDashboardProps,
+  getAdUnitDashboard,
+} from "../../../api/client/dashboard";
 
 export enum DashBoardMode {
   LIST,
@@ -15,19 +26,43 @@ export interface TableItem {
   title: string;
   display: string;
   date: string[];
-  status: boolean; // 승인 여부
+  status: string;
 }
 
-const DashBoard = () => {
-  const [mode, setMode] = useState(DashBoardMode.LIST);
-  // const [detailInfo, setDetailInfo] = useState<MediaCardProps | null>(null);
+const DashBoard = ({ mode, setMode, detailProps }: any) => {
+  const [applies, setApplies] = useState<TableItem[]>([]);
+  const [selectedData, setSelectedData] = useState<DashboardDataInfo | null>(
+    null
+  );
+  const [dashboardTitle, setDashboardTitle] = useState<string>("");
+  const [currDashboardId, setCurrDashboardId] = useState<number | null>(null);
+
+  const loadDetailData = async ({ dashboardId }: GetAdUnitDashboardProps) => {
+    const result = await getAdUnitDashboard({ dashboardId });
+    console.log(result);
+    if (result.status === 200) {
+      setCurrDashboardId(dashboardId);
+      result.data.data as DashboardDataInfo;
+      setSelectedData(result.data.data);
+      setMode(DashBoardMode.DETAIL);
+      return true;
+    }
+    return false;
+  };
 
   const columns: TableColumnsType<TableItem> = [
     {
       title: "",
       dataIndex: "mediaLink",
       render: (mediaLink) => (
-        <img className="w-[50px] h-[50px]" src={mediaLink} />
+        <img
+          className="w-[50px] h-[50px]"
+          src={mediaLink}
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            const target = e.target as HTMLImageElement;
+            target.src = defaultImageRectangle;
+          }}
+        />
       ),
     },
     {
@@ -50,31 +85,37 @@ const DashBoard = () => {
     {
       title: "광고 상태",
       dataIndex: "status",
+      render: (status, record) => (
+        <StatusBadge status={status} date={record.date} />
+      ),
     },
   ];
 
-  const data: TableItem[] = [
-    {
-      key: 1,
-      mediaId: 1,
-      mediaLink:
-        "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
-      title: "광고 테스트 1",
-      display: "미래관 4층",
-      date: ["2024-04-18", "2024-04-21"],
-      status: true,
-    },
-    {
-      key: 2,
-      mediaId: 2,
-      mediaLink:
-        "https://wink.kookmin.ac.kr/_next/image?url=https%3A%2F%2Fgithub.com%2FChoi-Jiwon-38.png&w=256&q=75",
-      title: "광고 테스트 2",
-      display: "과학관 1층 카페",
-      date: ["2024-04-17", "2024-04-18"],
-      status: true,
-    },
-  ];
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
+
+  const loadDashboardData = async () => {
+    const response = await getApplies({ filter: "ACCEPT" });
+    if (response.status === 200) {
+      const totalApplications: TotalApplicationInfo[] = response.data.data;
+
+      setApplies(
+        totalApplications.map((application) => ({
+          key: application.application.applicationId,
+          mediaId: application.media.mediaId,
+          mediaLink: application.media.mediaLink,
+          title: application.media.title,
+          display: application.application.location.address,
+          date: [
+            application.application.startDate,
+            application.application.endDate,
+          ],
+          status: "ACCEPT",
+        })) as TableItem[]
+      );
+    }
+  };
 
   return mode === DashBoardMode.LIST ? (
     <div className="flex flex-col h-full min-w-[920px] px-[30px] gap-7 overflow-y-scroll">
@@ -82,18 +123,22 @@ const DashBoard = () => {
       <Table
         size="small"
         columns={columns}
-        dataSource={data}
+        dataSource={applies}
         pagination={{ pageSize: 8, position: ["bottomCenter"] }}
         onRow={(record) => ({
           onClick: () => {
-            console.log(record);
-            setMode(DashBoardMode.DETAIL);
+            setDashboardTitle(record.title);
+            loadDetailData({ dashboardId: record.key });
           },
         })}
       />
     </div>
   ) : (
-    <DashBoardDetail />
+    <DashBoardDetail
+      dashboardTitle={dashboardTitle || detailProps.dashboardTitle}
+      dashboardData={selectedData! || detailProps.dashboardData}
+      dashboardId={currDashboardId! || detailProps.dashboardId}
+    />
   );
 };
 
