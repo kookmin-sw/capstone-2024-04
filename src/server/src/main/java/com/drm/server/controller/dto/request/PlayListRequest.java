@@ -11,4 +11,12 @@ public class PlayListRequest {
     public static class PlayListLog{
 
     }
+    @Getter
+    @Setter
+    @Builder
+    public static class Query{
+        Long locationId;
+        String arriveAt;
+        String leaveAt;
+    }
 }

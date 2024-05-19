@@ -50,5 +50,3 @@
   s3:
     access-key: ${access-key}
     secret-key: ${secret-key}
-  #server:
-  #  port: 80

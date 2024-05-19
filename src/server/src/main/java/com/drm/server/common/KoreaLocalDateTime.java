@@ -11,6 +11,16 @@ import java.util.List;
 
 @Component
 public class KoreaLocalDateTime {
+    // 입력 날짜 형식: "2024-05-12 13:58:28.534095"
+    private static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+
+    // 출력 날짜 형식: "2023-05-16T13:34:56.000"
+    private static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+    public static String convertToKsqlTimestamp(String dateStr) {
+        LocalDateTime dateTime = LocalDateTime.parse(dateStr, INPUT_FORMATTER);
+        return dateTime.format(OUTPUT_FORMATTER);
+    }
 
     public static LocalDate stringToLocalDateTime(String date)  {
         LocalDate formDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
