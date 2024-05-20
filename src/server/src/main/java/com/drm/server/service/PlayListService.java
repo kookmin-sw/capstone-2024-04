@@ -66,11 +66,17 @@ public class PlayListService {
 
     }
 
-    public MediaApplication getMediaAplicationFromPlaylist(Long locationId, LocalDateTime time){
+    public MediaApplication getMediaApplicationFromPlaylist(Long locationId, LocalDateTime time){
         // 해당 location(camera) 에서 해당 일-분-초에 틀어지고 있는 mediaAplication 반환
         // 구현 필요
         MediaApplication mediaApp = mediaApplicationRepository.findFirstByOrderByCreateDateDesc();;
         return mediaApp;
+    }
+
+    public MediaApplication getMediaApplicationFromPlaylistId(Long playListId){
+        PlayList playList = playListRepository.findById(playListId).get();
+        MediaApplication mediaApplication = playList.getMediaApplication();
+        return mediaApplication;
     }
 
     // test 코드용 호출

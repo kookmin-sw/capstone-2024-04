@@ -18,7 +18,8 @@ import java.util.List;
 public class KSqlDBHandler {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-    private final String ksqlDbUrl = "http://0.0.0.0:8088";
+//    private final String ksqlDbUrl = "http://0.0.0.0:8088";
+    private final String ksqlDbUrl = "http://43.203.218.109:8088";
 
     public List<PlayListLog> queryKsqlDb(String query) throws IOException {
         String url = ksqlDbUrl + "/query";

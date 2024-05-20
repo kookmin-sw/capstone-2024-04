@@ -6,6 +6,7 @@ import com.drm.server.domain.dailyMediaBoard.DailyMediaBoard;
 import com.drm.server.domain.detectedface.DetectedFace;
 import com.drm.server.domain.detectedface.DetectedFaceRepository;
 import com.drm.server.domain.mediaApplication.MediaApplication;
+import com.drm.server.domain.playlist.PlayList;
 import com.drm.server.domain.rowdetectedface.RowDetectedFace;
 import com.drm.server.domain.rowdetectedface.RowDetectedFaceRepository;
 import com.drm.server.service.DailyDetailBoardService;
@@ -37,6 +38,7 @@ public class DetectedFaceConsumer {
     private final MediaApplicationService mediaApplicationService;
     private final DailyMediaBoardService dailyMediaBoardService;
     private final DailyDetailBoardService dailyDetailBoardService;
+    private final PlayListService playListService;
     private final RowDetectedFaceRepository rowDetectedFaceRepository;
     private final KSqlDBHandler kSqlDBHandler;
 
@@ -64,6 +66,15 @@ public class DetectedFaceConsumer {
         //광고 찾는 로직 추가
         String qurey = kSqlDBHandler.getFilteredData(Long.valueOf((Integer) map.get("cameraId")),rowDetectedFace.getArriveAt().toString(),rowDetectedFace.getLeaveAt().toString());
         List<PlayListLog> playListLog = kSqlDBHandler.queryKsqlDb(qurey);
+
+        // 한 사람의 등장 - 퇴장 사이에 여러개의 광고가 노출되었을 경우(Playlist에서 송출되는 광고)
+        for(PlayListLog playListLogData : playListLog ){
+            MediaApplication mediaApplication = playListService.getMediaApplicationFromPlaylistId(playListLogData.getPlaylistId());
+            // playList 광고 시작, 전환 시간을 포함한 detectedFace save
+            DetectedFace detectedFace = DetectedFace.toEntity(map, playListLogData.getStartTime(), playListLogData.getEndTime());
+            detectedFace.updateMediaApplication(mediaApplication);
+            DetectedFace savedDetectedFace = detectedFaceRepository.save(detectedFace);
+        }
 
 //         Mediaapplication를 찾아서 기존 detectedFace 넣기,
 //        DetectedFace detectedFace = DetectedFace.toEntity(map, startTimeList, arriveTimeList);

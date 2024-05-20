@@ -20,7 +20,7 @@ public class PlayListServiceTest {
         LocalDateTime time = LocalDateTime.now();
         Long id = 0L;
 
-        MediaApplication mediaApp = playListService.getMediaAplicationFromPlaylist(id, time);
+        MediaApplication mediaApp = playListService.getMediaApplicationFromPlaylist(id, time);
 
     }
 

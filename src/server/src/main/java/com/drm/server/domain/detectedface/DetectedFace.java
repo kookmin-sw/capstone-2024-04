@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +52,18 @@ public class DetectedFace extends BaseTimeEntity {
     public static DetectedFace toEntity(Map<Object, Object> modelRequest,List<Integer> startTimeList, List<Integer> arriveTimeList) {
         LocalDateTime arriveAt = KoreaLocalDateTime.datTimeListToLocalDateTime(startTimeList);
         LocalDateTime leaveAt = KoreaLocalDateTime.datTimeListToLocalDateTime(arriveTimeList);
+        return makeDetectedFace(modelRequest, arriveAt, leaveAt);
+    }
+    public static DetectedFace toEntity(Map<Object, Object> modelRequest, String startTime, String arriveTime) {
+        // Time converter String to LocalDateTime
+        // String example : "2023-05-10T12:34:56.000"
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        LocalDateTime arriveAt = LocalDateTime.parse(startTime, formatter);
+        LocalDateTime leaveAt = LocalDateTime.parse(arriveTime, formatter);
+        return makeDetectedFace(modelRequest, arriveAt, leaveAt);
+    }
 
+    private static DetectedFace makeDetectedFace(Map<Object, Object> modelRequest, LocalDateTime arriveAt, LocalDateTime leaveAt){
         DetectedFace detectedFace = DetectedFace.builder()
                 .faceCaptureCnt((Integer) modelRequest.get("interestFrameCnt"))
                 .entireCaptureCnt((Integer) modelRequest.get("passedFrameCnt"))
