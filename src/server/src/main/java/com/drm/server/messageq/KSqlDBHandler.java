@@ -48,7 +48,7 @@ public class KSqlDBHandler {
                 Long locationId = columns.get(3).asLong();
 
                 // Creating PlaylistLog object
-                PlayListLog playlistLog = new PlayListLog(playlistId, endTime, startTime, locationId);
+                PlayListLog playlistLog = new PlayListLog(playlistId, startTime, endTime, locationId);
                 playlistLogs.add(playlistLog);
             }
         }
@@ -59,13 +59,11 @@ public class KSqlDBHandler {
 
 
     public String getFilteredData(Long locationId, String arriveAt, String leaveAt)  {
-        String arriveAtFormatted = KoreaLocalDateTime.convertToKsqlTimestamp(arriveAt);
-        String leaveAtFormatted = KoreaLocalDateTime.convertToKsqlTimestamp(leaveAt);
 
         String ksqlQuery = "SELECT * FROM playlist_stream " +
                 "WHERE location_id =" +locationId +
-                " AND NOT (start_time <= '" + arriveAtFormatted + "' AND end_time <= '" + arriveAtFormatted + "') " +
-                "AND NOT (start_time >= '" + leaveAtFormatted + "' AND end_time >= '" + leaveAtFormatted + "');";
+                " AND NOT (start_time <= '" + arriveAt + "' AND end_time <= '" + arriveAt + "') " +
+                "AND NOT (start_time >= '" + leaveAt + "' AND end_time >= '" + leaveAt + "');";
         return ksqlQuery;
     }
 

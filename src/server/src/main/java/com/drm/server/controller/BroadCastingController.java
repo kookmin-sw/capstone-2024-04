@@ -80,4 +80,5 @@ public class BroadCastingController {
         String squery = kSqlDBHandler.getFilteredData(query.getLocationId(),query.getArriveAt(), query.getLeaveAt());
         return kSqlDBHandler.queryKsqlDb(squery);
     }
+
 }

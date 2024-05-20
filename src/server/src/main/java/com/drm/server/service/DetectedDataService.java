@@ -20,7 +20,7 @@ public class DetectedDataService {
 
     // 아래의 Service / Repository 를 어떤 식으로 주입해줄 수 있을까? -> 추후에 사진이 아닌, 영상용 데이터가 들어왔을때를 고려한다.
     // 궁금한 것 -> 이런 식으로 autowired 없이 필드 주입시에, DetectedDataService 호출시마다,
-    // 새로운 필드 변수(mediaService, DetectedFaceRepository) 가 생성될까?
+    // 새로운 필드 변수(mediaService, RowDetectedFaceRepository) 가 생성될까?
     private final MediaService mediaService;
     private final PlayListService playListService;
     private final DailyMediaBoardService dailyMediaBoardService;

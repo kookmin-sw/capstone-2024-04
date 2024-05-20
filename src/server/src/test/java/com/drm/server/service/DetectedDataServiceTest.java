@@ -35,7 +35,7 @@ class DetectedDataServiceTest {
 
 
 //    @Autowired
-//    DetectedDataServiceTest (DetectedDataService detectedDataService, MediaService mediaService, DetectedFaceRepository detectedFaceRepository, MediaRepository mediaRepository) {
+//    DetectedDataServiceTest (DetectedDataService detectedDataService, MediaService mediaService, RowDetectedFaceRepository detectedFaceRepository, MediaRepository mediaRepository) {
 //        this.detectedDataService = detectedDataService;
 //        this.mediaService = mediaService;
 //        this.detectedFaceRepository = detectedFaceRepository;
