@@ -43,7 +43,6 @@ git clone https://github.com/kookmin-sw/capstone-2024-04.git
     
     cd src/server/
     docker-compose up -d
-    ./gradlew bootRun
 
 </div>
 </details>
