@@ -1,6 +1,7 @@
 from kafka import KafkaProducer
 from json import dumps
 import time
+import datetime
 
 # 사용 라이브러리 -> pip install kafka-python 
 
@@ -24,28 +25,45 @@ import time
 
 # fps ->  frame per second - 1 로 통일
 
-def kafkaSend(cameraId, interestFrameCnt, passedFrameCnt, arriveTime, leaveTime, staringframeData, male, age, fps):
-    producer = KafkaProducer(
-    acks=0, 
-    compression_type='gzip', 
-    # 로컬 서버
-    # bootstrap_servers=['localhost:9092'],
-    # 클라우드 카프카 서버 -> 테스트시 가능하면 해당 서버로 보내주세요.
-    bootstrap_servers=['3.34.47.236:29092'],
-    value_serializer=lambda x:dumps(x).encode('utf-8') 
-    )
-    
+def kafkaSend(producer, cameraId, interestFrameCnt, passedFrameCnt, arriveTime, leaveTime, staringframeData, male, age, fps):
     data = {'cameraId' : cameraId, 'startAt' : arriveTime, 'leaveAt' : leaveTime, 
             'passedFrameCnt' : passedFrameCnt, 'interestFrameCnt' : interestFrameCnt, "staringData" : staringframeData,
              "male": male, "age" : age, "fps" : fps}
     producer.send('drm-face-topic', value=data)
-    producer.flush() 
+    # producer.poll() 
     
     
 
 if __name__ == '__main__':
+    producer = KafkaProducer(
+    acks=0, 
+    compression_type='gzip', 
+    bootstrap_servers=['43.203.218.109:29092'],
+    value_serializer=lambda x:dumps(x).encode('utf-8') 
+    )
     exampleTime =  time.localtime(time.time())
-    kafkaSend(1, 0, 5, exampleTime, exampleTime, [0,0,0,0,0], 0, 45, 1)
-    # kafkaSend(1, 1, 5, exampleTime, exampleTime, [0,0,0,0,1], 1, 45, 1)
-    # kafkaSend(2, 5, 22, exampleTime, exampleTime, [0,0,0,1,1,1,0], 0, 45, 1)
-    # kafkaSend(3, 10, 25, exampleTime, exampleTime, [0,0,0,1,1,1,0], 0, 45, 1)
+    printTime = datetime.datetime.now()
+    
+    print("KAFKA TEST START")
+    print("TEST TIME : ", printTime.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3])
+    for i in range(10000):
+        # 아래의 테스트 전송 10개를 1 suite 로 지정
+        if(i % 50 == 0):
+            print("TEST PROCESSING : ", i)
+        kafkaSend(producer, 1, 0, 5, exampleTime, exampleTime, [0,0,0,0,0], 0, 32, 10)
+        kafkaSend(producer, 1, 9, 18, exampleTime, exampleTime, [0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,1], 0, 18, 10)
+        kafkaSend(producer, 1, 1, 5, exampleTime, exampleTime, [0,0,0,0,1], 1, 45, 5)
+        
+        kafkaSend(producer, 2, 9, 18, exampleTime, exampleTime, [0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,1], 1, 80, 10)
+        kafkaSend(producer, 2, 0, 5, exampleTime, exampleTime, [0,0,0,0,0], 0, 25, 10)
+        kafkaSend(producer, 2, 6, 14, exampleTime, exampleTime, [0,0,0,1,1,1,0, 0,0,0,1,1,1,0], 0, 23, 10)
+        kafkaSend(producer, 2, 9, 18, exampleTime, exampleTime, [0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,1], 0, 22, 5)
+
+        kafkaSend(producer, 3, 9, 18, exampleTime, exampleTime, [0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,1], 1, 15, 10)
+        kafkaSend(producer, 3, 6, 14, exampleTime, exampleTime, [0,0,0,1,1,1,0, 0,0,0,1,1,1,0], 1, 20, 10)
+        kafkaSend(producer, 3, 9, 18, exampleTime, exampleTime, [0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,1], 0, 27, 5)
+    producer.flush()
+    printEndTime = datetime.datetime.now()
+    print("TEST TIME : ", printTime.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3])
+    print("TEST END TIME : ", printEndTime.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3])
+    print("TEST SEND DONE")
