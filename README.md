@@ -6,11 +6,11 @@
 
 ### 1. 프로젝트 소개
 
-"Do you read me?"는 데이터 분석을 통해 옥외 광고의 효율성을 극대화하는 웹 서비스입니다. DRM은 디스플레이 근처의 유동 인구와 타겟층 정보를 분석하여 광고주가 시각적으로 쉽게 이해할 수 있는 대시보드를 제공합니다. 광고주는 대시보드를 통해 사람들의 관심도와 반응을 분석하고 이를 바탕으로 최적의 광고 전략을 수립할 수 있습니다. DRM은 광고주에게 데이터 기반의 솔루션을 제공함으로써 광고의 효과를 극대화하고 광고 캠페인의 ROI를 향상시키는 데 기여합니다. 
+ 프로젝트 "Do you read me?"은 지하철 탑승객들이 지하철 광고에 얼마나 많은 관심을 가지는지 측정하고, 유동인구의 관심도를 분석하여 관심 인구에 대한 정보를 대시보드 형태로 제공하는 광고주 대상 B2B 서비스입니다. DRM는 광고주는 최적의 광고 수립할 수 있도록 도와주며 광고 캠페인의 ROI(Return On Investment)를 향상시키는 데 기여합니다. 서울 2호선 지하철 열차 내 광고 디스플레이부터 시범 적용을 시작하여, 추후 다른 옥외광고 분석까지 가능하도록 확장 예정입니다.
 
 ### 2. Abstract
 
-The "Do you read me?" project is a web service designed to optimize the effectiveness of outdoor advertising through data analysis. By providing a dashboard that visually represents the flow of people and target demographics near display locations, it enables advertisers to easily understand and analyze public interest and responses. This data-driven solution allows for the development of optimal advertising strategies, maximizing the impact of advertisements and enhancing the return on investment (ROI) for advertisers.
+ The project "Do you read me?" measures the attention subway passengers pay to subway advertisements and analyzes the interest levels of the foot traffic. It provides advertisers with information on interested populations through a dashboard. DRM helps advertisers optimize their ad placements and improve the ROI (Return On Investment) of their ad campaigns. Starting with advertising displays inside Seoul Subway Line 2 trains, the project plans to eventually expand to analyze other types of outdoor advertising.
 
 ### 3. 영상
 ### 3.1. 소개 영상(중간 발표)
