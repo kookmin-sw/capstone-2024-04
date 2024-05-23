@@ -1,7 +1,7 @@
 # Do you Read me? (DRM)
 
 
-<img src="src/model/img/output_video2.gif" alt="gif1" width="600" />
+<img src="src/model/img/output_video2.gif" alt="gif1" width="700" />
 
 
 ### 1. 프로젝트 소개
@@ -21,10 +21,10 @@
 [![Video Label](http://img.youtube.com/vi/15gxa_gtftI/0.jpg)](https://www.youtube.com/watch?v=15gxa_gtftI)
 
 ### 4. 모델 워크플로우
-<img src="src/model/img/model_workflow.png" alt="img1" width="500"/>
+<img src="src/model/img/model_workflow.png" alt="img1" width="1200"/>
 
 ### 5. 소프트웨어 아키텍처
-<img src="src/model/img/software_architecture.png" alt="img2" width="500"/>
+<img src="src/model/img/software_architecture.png" alt="img2" width="1200"/>
 
 ### 6. 팀 소개
 
