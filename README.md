@@ -1,4 +1,4 @@
-# Do you Read me? (DRM)
+# 📚 Do you Read me? (DRM)
 
 
 <img src="src/model/img/output_video2.gif" alt="gif1" width="700" />
@@ -74,6 +74,8 @@ git clone https://github.com/kookmin-sw/capstone-2024-04.git
 
 
 ### 8. 최종 제출 자료
-🗂️ [포스터](https://github.com/kookmin-sw/capstone-2024-04/files/15377478/-.-4.pdf) <br />
-🗂️ [최종 발표 자료](https://github.com/kookmin-sw/capstone-2024-04/files/15377483/-.-4.pdf) <br />
-🗂️ [결과 보고서](https://github.com/kookmin-sw/capstone-2024-04/files/15377484/-.-4.pdf) <br />
+🗂️ [중간 발표 자료](docs/%EC%A4%91%EA%B0%84%EB%B0%9C%ED%91%9C-%EC%B5%9C%EC%A0%81%ED%99%94%EB%90%9C%20%EC%98%A5%EC%99%B8%20%EA%B4%91%EA%B3%A0%EB%A5%BC%20%EC%9C%84%ED%95%9C%20%EA%B4%91%EA%B3%A0%20%ED%9A%A8%EA%B3%BC%20%EB%B6%84%EC%84%9D%20%EC%86%94%EB%A3%A8%EC%85%98-4%EC%A1%B0.pdf) <br />
+🗂️ [중간 보고서](docs/%EC%A4%91%EA%B0%84%EB%B3%B4%EA%B3%A0%EC%84%9C-%EC%B5%9C%EC%A0%81%ED%99%94%EB%90%9C%20%EC%98%A5%EC%99%B8%20%EA%B4%91%EA%B3%A0%EB%A5%BC%20%EC%9C%84%ED%95%9C%20%EA%B4%91%EA%B3%A0%20%ED%9A%A8%EA%B3%BC%20%EB%B6%84%EC%84%9D%20%EC%86%94%EB%A3%A8%EC%85%98.pdf) <br />
+🗂️ [포스터](docs/%ED%8F%AC%EC%8A%A4%ED%84%B0-%EC%A7%80%ED%95%98%EC%B2%A0%20%ED%83%91%EC%8A%B9%EA%B0%9D%20%ED%96%89%EB%8F%99%20%EA%B8%B0%EB%B0%98%20%EA%B4%91%EA%B3%A0%20%EA%B4%80%EC%8B%AC%EB%8F%84%20%EB%B6%84%EC%84%9D%20%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C-4%EC%A1%B0.pdf) <br />
+🗂️ [최종 발표 자료](docs/%EC%B5%9C%EC%A2%85%EB%B0%9C%ED%91%9C-%EC%A7%80%ED%95%98%EC%B2%A0%20%ED%83%91%EC%8A%B9%EA%B0%9D%20%ED%96%89%EB%8F%99%20%EA%B8%B0%EB%B0%98%20%EA%B4%91%EA%B3%A0%20%EA%B4%80%EC%8B%AC%EB%8F%84%20%EB%B6%84%EC%84%9D%20%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C-4%EC%A1%B0.pdf)) <br />
+🗂️ [결과 보고서](docs/%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C-%EC%A7%80%ED%95%98%EC%B2%A0%20%ED%83%91%EC%8A%B9%EA%B0%9D%20%ED%96%89%EB%8F%99%20%EA%B8%B0%EB%B0%98%20%EA%B4%91%EA%B3%A0%20%EA%B4%80%EC%8B%AC%EB%8F%84%20%EB%B6%84%EC%84%9D%20%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C-4%EC%A1%B0.pdf) <br />
