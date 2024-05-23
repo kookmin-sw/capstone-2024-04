@@ -60,8 +60,8 @@ git clone https://github.com/kookmin-sw/capstone-2024-04.git
 <div markdown="1">
 
     cd src/model
-    pip install -r requirements.txt
-    python fastapi/main.py
+    pip3 install -r requirements.txt
+    python3 pipeline/main.py
 
 </div>
 </details>
