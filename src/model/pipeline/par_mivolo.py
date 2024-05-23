@@ -1,8 +1,8 @@
-import sys
-# TODO : 환경변수로 수정
-sys.path.append('/home/kh/capstone/PAR/mivolo')
-
 import os
+import sys
+
+MIVOLO_DIR = os.getenv('MIVOLO_DIR')
+sys.path.append(MIVOLO_DIR)
 
 import cv2
 import torch
@@ -17,9 +17,12 @@ from mivolo.data.misc import prepare_classification_images
 
 class PAR:
     def __init__(self):
+        MIVOLO_WEIGHT_PATH = os.getenv('MIVOLO_WEIGHT_PATH')
+        if MIVOLO_WEIGHT_PATH is None:
+            raise Exception('MIVOLO_WEIGHT_PATH is not given.')
+
         self.model = MiVOLO(
-            # TODO : 환경변수로 수정
-            '/home/kh/capstone/PAR/mivolo/models/mivolo_imbd.pth.tar',
+            MIVOLO_WEIGHT_PATH,
             'cuda:0',
             half=True,
             use_persons=True,
@@ -60,7 +63,7 @@ class PAR:
 if __name__ == '__main__':
     import os
     assert os.path.exists('lena.jpg')
-    
+
     par = PAR()
     result = par.predict('lena.jpg')
     print(result)

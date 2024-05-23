@@ -22,4 +22,12 @@ public class LocationService {
         return locationInfos;
     }
 
+    public Location createLocation(int cameraNum, String addressStr){
+        Location location = Location.builder().address(addressStr).cameraId(cameraNum).build();
+        return locationRepository.save(location);
+    }
+    public Location findByCameraId(int cameraId){
+        return locationRepository.findByCameraId(cameraId).orElseThrow(() -> new IllegalArgumentException("cannot find location by cameraId"));
+    }
+
 }

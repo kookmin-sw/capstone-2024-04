@@ -1,6 +1,6 @@
 import Cookies from "universal-cookie";
-import { SignInAPIProps, SignUpAPIProps } from "../interfaces/interface";
-import publicApi from "./public_api";
+import { SignInAPIProps, SignUpAPIProps } from "../../interfaces/interface";
+import publicApi from "../public_api";
 
 
 export const signup = async ({email, password, company}: SignUpAPIProps) => {
@@ -26,7 +26,11 @@ export const signin = async ({email, password}: SignInAPIProps) => {
 
 export const tokenRefresh = async ({accessToken, refreshToken}: any) => {
     const cookies = new Cookies();
-    const response = await publicApi.post('/api/v1/auth/reissue', { accessToken,refreshToken });
+    const response: any = await publicApi.post('/api/v1/auth/reissue', { accessToken,refreshToken });
+
+    if (response.status === 500 && response.divisionCode === "G999") { // Redis에 RefreshToken이 존재하지 않는 경우
+    // 에러 처리 필요 
+    }
 
     const newAccessToken = response.data.data.accessToken;
     const newRefreshToken = response.data.data.refreshToken;

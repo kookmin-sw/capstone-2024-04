@@ -22,16 +22,13 @@ import java.util.UUID;
 public class FileService {
     private final AmazonS3Client amazonS3Client;
 
-    private String bucketName="k-eum";
-    private static String filePath = "image";
-
-//    private String filePath = "marketpost";
+    private String bucketName="drmbucketofficial";
 
     public String getUuidFileName(String fileName) {
         String ext = fileName.substring(fileName.indexOf(".") + 1);
         return UUID.randomUUID() + "." + ext;
     }
-    public FileDto uploadFile(MultipartFile multipartFile){
+    public FileDto uploadFile(String filePath, MultipartFile multipartFile){
         String originalFileName = multipartFile.getOriginalFilename();
         String uploadFileName = getUuidFileName(originalFileName);
         String uploadFileUrl = "";
@@ -50,7 +47,7 @@ public class FileService {
                             .withCannedAcl(CannedAccessControlList.PublicRead));
 
             // S3에 업로드한 폴더 및 파일 URL
-            uploadFileUrl = "https://kr.object.ncloudstorage.com/"+ bucketName + "/" + keyName;
+            uploadFileUrl = "https://drmbucketofficial.s3.ap-northeast-2.amazonaws.com/" + keyName;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,17 +70,17 @@ public class FileService {
         }
 
     }
-    public List<FileDto> uploadFiles(List<MultipartFile> multipartFiles) {
-
-
-        List<FileDto> s3files = new ArrayList<>();
-
-        for (MultipartFile multipartFile : multipartFiles) {
-            FileDto fileDto = uploadFile(multipartFile);
-            s3files.add(fileDto);
-        }
-
-        return s3files;
-    }
+//    public List<FileDto> uploadFiles(List<MultipartFile> multipartFiles) {
+//
+//
+//        List<FileDto> s3files = new ArrayList<>();
+//
+//        for (MultipartFile multipartFile : multipartFiles) {
+//            FileDto fileDto = uploadFile(multipartFile);
+//            s3files.add(fileDto);
+//        }
+//
+//        return s3files;
+//    }
 
 }

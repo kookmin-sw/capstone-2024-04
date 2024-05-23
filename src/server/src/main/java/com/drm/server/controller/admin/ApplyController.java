@@ -13,12 +13,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,12 +60,28 @@ public class ApplyController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    public ResponseEntity<APIResponse<List<MediaApplicationResponse.TotalApplicationInfo>>> getApplications(){
-        List<MediaApplication> mediaApplications = mediaApplicationService.findAllApplications();
+    public ResponseEntity<APIResponse<List<MediaApplicationResponse.TotalApplicationInfo>>> getApplications(@PageableDefault(size = 6) Pageable pageable){
+        List<MediaApplication> mediaApplications = mediaApplicationService.findAllApplications(pageable);
         List<MediaApplicationResponse.TotalApplicationInfo> mediaApplicationInfos = mediaApplications.stream().map(MediaApplicationResponse.TotalApplicationInfo::new).collect(Collectors.toList());
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, mediaApplicationInfos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/{applyId}")
+    @Operation(summary = "신청 id별 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "토큰 시간 만료, 형식 오류,로그아웃한 유저 접근,헤더에 값이 없을때",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "권한이 없는 경우",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+    })
+    public ResponseEntity<APIResponse<MediaApplicationResponse.TotalApplicationInfo>> findByApplyId (@PathVariable Long applyId){
+        MediaApplication mediaApplication = mediaApplicationService.findById(applyId);
+        MediaApplicationResponse.TotalApplicationInfo info = new MediaApplicationResponse.TotalApplicationInfo(mediaApplication);
+        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS,info);
+        return ResponseEntity.ok(response);    }
 
 }
 

@@ -1,8 +1,10 @@
 package com.drm.server.messageq;
 
+import com.drm.server.domain.dailyMediaBoard.DailyMediaBoard;
 import com.drm.server.domain.detectedface.DetectedFace;
 import com.drm.server.domain.detectedface.DetectedFaceRepository;
 import com.drm.server.domain.mediaApplication.MediaApplication;
+import com.drm.server.service.DailyDetailBoardService;
 import com.drm.server.service.DailyMediaBoardService;
 import com.drm.server.service.MediaApplicationService;
 import com.drm.server.service.PlayListService;
@@ -29,12 +31,13 @@ public class DetectedFaceConsumer {
     private final DetectedFaceRepository detectedFaceRepository;
     private final MediaApplicationService mediaApplicationService;
     private final DailyMediaBoardService dailyMediaBoardService;
+    private final DailyDetailBoardService dailyDetailBoardService;
 
 
     //컨슈머가 캐치하는 구간
     @KafkaListener(topics = "drm-face-topic")
     public void updateQty(String kafkaMessage) {
-        log.info("Kafka Message: ->" + kafkaMessage);
+        log.info("얼굴인식 Kafka Message: ->" + kafkaMessage);
 
         Map<Object, Object> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
@@ -52,6 +55,7 @@ public class DetectedFaceConsumer {
         MediaApplication mediaApplication = mediaApplicationService.findByCameraIdAndDate((Integer) map.get("cameraId"), detectedFace.getArriveAt());
         detectedFace.updateMediaApplication(mediaApplication);
         DetectedFace savedDetectedFace = detectedFaceRepository.save(detectedFace);
-        dailyMediaBoardService.updateDailyBoard(savedDetectedFace);
+        DailyMediaBoard dailyMediaBoard = dailyMediaBoardService.updateDailyBoard(savedDetectedFace);
+        dailyDetailBoardService.updateDatailBoard(detectedFace,dailyMediaBoard);
     }
 }

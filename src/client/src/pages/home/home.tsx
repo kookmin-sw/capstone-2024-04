@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import logoWhite from "../../assets/images/LogoWhite.svg";
-import infoCircle from "../../assets/icons/InfoCircle.svg";
+import leftArrow from "../../assets/icons/left-arrow.svg";
 import clipboardTextClockBlacksub from "../../assets/icons/clipboard-text-clock-blacksub.svg";
 import clipboardTextClockWhitesub from "../../assets/icons/clipboard-text-clock-whitesub.svg";
 import chartTimelineBlacksub from "../../assets/icons/chart-timeline-blacksub.svg";
 import chartTimelineWhitesub from "../../assets/icons/chart-timeline-whitesub.svg";
 import cogBlacksub from "../../assets/icons/cog-blacksub.svg";
 import cogWhitesub from "../../assets/icons/cog-whitesub.svg";
-import fileCompareBlacksub from "../../assets/icons/file-compare-blacksub.svg";
-import fileCompareWhitesub from "../../assets/icons/file-compare-whitesub.svg";
+import peopleBlacksub from "../../assets/icons/people-blacksub.svg";
+import peopleWhitesub from "../../assets/icons/people-whitesub.svg";
 import uploadBlacksub from "../../assets/icons/upload-blacksub.svg";
 import uploadWhitesub from "../../assets/icons/upload-whitesub.svg";
 import viewDashboardBlacksub from "../../assets/icons/view-dashboard-blacksub.svg";
@@ -16,14 +16,16 @@ import viewDashboardWhitesub from "../../assets/icons/view-dashboard-whitesub.sv
 import MenuButton from "../../components/menu_button";
 import PostMediaScreen from "./post-media/post_media";
 import { Body1, Headline1 } from "../../components/text";
-import CompareMediaScreen from "./compare-media/compare_media";
 import SettingScreen from "./setting/setting";
-import DashBoard from "./dashboard/dashboard";
+import DashBoard, { DashBoardMode } from "./dashboard/dashboard";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
-import Insight from "./insight/insight";
+import Insight, { InsightMode } from "./insight/insight";
 import HistoryScreen from "./history/history";
-import { UserInfo } from "../../interfaces/interface";
+import { MediaInfo, UserInfo } from "../../interfaces/interface";
+import defaultImageRectangle from "../../assets/images/default_rectangle.svg";
+import FootTrafficInfo from "./foot-traffic-info/foot_traffic_info";
+import { DashboardDetailProps } from "./dashboard/dashboard_detail";
 
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -32,16 +34,28 @@ const HomePage = () => {
   const [currMenuIdx, setCurrMenuIdx] = useState(0);
   const [currInfo, setCurrInfo] = useState<UserInfo | undefined | null>(null);
 
+  // 페이지 별 이동을 위한 state <- 리팩토링 필요
+  const [dashboardDetailProps, setDashboardDetailProps] =
+    useState<DashboardDetailProps | null>(null);
+  const [insightDetailProps, setInsightDetailProps] =
+    useState<MediaInfo | null>(null);
+
   const logout = () => {
     const cookies = new Cookies();
     // 인증 관련 토큰 제거
     cookies.remove("accessToken");
     cookies.remove("refreshToken");
+    // 사용자 정보 관련 토큰 제거
+    cookies.remove("userInfo");
+    cookies.remove("role");
     // 자동 로그인 설정 제거
     cookies.remove("autoLogin");
 
     navigate("/");
   };
+
+  const [dashboardMode, setDashboardMode] = useState(DashBoardMode.LIST);
+  const [insightMode, setInsightMode] = useState(InsightMode.LIST);
 
   const menuButtons = [
     {
@@ -49,7 +63,13 @@ const HomePage = () => {
       description: "해당 기간에 집행한 광고에 대한 통계를 확인할 수 있어요.",
       iconWhiteSrc: viewDashboardWhitesub,
       iconBlackSrc: viewDashboardBlacksub,
-      component: <DashBoard />,
+      component: (
+        <DashBoard
+          mode={dashboardMode}
+          setMode={setDashboardMode}
+          detailProps={dashboardDetailProps}
+        />
+      ),
     },
     {
       title: "인사이트",
@@ -57,15 +77,21 @@ const HomePage = () => {
         "하나의 광고에 대해 전체 기간의 통계를 한눈에 확인할 수 있어요.",
       iconWhiteSrc: chartTimelineWhitesub,
       iconBlackSrc: chartTimelineBlacksub,
-      component: <Insight />,
+      component: (
+        <Insight
+          mode={insightMode}
+          setMode={setInsightMode}
+          detailProps={insightDetailProps}
+        />
+      ),
     },
     {
-      title: "위치정보비교",
+      title: "유동인구정보",
       description:
         "각 위치별로 유동인구 정보를 비교할 수 있어요. 집행할 디스플레이 선택시 참고하면 좋아요.",
-      iconWhiteSrc: fileCompareWhitesub,
-      iconBlackSrc: fileCompareBlacksub,
-      component: <CompareMediaScreen />,
+      iconWhiteSrc: peopleWhitesub,
+      iconBlackSrc: peopleBlacksub,
+      component: <FootTrafficInfo />,
     },
     {
       title: "광고 등록",
@@ -79,14 +105,24 @@ const HomePage = () => {
       description: "전체 광고 히스토리를 확인할 수 있어요.",
       iconWhiteSrc: clipboardTextClockWhitesub,
       iconBlackSrc: clipboardTextClockBlacksub,
-      component: <HistoryScreen />,
+      component: (
+        <HistoryScreen
+          setMenuIndex={setCurrMenuIdx}
+          setDashboardMode={setDashboardMode}
+          setInsightMode={setInsightMode}
+          setDashboardDetailProps={setDashboardDetailProps}
+          setInsightDetailProps={setInsightDetailProps}
+        />
+      ),
     },
     {
       title: "설정",
       description: "",
       iconWhiteSrc: cogWhitesub,
       iconBlackSrc: cogBlacksub,
-      component: <SettingScreen userInfo={currInfo} setUserInfo={setCurrInfo} />,
+      component: (
+        <SettingScreen userInfo={currInfo} setUserInfo={setCurrInfo} />
+      ),
     },
   ];
 
@@ -115,6 +151,10 @@ const HomePage = () => {
             <img
               className="w-20 h-20 rounded-full bg-white"
               src={currInfo?.profileImage}
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                const target = e.target as HTMLImageElement;
+                target.src = defaultImageRectangle;
+              }}
             />
             <p className="font-medium text-base text-white pt-5 pb-2">
               {currInfo?.company}
@@ -131,7 +171,17 @@ const HomePage = () => {
                 iconBlackSrc={button.iconBlackSrc}
                 iconWhiteSrc={button.iconWhiteSrc}
                 isActive={index === currMenuIdx}
-                onClick={() => setCurrMenuIdx(index)}
+                onClick={() => {
+                  if (index !== 0) {
+                    // 대시보드가 아닌 메뉴 클릭 시 리스트 뷰로 초기화
+                    setDashboardMode(DashBoardMode.LIST);
+                  }
+                  if (index !== 1) {
+                    // 인사이트가 아닌 메뉴 클릭 시 리스트 뷰로 초기화
+                    setInsightMode(InsightMode.LIST);
+                  }
+                  setCurrMenuIdx(index);
+                }}
               />
             ))}
           </div>
@@ -176,7 +226,24 @@ const HomePage = () => {
               color="text-white_sub"
             />
           </div>
-          <img className="w-4 h-4 cursor-pointer" src={infoCircle} />
+          {currMenuIdx === 0 && dashboardMode === DashBoardMode.DETAIL && (
+            <div
+              className="flex gap-2 px-3 py-2 bg-white rounded-lg cursor-pointer"
+              onClick={() => setDashboardMode(DashBoardMode.LIST)}
+            >
+              <img src={leftArrow} />
+              <p className="text-xs">광고목록</p>
+            </div>
+          )}
+          {currMenuIdx === 1 && insightMode === InsightMode.DETAIL && (
+            <div
+              className="flex gap-2 px-3 py-2 bg-white rounded-lg cursor-pointer"
+              onClick={() => setInsightMode(InsightMode.LIST)}
+            >
+              <img src={leftArrow} />
+              <p className="text-xs">광고목록</p>
+            </div>
+          )}
         </div>
         <div className="h-full rounded-[10px] py-[50px] px-[30px] mt-6 mb-[60px] bg-white overflow-hidden">
           {/* 스크린 내부 */}

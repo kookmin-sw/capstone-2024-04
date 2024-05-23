@@ -1,9 +1,14 @@
 import { Subtitle1, Subtitle2 } from "../../../components/text";
 import { useEffect, useRef, useState } from "react";
 import { UserInfo } from "../../../interfaces/interface";
-import { patchPassword, patchProfile, verifyPassword } from "../../../api/user";
+import {
+  patchPassword,
+  patchProfile,
+  verifyPassword,
+} from "../../../api/client/user";
 import { toast } from "react-hot-toast";
 import Cookies from "universal-cookie";
+import defaultImageRectangle from "../../../assets/images/default_rectangle.svg";
 
 interface SettingScreenProps {
   userInfo: null | undefined | UserInfo;
@@ -97,6 +102,10 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
         <img
           className="w-[93px] h-[93px] rounded-full border-[1px] border-gray2"
           src={userInfo?.profileImage}
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            const target = e.target as HTMLImageElement;
+            target.src = defaultImageRectangle;
+          }}
         />
         <input
           type="file"

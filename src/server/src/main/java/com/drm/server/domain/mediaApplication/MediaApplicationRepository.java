@@ -2,15 +2,19 @@ package com.drm.server.domain.mediaApplication;
 
 import com.drm.server.domain.location.Location;
 import com.drm.server.domain.media.Media;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Repository
 public interface MediaApplicationRepository extends JpaRepository<MediaApplication,Long> {
     Optional<List<MediaApplication>> findByMedia(Media media);
     @Query("SELECT CASE WHEN COUNT(m.mediaApplicationId) > 0 THEN true ELSE false END FROM MediaApplication m " +
@@ -32,4 +36,53 @@ public interface MediaApplicationRepository extends JpaRepository<MediaApplicati
     );
 
     MediaApplication findFirstByOrderByCreateDateDesc();
+
+    Optional<List<MediaApplication>> findAllByLocation(Location location);
+    Optional<List<MediaApplication>> findByMediaInOrderByCreateDateDesc(List<Media> mediaList,Pageable pageable);
+
+    List<MediaApplication> findAllByOrderByCreateDateDesc(Pageable pageable);
+    @Query("SELECT ma FROM MediaApplication ma " +
+            "WHERE ma.media IN :mediaList " +
+            "AND ma.startDate <= :today " +
+            "AND (:status IS NULL OR ma.status = :status)" +
+            "ORDER BY ma.createDate DESC ")
+    Optional<List<MediaApplication>> findByMediaInAndDashboardData(
+            @Param("mediaList") List<Media> mediaList,
+            @Param("today") LocalDate today,
+            @Param("status") Status status,
+            Pageable Pageable);
+
+    @Query("SELECT CASE WHEN COUNT(ma) > 0 THEN true ELSE false END " +
+            "FROM MediaApplication ma " +
+            "WHERE ma.media = :media " +
+            "AND ma.startDate <= :today " +
+            "AND (:status IS NULL OR ma.status = :status)"+
+            "ORDER BY ma.createDate DESC "
+    )
+    boolean existsByMediaAndStartDateBeforeAndStatusIsNullOrStatus(
+            @Param("media") Media media,
+            @Param("today") LocalDate today,
+            @Param("status") Status status);
+
+    @Query("SELECT CASE WHEN COUNT(ma) > 0 THEN true ELSE false END " +
+            "FROM MediaApplication ma " +
+            "WHERE ma.media IN :mediaList " +
+            "AND ma.startDate <= :today " +
+            "AND ma.endDate >= :today " +
+            "AND ( ma.status = :status)")
+    boolean existsRunningMedia(
+            @Param("mediaList") List<Media> mediaList,
+            @Param("today") LocalDate today,
+            @Param("status") Status status);
+    @Query("SELECT CASE WHEN COUNT(ma) > 0 THEN true ELSE false END " +
+            "FROM MediaApplication ma " +
+            "WHERE (ma.media = :mediaList) " +
+            "AND ((ma.startDate <= :startDate AND ma.endDate >= :startDate) " +
+            "OR (ma.startDate <= :endDate AND ma.endDate >= :endDate)) " +
+            "AND ma.location = :location")
+    boolean existsByMediaBetweenDate(
+            @Param("mediaList") Media media,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("location") Location location);
 }

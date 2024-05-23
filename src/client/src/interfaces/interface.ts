@@ -30,6 +30,28 @@ export interface UserInfo {
     profileImage: string;
 }
 
+export interface TodayList {
+    playListId: number;
+    posting: boolean;
+    location: Location;
+    media: MediaInfo;
+}
+
+export interface MediaApplicationInfo {
+    applicationId: number;
+    startDate: string;
+    endDate: string;
+    status: string;
+    location: LocationInfo;
+    user: UserInfo;
+}
+
+export interface TotalApplicationInfo {
+    media: MediaInfo;
+    application: MediaApplicationInfo;
+}
+
+
 /** ETC */
 export interface SignUpPageProps {
     goToSignIn: any;
@@ -42,6 +64,33 @@ export interface SignInPageProps {
 export interface FindPasswordPageProps {
     goToSignIn: any;
 }
+
+export interface datePerDay {
+    date: string;
+}
+
+export interface DashboardDataInfo {
+    mediaAppsCnt: number; // 해당 광고에 집계된, 집행된 광고의 날짜수
+    hourlyInterestedCount: number[]; // 시간당 관심을 표현한 사람 수(0시 ~ 23시)
+    hourlyPassedCount: number[]; // 시간당 포착된 사람 수 (0시 ~ 23시)
+    hourlyAvgStaringTime: number[]; // 시간당 평균 응시 횟수 (0시 ~ 23시)
+    totalPeopleCount: number; // 전체 포착된 사람 수 
+    avgStaringTime: number; // 해당 광고 평균 시청 시간
+    avgAge: number; // 해당 광고 평균 시청 나이 
+    maleInterestCnt: number; // 관심을 표현한 남자 인원 수
+    femaleInterestCnt: number; // 관심을 표현한 여자의 인원수
+    maleCnt: number; // 집계된 남자의 인원 수
+}
+
+export interface LocationDataInfo{
+    mediaAppsCnt: number;
+    passedPeopleCntPerDay: number;
+    passedPeopleListPerHour: number[];
+    totalAgeRangeCount: number[];
+    avgMaleRatio: number;
+}
+
+
 
 export interface MenuButtonProps {
     title: string;
@@ -67,10 +116,22 @@ export interface MediaInfo {
     mediaLink: string,
     title: string,
     description: string,
-    dashboard: DashBoardInfo[],
+    dashboardId: number,
 }
 
 export interface DashBoardInfo {
     title: string,
     description: string,
+}
+
+export interface Create {
+    advertisementTitle: string,
+    advertisementDescription: string,
+    locationId: number,
+    startDate: string,
+    endDate: string,
+}
+
+export interface MediaApplicationList {
+    applyId: number[],
 }

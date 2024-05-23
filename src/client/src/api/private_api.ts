@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "ax
 import toast from 'react-hot-toast';
 import Cookies from "universal-cookie";
 import { ErrorResponse } from "../interfaces/interface";
-import { tokenRefresh } from "./auth";
+import { tokenRefresh } from "./client/auth";
 
 
 const API_ENDPOINT = import.meta.env.VITE_APP_API_ENDPOINT;
@@ -61,6 +61,10 @@ privateApi.interceptors.response.use((response: AxiosResponse) => {
             console.error('refreshToken이 만료되어 사라짐');
             toast.error('로그인 시간 제한이 만료되었습니다.');
         }
+    }
+
+    if (errorResponse) {
+        return errorResponse;
     }
 });
 
