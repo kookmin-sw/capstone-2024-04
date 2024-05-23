@@ -1,7 +1,7 @@
 # Do you Read me? (DRM)
 
-![IMG_0852](https://github.com/kookmin-sw/capstone-2024-04/assets/81795729/9a3f1840-a9ec-4075-86ec-2dca9c2bab85)
 
+<img src="src/model/img/output_video2.gif" alt="gif1" width="600" />
 
 
 ### 1. 프로젝트 소개
@@ -12,6 +12,7 @@
 
  The project "Do you read me?" is a B2B service designed to measure the level of interest subway passengers have in the display advertisements located above subway doors and analyze the attention of the floating population. This service provides advertisers with information about interested populations in the form of a dashboard. DRM helps advertisers optimize their ad campaigns and enhance the ROI (Return On Investment) of their advertising efforts. Initially, the service will be piloted with advertisement displays inside the trains of Seoul Metro Line 2, with plans to expand to other outdoor advertising analyses in the future.
 
+
 ### 3. 영상
 ### 3.1. 소개 영상(중간 발표)
 [![Video Label](http://img.youtube.com/vi/Qv744Msoz18/0.jpg)](https://youtu.be/Qv744Msoz18)
@@ -19,15 +20,20 @@
 ### 3.2 시연 영상
 [![Video Label](http://img.youtube.com/vi/15gxa_gtftI/0.jpg)](https://www.youtube.com/watch?v=15gxa_gtftI)
 
+### 4. 모델 워크플로우
+<img src="src/model/img/model_workflow.png" alt="img1" width="500"/>
 
-### 4. 팀 소개
+### 5. 소프트웨어 아키텍처
+<img src="src/model/img/software_architecture.png" alt="img2" width="500"/>
+
+### 6. 팀 소개
 
 |<img width="60" src="https://github.com/donggook-me.png">|<img width="60" src="https://github.com/ssoree912.png">|<img width="60" src="https://github.com/soobinheo.png">|<img width="60" src="https://github.com/khleexv.png">|<img width="60" src="https://github.com/Choi-Jiwon-38.png">|<img width="60" src="https://github.com/jangsumi.png">|
 |---|---|---|---|---|---|
 |[이동국(****2282)](https://github.com/donggook-me)|[황솔희(****3168)](https://github.com/ssoree912)|[허수빈(****1320)](https://github.com/soobinheo)|[이강희(****1653)](https://github.com/khleexv)|[최지원(****3091)](https://github.com/Choi-Jiwon-38)|[장수미(****3216)](https://github.com/jangsumi)|
 |Back-End|Back-End|AI|AI|Front-End|PM, Designer|
 
-### 5. 사용법
+### 7. 사용법
 
 Common
 ```bash
@@ -67,7 +73,7 @@ git clone https://github.com/kookmin-sw/capstone-2024-04.git
 </details>
 
 
-### 6. 최종 제출 자료
-🗂️ [포스터-지하철 탑승객 행동 기반 광고 관심도 분석 대시보드-4조.pdf](https://github.com/kookmin-sw/capstone-2024-04/files/15377478/-.-4.pdf) <br />
-🗂️ [최종발표-지하철 탑승객 행동 기반 광고 관심도 분석 대시보드-4조.pdf](https://github.com/kookmin-sw/capstone-2024-04/files/15377483/-.-4.pdf) <br />
-🗂️ [결과보고서-지하철 탑승객 행동 기반 광고 관심도 분석 대시보드-4조.pdf](https://github.com/kookmin-sw/capstone-2024-04/files/15377484/-.-4.pdf) <br />
+### 8. 최종 제출 자료
+🗂️ [포스터](https://github.com/kookmin-sw/capstone-2024-04/files/15377478/-.-4.pdf) <br />
+🗂️ [최종 발표 자료](https://github.com/kookmin-sw/capstone-2024-04/files/15377483/-.-4.pdf) <br />
+🗂️ [결과 보고서](https://github.com/kookmin-sw/capstone-2024-04/files/15377484/-.-4.pdf) <br />
