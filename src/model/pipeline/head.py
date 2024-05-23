@@ -1,8 +1,8 @@
 import os
 import sys
 
-# TODO: 저장소 경로 수정
-sys.path.append('/root/6DRepNet/sixdrepnet')
+HEAD_DIR = os.getenv('HEAD_DIR')
+sys.path.append(HEAD_DIR)
 
 import torch
 from torchvision import transforms
@@ -26,9 +26,10 @@ class Head:
                                deploy=True,
                                pretrained=False)
         self.detector = RetinaFace(gpu_id=0)
-        # TODO: 가중치 경로 수정
-        snapshot_path = '/root/6DRepNet/6DRepNet_300W_LP_AFLW2000.pth'
-        saved_state_dict = torch.load(os.path.join(snapshot_path), map_location='cpu')
+        HEAD_WEIGHT_PATH = os.getenv('HEAD_WEIGHT_PATH')
+        if HEAD_WEIGHT_PATH is None:
+            raise Exception('HEAD_WEIGHT_PATH is not given.')
+        saved_state_dict = torch.load(os.path.join(HEAD_WEIGHT_PATH), map_location='cpu')
         if 'model_state_dict' in saved_state_dict:
             self.model.load_state_dict(saved_state_dict['model_state_dict'])
         else:
@@ -74,10 +75,10 @@ class Head:
                 y_pred_deg = euler[:, 1].cpu().item()
                 r_pred_deg = euler[:, 2].cpu().item()
                 results.append((p_pred_deg, y_pred_deg, r_pred_deg))
-            
+
                 utils.plot_pose_cube(image,  y_pred_deg, p_pred_deg, r_pred_deg, x_min + int(.5*(
                     x_max-x_min)), y_min + int(.5*(y_max-y_min)), size=bbox_width)
-    
+
         if len(results) == 0:
             return 0
         else:
