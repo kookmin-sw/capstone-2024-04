@@ -1,5 +1,5 @@
 from tracker import Tracker
-from par import PAR
+from par_mivolo import PAR
 from look import LOOK
 from head import Head
 
@@ -18,7 +18,6 @@ class INFO:
     frame_out: int
     gender: str
     age: str
-    attention: float # 관심도 정도. 아직 정해지지 않음
     staring_list: list
 
 class Pipeline:
@@ -36,12 +35,6 @@ class Pipeline:
     def track(self, video_path):
         results = self.tracker.track(video_path)        
         return results
-        
-    def head_pose(self, image_array):
-        ...
-
-    def gaze(self, image_array):
-        ...
     
     def run(self, video_path, visualize = False) -> List[INFO]:
         """
