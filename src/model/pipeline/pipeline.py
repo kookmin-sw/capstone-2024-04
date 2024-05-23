@@ -1,6 +1,7 @@
 from tracker import Tracker
 from par import PAR
 from look import LOOK
+from head import Head
 
 from typing import List
 from dataclasses import dataclass
@@ -25,6 +26,8 @@ class Pipeline:
         self.tracker = Tracker()
         self.par = PAR()
         self.look = LOOK()
+        self.head = Head()
+
         
     def detect(self, image_path):
         results = self.tracker.detect(image_path)
@@ -104,7 +107,9 @@ class Pipeline:
                 kps_idx = (results[frame_id].boxes.id == track_id).nonzero()
                 kps = results[frame_id].keypoints.data[kps_idx].detach().cpu().numpy().squeeze(0)
                 out_look = self.look.predict(kps, image_size)
-                if out_look > 0.5:
+                out_head = self.head.predict(src)
+
+                if out_look > 0.5 or out_head > -20:
                     staring_list[frame_id - frame_in] = 1
                 
             age = max(ages.items(), key=lambda x:x[1])[0]
@@ -146,7 +151,7 @@ class Pipeline:
                     look = staring_list[frame_id - frame_in]
                     cv2.putText(frames[frame_id], f'{look}', (left, top+80), cv2.FONT_HERSHEY_SIMPLEX,
                                 1, GREEN if look else RED, 3, cv2.LINE_AA)
-            
+                                
             height, width, _ = frames[0].shape
             cap = cv2.VideoCapture(video_path)
             fps = cap.get(cv2.CAP_PROP_FPS)
