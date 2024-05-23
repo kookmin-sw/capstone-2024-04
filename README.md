@@ -24,7 +24,7 @@
 <img src="src/model/img/model_workflow.png" alt="img1" width="1200"/>
 
 ### 5. 소프트웨어 아키텍처
-<img src="src/model/img/software_architecture.jpeg" alt="img2" width="1200"/>
+<img src="src/model/img/software_architecture.png" alt="img2" width="1200"/>
 
 ### 6. 팀 소개
 
