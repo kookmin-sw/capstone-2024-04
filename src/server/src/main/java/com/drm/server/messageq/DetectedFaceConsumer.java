@@ -73,18 +73,14 @@ public class DetectedFaceConsumer {
         for(PlayListLog playListLogData : playListLog ){
             MediaApplication mediaApplication = playListService.getMediaApplicationFromPlaylistId(playListLogData.getPlaylistId());
             // playList 광고 시작, 전환 시간을 포함한 detectedFace save
+            // DetectedFace toEntity 내부에서 시간대 단위로 몇개 프레임에 해당되는 것까지 끊어지는지 계산하고
+            // 수치 업데이트하여 각자 저장.
             DetectedFace detectedFace = DetectedFace.toEntity(map, playListLogData.getStartTime(), playListLogData.getEndTime());
             detectedFace.updateMediaApplication(mediaApplication);
             DetectedFace savedDetectedFace = detectedFaceRepository.save(detectedFace);
             detectedFaceList.add(savedDetectedFace);
         }
 
-//         Mediaapplication를 찾아서 기존 detectedFace 넣기,
-//        DetectedFace detectedFace = DetectedFace.toEntity(map, startTimeList, arriveTimeList);
-////        기존 찾는 로직. 이거 없애고 playListLog 여기서 나온 값을 가지고 팢아서 넣으면 됨
-//        MediaApplication mediaApplication = mediaApplicationService.findByCameraIdAndDate((Integer) map.get("cameraId"), detectedFace.getArriveAt());
-//        detectedFace.updateMediaApplication(mediaApplication);
-//        DetectedFace savedDetectedFace = detectedFaceRepository.save(detectedFace);
 ////       갱신 대시보드 업데이트
 //        DailyMediaBoard dailyMediaBoard = dailyMediaBoardService.updateDailyBoard(savedDetectedFace);
 //        dailyDetailBoardService.updateDatailBoard(detectedFace,dailyMediaBoard);

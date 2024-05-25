@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -63,17 +65,55 @@ public class DetectedFace extends BaseTimeEntity {
         return makeDetectedFace(modelRequest, arriveAt, leaveAt);
     }
 
-    private static DetectedFace makeDetectedFace(Map<Object, Object> modelRequest, LocalDateTime arriveAt, LocalDateTime leaveAt){
+    private static DetectedFace makeDetectedFace(Map<Object, Object> modelRequest, LocalDateTime startAt, LocalDateTime endAt) {
+        // Split data
+        // 사람별 등장, 퇴장 시간
+        List<Integer> arriveTimeList = (List<Integer>) modelRequest.get("startAt");
+        List<Integer> leaveTimeList = (List<Integer>) modelRequest.get("leaveAt");
+        LocalDateTime arriveAt = KoreaLocalDateTime.datTimeListToLocalDateTime(arriveTimeList);
+        LocalDateTime leaveAt = KoreaLocalDateTime.datTimeListToLocalDateTime(leaveTimeList);
+
+        // FPS (frames per second)
+        int fps = (Integer) modelRequest.get("fps");
+
+
+        // 광고별 시작 종료 시간
+        // startAt, endAt are already provided as parameters
+        int startFrameIndex = -1;
+        int endFrameIndex = -1;
+
+        if (!startAt.isBefore(arriveAt) && !startAt.isAfter(leaveAt)) {
+            startFrameIndex = (int) Duration.between(arriveAt, startAt).getSeconds() * fps;
+        }
+        if (!endAt.isBefore(arriveAt) && !endAt.isAfter(leaveAt)) {
+            endFrameIndex = (int) Duration.between(arriveAt, endAt).getSeconds() * fps;
+        }
+
+        // Extract staring data within the frame range
+        List<Boolean> staringData = (List<Boolean>) modelRequest.get("staringData");
+        List<Boolean> mappedStaringData = staringData.subList(Math.max(0, startFrameIndex), Math.min(staringData.size(), endFrameIndex));
+
+        // Update faceCaptureCnt and entireCaptureCnt based on mappedStaringData
+        int faceCaptureCnt = (int) modelRequest.get("interestFrameCnt");
+        int entireCaptureCnt = (int) modelRequest.get("passedFrameCnt");
+
+        // Optional: Recalculate based on the mapped staring data
+        // Assuming interestFrameCnt is the count of true values in the staring data
+        faceCaptureCnt = (int) mappedStaringData.stream().filter(b -> b).count();
+        entireCaptureCnt = mappedStaringData.size();
+
+        // Create the DetectedFace instance
         DetectedFace detectedFace = DetectedFace.builder()
-                .faceCaptureCnt((Integer) modelRequest.get("interestFrameCnt"))
-                .entireCaptureCnt((Integer) modelRequest.get("passedFrameCnt"))
-                .staring((List<Boolean>) modelRequest.get("staringData"))
+                .faceCaptureCnt(faceCaptureCnt)
+                .entireCaptureCnt(entireCaptureCnt)
+                .staring(mappedStaringData)
                 .arriveAt(arriveAt)
                 .leaveAt(leaveAt)
-                .age((Integer)modelRequest.get("age"))
-                .male((Integer)modelRequest.get("male")==1?true:false)
-                .fps((Integer) modelRequest.get("fps"))
+                .age((Integer) modelRequest.get("age"))
+                .male((Integer) modelRequest.get("male") == 1)
+                .fps(fps)
                 .build();
+
         return detectedFace;
     }
 }
