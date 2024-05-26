@@ -34,28 +34,58 @@ public class DetectedFaceConsumer {
     private final DailyDetailBoardService dailyDetailBoardService;
 
 
-    //컨슈머가 캐치하는 구간
+  //   컨슈머가 캐치하는 구간
+//    @KafkaListener(topics = "drm-face-topic")
+////    @KafkaListener(topics = "drm-face-topic", containerFactory = "kafkaBatchListeningFactory")
+//    public void updateQty(String kafkaMessage) {
+//        log.info("얼굴인식 Kafka Message: ->" + kafkaMessage);
+//
+//        Map<Object, Object> map = new HashMap<>();
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            map = mapper.readValue(kafkaMessage, new TypeReference<Map<Object, Object>>() {});
+//        } catch (JsonProcessingException ex) {
+//            ex.printStackTrace();
+//        }
+//
+//        List<Integer> startTimeList = (List<Integer>) map.get("startAt");
+//        List<Integer> arriveTimeList = (List<Integer>) map.get("leaveAt");
+//
+//        DetectedFace detectedFace = DetectedFace.toEntity(map, startTimeList, arriveTimeList);
+//
+//        MediaApplication mediaApplication = mediaApplicationService.findByCameraIdAndDate((Integer) map.get("cameraId"), detectedFace.getArriveAt());
+//        detectedFace.updateMediaApplication(mediaApplication);
+//        DetectedFace savedDetectedFace = detectedFaceRepository.save(detectedFace);
+//        DailyMediaBoard dailyMediaBoard = dailyMediaBoardService.updateDailyBoard(savedDetectedFace);
+//        dailyDetailBoardService.updateDatailBoard(detectedFace,dailyMediaBoard);
+//    }
+
+//    컨슈머가 캐치하는 구간 -> Batch Listener
     @KafkaListener(topics = "drm-face-topic")
-    public void updateQty(String kafkaMessage) {
-        log.info("얼굴인식 Kafka Message: ->" + kafkaMessage);
+    public void updateBatchQty(List<String> kafkaMessages) {
+        for (String kafkaMessage : kafkaMessages) {
+            log.info("얼굴인식 Kafka Message: ->" + kafkaMessage);
 
-        Map<Object, Object> map = new HashMap<>();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            map = mapper.readValue(kafkaMessage, new TypeReference<Map<Object, Object>>() {});
-        } catch (JsonProcessingException ex) {
-            ex.printStackTrace();
+            // Your existing processing logic for each Kafka message
+            Map<Object, Object> map = new HashMap<>();
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                map = mapper.readValue(kafkaMessage, new TypeReference<Map<Object, Object>>() {
+                });
+            } catch (JsonProcessingException ex) {
+                ex.printStackTrace();
+            }
+
+            List<Integer> startTimeList = (List<Integer>) map.get("startAt");
+            List<Integer> arriveTimeList = (List<Integer>) map.get("leaveAt");
+
+            DetectedFace detectedFace = DetectedFace.toEntity(map, startTimeList, arriveTimeList);
+
+            MediaApplication mediaApplication = mediaApplicationService.findByCameraIdAndDate((Integer) map.get("cameraId"), detectedFace.getArriveAt());
+            detectedFace.updateMediaApplication(mediaApplication);
+            DetectedFace savedDetectedFace = detectedFaceRepository.save(detectedFace);
+            DailyMediaBoard dailyMediaBoard = dailyMediaBoardService.updateDailyBoard(savedDetectedFace);
+            dailyDetailBoardService.updateDatailBoard(detectedFace, dailyMediaBoard);
         }
-
-        List<Integer> startTimeList = (List<Integer>) map.get("startAt");
-        List<Integer> arriveTimeList = (List<Integer>) map.get("leaveAt");
-
-        DetectedFace detectedFace = DetectedFace.toEntity(map, startTimeList, arriveTimeList);
-
-        MediaApplication mediaApplication = mediaApplicationService.findByCameraIdAndDate((Integer) map.get("cameraId"), detectedFace.getArriveAt());
-        detectedFace.updateMediaApplication(mediaApplication);
-        DetectedFace savedDetectedFace = detectedFaceRepository.save(detectedFace);
-        DailyMediaBoard dailyMediaBoard = dailyMediaBoardService.updateDailyBoard(savedDetectedFace);
-        dailyDetailBoardService.updateDatailBoard(detectedFace,dailyMediaBoard);
     }
 }

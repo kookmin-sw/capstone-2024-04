@@ -13,6 +13,7 @@ import com.drm.server.domain.playlist.PlayListRepository;
 import com.drm.server.domain.user.User;
 import com.drm.server.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import software.amazon.ion.NullValueException;
@@ -25,6 +26,7 @@ import java.util.List;
 
 import static com.drm.server.domain.mediaApplication.Status.WAITING;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MediaApplicationService {
@@ -37,7 +39,9 @@ public class MediaApplicationService {
         MediaApplication mediaApplication = MediaApplication.toEntity(startDate, endDate, media, location);
 //        같은 장소에 송출 날짜 겹치는 경우 예외
         verifyDuplicateMediaInSameLocation(mediaApplication);
-        return mediaApplicationRepository.save(mediaApplication);
+        MediaApplication saved = mediaApplicationRepository.save(mediaApplication);
+        log.info("CREATE MEDIA APPLICATION : " + saved.getMediaApplicationId());
+        return saved;
     }
     public void deleteMediaApplication(Long mediaId, Long mediaApplicationId, User user){
         MediaApplication mediaApplication = findById( mediaApplicationId);
@@ -94,9 +98,12 @@ public class MediaApplicationService {
         if(mediaApplication.getMedia().getMediaId() != mediaId) throw new IllegalArgumentException("mediaId가 잘못되었습니다");
     }
     public void verifyUser(MediaApplication mediaApplication, User user){
-        if(!mediaApplication.getMedia().getDashboard().getUser().equals(user)) throw new ForbiddenException("해당 신청에 접근 권한이 없습니다");
+        // 객체 동등한지 여부 확인 -> Id 값 수정으로 변경 (Test 코드에서 복사해와서 함수 실행하는 부분 편리를 위해)
+        //        if(!mediaApplication.getMedia().getDashboard().getUser().equals(user)) throw new ForbiddenException("해당 신청에 접근 권한이 없습니다");
+        if(mediaApplication.getMedia().getDashboard().getUser().getUserId() != user.getUserId()) throw new ForbiddenException("해당 신청에 접근 권한이 없습니다");
     }
 
+    // 아래는 삭제할때 MediaApp - user 의 일치를 확인하는 verify
     public void deleteVerify(MediaApplication mediaApplication, User user){
         verifyUser(mediaApplication,user);
         if(!mediaApplication.getStatus().equals(WAITING)) throw new ForbiddenException("신청 대기일때만 삭제 가능합니다");

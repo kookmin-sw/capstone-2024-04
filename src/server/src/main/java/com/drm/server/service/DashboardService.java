@@ -101,7 +101,7 @@ public class DashboardService {
         // 광고 집행 단위가 유저의 것인지 확인
         User user = userService.getUser(userId);
         MediaApplication mediaApplication = mediaApplicationService.findById(mediaApplicationId);
-        mediaApplicationService.deleteVerify(mediaApplication, user);
+        mediaApplicationService.verifyUser(mediaApplication, user);
         // 일별 데이터 조회
         DailyMediaBoard board = dailyMediaBoardService.findDailyBoardByDateAndApplication(mediaApplication, date);
 
@@ -169,7 +169,7 @@ public class DashboardService {
 
     public DashboardResponse.DashboardDetailDataInfo getDashboardFiltered(Long userId, Long dashboardId, boolean male, boolean female, List<Boolean> ageRanges) {
         verifyUser(userId, dashboardId);
-        if(ageRanges.size() != 7) throw new IllegalArgumentException("FILTER DASHBOARD SEARCH FAILED : AGE RANGES DOES NOT HAVE 7 COLUMN");
+        if(ageRanges.size() != 6) throw new IllegalArgumentException("FILTER DASHBOARD SEARCH FAILED : AGE RANGES DOES NOT HAVE 6 COLUMN");
         DashboardResponse.DashboardDetailDataInfo infoSum = new DashboardResponse.DashboardDetailDataInfo();
         List<MediaApplication> mediaAppList = findMediaApplicationByDashboardId(userId, dashboardId);
 
@@ -180,18 +180,28 @@ public class DashboardService {
                 // 해당 집행된 광고에 대한 age / male or female 여부에 따른 합계
                 for (int i = 0; i < ageRanges.size(); i++) {
                     if (ageRanges.get(i)) {
-                        if (male) {
-                            List<DailyDetailBoard> detailBoards = dailyDetailBoardService.findDetailBoardByDailyBoard(board, (i + 1), true);
-                            for (DailyDetailBoard detailBoard : detailBoards) {
-                                infoSum.addDetailData(detailBoard);
+                        // 마지막 range -> 60대 이상의 경우 60,70,80,90대 조회 후 합계
+                        int range = i+1; // 나이대 range -> 1,2,3,4,5,6 (10대,20대,30대,40대,50대,60대 이상)
+                        if(range == 6){
+                            for (int j=i; j<=9; j++){
+                                if (male) {
+                                    addDetailDashboardData(board, infoSum, j, true);
+                                }
+                                if (female) {
+                                    addDetailDashboardData(board, infoSum, j, false);
+                                }
                             }
                         }
-                        if (female) {
-                            List<DailyDetailBoard> detailBoards = dailyDetailBoardService.findDetailBoardByDailyBoard(board, (i + 1), false);
-                            for (DailyDetailBoard detailBoard : detailBoards) {
-                                infoSum.addDetailData(detailBoard);
+                        // 10,20,30,40,50 대의 경우 해당 구간만 조회하여 반영
+                        else {
+                            if (male) {
+                                addDetailDashboardData(board, infoSum, range, true);
+                            }
+                            if (female) {
+                                addDetailDashboardData(board, infoSum, range, false);
                             }
                         }
+
                     }
                 }
             }
@@ -199,5 +209,15 @@ public class DashboardService {
         return infoSum;
 
     }
+
+    private DashboardResponse.DashboardDetailDataInfo addDetailDashboardData(DailyMediaBoard board, DashboardResponse.DashboardDetailDataInfo infoSum,  int ageRangeVal, Boolean maleCheck){
+        List<DailyDetailBoard> detailBoards = dailyDetailBoardService.findDetailBoardByDailyBoard(board, ageRangeVal, maleCheck);
+        for (DailyDetailBoard detailBoard : detailBoards) {
+            infoSum.addDetailData(detailBoard);
+        }
+        return infoSum;
+    }
+
+
 }
 
