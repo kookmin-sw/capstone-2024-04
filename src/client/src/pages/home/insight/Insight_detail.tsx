@@ -21,7 +21,7 @@ interface FilteredInfo {
 }
 
 const InsightDetail = ({ detailInfo }: any) => {
-  const [ageRanges, setAgeRanges] = useState<boolean[]>(Array(7).fill(false));
+  const [ageRanges, setAgeRanges] = useState<boolean[]>(Array(6).fill(false));
   const [ageRangesCount, setAgeRangesCount] = useState<number>(0);
   const [openModal, setOpenModal] = useState(false);
   const [male, setMale] = useState<boolean>(false);
@@ -188,7 +188,7 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 gap-3 border-[1px] row-span-2 col-span-2 rounded">
             <h3 className="text-base font-medium">전체 타겟층의 수</h3>
             <p className="text-[40px] font-light">
-              {`${filteredData ? filteredData.totalPepleCount || 78  : 0}명`}
+              {`${filteredData ? filteredData.totalPepleCount || 78 : 0}명`}
             </p>
             <p className="text-[#6b6b6b] text-xs">
               해당 광고 앞을 지나간 사람이 광고 타겟층인 경우
@@ -215,7 +215,11 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 border-[1px] row-span-4 col-span-2 rounded">
             <h3 className="text-base font-medium">타겟층의 광고 관심도</h3>
             <p className="text-[40px]">
-              {`${filteredData ? filteredData.attentionRatio || (56 / 78 * 100).toFixed(1) : 0}%`}
+              {`${
+                filteredData
+                  ? filteredData.attentionRatio || ((56 / 78) * 100).toFixed(1)
+                  : 0
+              }%`}
             </p>
             <TargetInterestChart
               series={
