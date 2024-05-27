@@ -71,6 +71,7 @@ export interface datePerDay {
 
 export interface DashboardDataInfo {
     mediaAppsCnt: number; // 해당 광고에 집계된, 집행된 광고의 날짜수
+    interestedPeopleAgeRangeCount: number[];
     hourlyInterestedCount: number[]; // 시간당 관심을 표현한 사람 수(0시 ~ 23시)
     hourlyPassedCount: number[]; // 시간당 포착된 사람 수 (0시 ~ 23시)
     hourlyAvgStaringTime: number[]; // 시간당 평균 응시 횟수 (0시 ~ 23시)
