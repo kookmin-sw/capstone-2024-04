@@ -266,7 +266,10 @@ const DashBoardDetail = ({
           </p>
           <MixedChart
             total={data.hourlyPassedCount}
-            interest={data.hourlyInterestedCount}
+            interest={data.hourlyPassedCount.map((passed, index) => {
+              const interested = data.hourlyInterestedCount[index];
+              return passed === 0 ? 0 : ((interested / passed) * 100) | 0; // float가 아닌 int 형태
+            })}
           />
         </div>
       </div>
