@@ -13,6 +13,7 @@ import {
   GetAdUnitDashboardProps,
   getAdUnitDashboard,
 } from "../../../api/client/dashboard";
+import { toast } from "react-hot-toast";
 
 export enum DashBoardMode {
   LIST,
@@ -46,6 +47,8 @@ const DashBoard = ({ mode, setMode, detailProps }: any) => {
       setSelectedData(result.data.data);
       setMode(DashBoardMode.DETAIL);
       return true;
+    } else if (result.status === 500) {
+      toast.error("현재 대시보드에 접근할 수 없습니다.");
     }
     return false;
   };
