@@ -104,28 +104,6 @@ const DashBoardDetail = ({
     loadDashboardWithLocation();
   }, [locationId]);
 
-  const dummy: DashboardDataInfo = {
-    mediaAppsCnt: 25,
-    hourlyInterestedCount: [
-      20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6, 20,
-      31, 50, 20, 30, 6,
-    ],
-    hourlyPassedCount: [
-      15, 28, 45, 20, 25, 7, 19, 30, 48, 18, 27, 5, 20, 31, 50, 20, 30, 6, 20,
-      31, 50, 20, 30, 6,
-    ],
-    hourlyAvgStaringTime: [
-      2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3,
-      9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2,
-    ],
-    totalPeopleCount: 254,
-    avgStaringTime: 3.1,
-    avgAge: 27.2,
-    maleInterestCnt: 102,
-    femaleInterestCnt: 72,
-    maleCnt: 200,
-  };
-
   return (
     <div className="min-w-[920px] w-full h-full overflow-y-scroll flex flex-col">
       <div className="flex justify-between items-start">
@@ -179,13 +157,13 @@ const DashBoardDetail = ({
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">총 유동인구수</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {dummy.totalPeopleCount.toLocaleString("ko-KR")}명
+              {data.totalPeopleCount.toLocaleString("ko-KR")}명
             </p>
           </div>
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">관심 인구수</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {(dummy.maleInterestCnt + dummy.femaleInterestCnt).toLocaleString(
+              {(data.maleInterestCnt + data.femaleInterestCnt).toLocaleString(
                 "ko-KR"
               )}
               명
@@ -195,8 +173,8 @@ const DashBoardDetail = ({
             <p className="text-base font-medium">광고 관심도</p>
             <p className="my-4 text-center font-light text-[26px]">
               {(
-                ((dummy.maleInterestCnt + dummy.femaleInterestCnt) /
-                  dummy.totalPeopleCount) *
+                ((data.maleInterestCnt + data.femaleInterestCnt) /
+                  data.totalPeopleCount) *
                 100
               ).toFixed(1)}
               %
@@ -205,7 +183,7 @@ const DashBoardDetail = ({
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">시선 고정시간</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {dummy.avgStaringTime}초
+              {data.avgStaringTime}초
             </p>
           </div>
         </div>
@@ -218,8 +196,8 @@ const DashBoardDetail = ({
             <div className="flex h-full justify-center items-center">
               <InterestPeopleChart
                 interestPeopleCount={[
-                  dummy.maleInterestCnt,
-                  dummy.femaleInterestCnt,
+                  data.maleInterestCnt,
+                  data.femaleInterestCnt,
                 ]}
               />
             </div>
