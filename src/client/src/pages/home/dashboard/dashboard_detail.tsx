@@ -211,8 +211,35 @@ const DashBoardDetail = ({
             </p>
             <InterestBar
               interestAge={[
-                { name: "10대", data: [10] },
-                { name: "20대", data: [13] },
+                {
+                  name: "10대",
+                  data: [data.interestedPeopleAgeRangeCount[0]],
+                },
+                {
+                  name: "20대",
+                  data: [data.interestedPeopleAgeRangeCount[1]],
+                },
+                {
+                  name: "30대",
+                  data: [data.interestedPeopleAgeRangeCount[2]],
+                },
+                {
+                  name: "40대",
+                  data: [data.interestedPeopleAgeRangeCount[3]],
+                },
+                {
+                  name: "50대",
+                  data: [data.interestedPeopleAgeRangeCount[4]],
+                },
+                {
+                  name: "60대 이상",
+                  data: [
+                    data.interestedPeopleAgeRangeCount[5] +
+                      data.interestedPeopleAgeRangeCount[6] +
+                      data.interestedPeopleAgeRangeCount[7] +
+                      data.interestedPeopleAgeRangeCount[8],
+                  ],
+                },
               ]}
             />
             <p className="text-base font-medium">전체 유동인구 나이대</p>
