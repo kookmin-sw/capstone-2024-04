@@ -167,7 +167,7 @@ const DashBoardDetail = ({
         <p className="text-base">광고 관심도 분석 결과</p>
         <DatePicker
           minDate={dayjs(date[0])}
-          maxDate={dayjs(date[1])}
+          maxDate={dayjs(date[1]) < dayjs() ? dayjs(date[1]) : dayjs()}
           disabled={date.length === 0}
           onChange={(_, dateString) => {
             setSelectedDate(dateString as string);
