@@ -168,6 +168,7 @@ const DashBoardDetail = ({
         <DatePicker
           minDate={dayjs(date[0])}
           maxDate={dayjs(date[1])}
+          disabled={date.length === 0}
           onChange={(_, dateString) => {
             setSelectedDate(dateString as string);
           }}
