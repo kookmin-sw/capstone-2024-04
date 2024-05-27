@@ -48,16 +48,14 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
       const userInfo: UserInfo = loginData.userInfo;
       const role = loginData.authority;
 
-      await Promise.all([
-        // 쿠키에 토큰 저장
-        cookies.set("accessToken", accessToken),
-        cookies.set("refreshToken", refreshToken, { maxAge: expirationTime }),
-        // 자동 로그인 체크박스 체킹 여부에 따라 쿠키 설정
-        cookies.set("autoLogin", autoLogin),
-        // 사용자 정보 저장
-        cookies.set("userInfo", userInfo),
-        cookies.set("role", role),
-      ]);
+      // 쿠키에 토큰 저장
+      cookies.set("accessToken", accessToken);
+      cookies.set("refreshToken", refreshToken, { maxAge: expirationTime });
+      // 자동 로그인 체크박스 체킹 여부에 따라 쿠키 설정
+      cookies.set("autoLogin", autoLogin);
+      // 사용자 정보 저장
+      cookies.set("userInfo", userInfo);
+      cookies.set("role", role);
       navigate("/home");
 
       return true;
@@ -76,16 +74,14 @@ const SignInPage = ({ goToSignUp, goToFindPassword }: SignInPageProps) => {
       const userInfo: UserInfo = loginData.userInfo;
       const role = loginData.authority;
 
-      await Promise.all([
-        // 쿠키에 토큰 저장
-        cookies.set("accessToken", accessToken),
-        cookies.set("refreshToken", refreshToken, { maxAge: expirationTime }),
-        // 자동 로그인 체크박스 체킹 여부에 따라 쿠키 설정
-        cookies.set("autoLogin", autoLogin),
-        // 사용자 정보 저장
-        cookies.set("userInfo", userInfo),
-        cookies.set("role", role),
-      ]);
+      // 쿠키에 토큰 저장
+      cookies.set("accessToken", accessToken);
+      cookies.set("refreshToken", refreshToken, { maxAge: expirationTime });
+      // 자동 로그인 체크박스 체킹 여부에 따라 쿠키 설정
+      cookies.set("autoLogin", autoLogin);
+      // 사용자 정보 저장
+      cookies.set("userInfo", userInfo);
+      cookies.set("role", role);
       navigate("/admin");
 
       return true;
