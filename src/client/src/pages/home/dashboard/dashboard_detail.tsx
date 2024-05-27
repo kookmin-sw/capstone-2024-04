@@ -172,11 +172,13 @@ const DashBoardDetail = ({
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">광고 관심도</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {(
-                ((data.maleInterestCnt + data.femaleInterestCnt) /
-                  data.totalPeopleCount) *
-                100
-              ).toFixed(1)}
+              {data.totalPeopleCount === 0
+                ? "0.0"
+                : (
+                    ((data.maleInterestCnt + data.femaleInterestCnt) /
+                      data.totalPeopleCount) *
+                    100
+                  ).toFixed(1)}
               %
             </p>
           </div>
