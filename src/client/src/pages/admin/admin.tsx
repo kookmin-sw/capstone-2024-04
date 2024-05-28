@@ -96,16 +96,16 @@ const AdminPage = () => {
           <div className="flex flex-col w-[180px] mt-12 items-center">
             <img
               className="w-20 h-20 rounded-full bg-white"
-              src={currInfo?.profileImage}
+              src={currInfo?.profileImage || defaultImageRectangle}
               onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
                 const target = e.target as HTMLImageElement;
                 target.src = defaultImageRectangle;
               }}
             />
             <p className="font-medium text-base text-white pt-5 pb-2">
-              {currInfo?.company}
+              {currInfo?.company || "관리자"}
             </p>
-            <p className="text-white">{currInfo?.email}</p>
+            <p className="text-white">{currInfo?.email || "admin@email"}</p>
           </div>
         </div>
         <div className="flex-grow bg-[#F0F2F5] flex flex-col justify-between">

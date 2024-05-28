@@ -101,7 +101,7 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
         <Subtitle2 text="프로필 사진" color="text-black" />
         <img
           className="w-[93px] h-[93px] rounded-full border-[1px] border-gray2"
-          src={userInfo?.profileImage}
+          src={userInfo?.profileImage || defaultImageRectangle}
           onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
             const target = e.target as HTMLImageElement;
             target.src = defaultImageRectangle;
@@ -119,11 +119,11 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
         </button>
         <Subtitle1 text="아이디" color="text-placeholder" />
         <div className="flex items-center w-[320px] h-12 rounded-md border-[1px] border-gray2 px-6">
-          {userInfo?.email}
+          {userInfo?.email || "admin@email"}
         </div>
         <Subtitle1 text="회사명" color="text-placeholder" />
         <div className="flex items-center w-[320px] h-12 rounded-md border-[1px] border-gray2 px-6">
-          {userInfo?.company}
+          {userInfo?.company || "관리자"}
         </div>
         <Subtitle1 text="비밀번호" color="text-placeholder" />
         <button
