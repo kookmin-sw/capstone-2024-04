@@ -325,12 +325,41 @@ const InsightDetail = ({ detailInfo }: any) => {
               광고에 관심을 보인 사람의 나이대를 분석했어요.
             </p>
             <TotalBar
-              totalAge={[
-                { name: "10대", data: [10] },
-                { name: "20대", data: [13] },
-                { name: "30대", data: [1] },
-                { name: "40대", data: [19] },
-              ]}
+              totalAge={
+                data && data.totalPeopleAgeRangeCount !== null
+                  ? [
+                      {
+                        name: "10대",
+                        data: [data.totalPeopleAgeRangeCount[0]],
+                      },
+                      {
+                        name: "20대",
+                        data: [data.totalPeopleAgeRangeCount[1]],
+                      },
+                      {
+                        name: "30대",
+                        data: [data.totalPeopleAgeRangeCount[2]],
+                      },
+                      {
+                        name: "40대",
+                        data: [data.totalPeopleAgeRangeCount[3]],
+                      },
+                      {
+                        name: "50대",
+                        data: [data.totalPeopleAgeRangeCount[4]],
+                      },
+                      {
+                        name: "60대 이상",
+                        data: [
+                          data.totalPeopleAgeRangeCount[5] +
+                            data.totalPeopleAgeRangeCount[6] +
+                            data.totalPeopleAgeRangeCount[7] +
+                            data.totalPeopleAgeRangeCount[8],
+                        ],
+                      },
+                    ]
+                  : []
+              }
             />
           </div>
         </div>

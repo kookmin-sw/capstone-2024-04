@@ -256,14 +256,41 @@ const DashBoardDetail = ({
               광고 디스플레이 앞을 지나간 모든 사람의 나이대는 다음과 같아요.
             </p>
             <TotalBar
-              totalAge={[
-                { name: "10대", data: [10] },
-                { name: "20대", data: [13] },
-                { name: "30대", data: [1] },
-                { name: "40대", data: [19] },
-                { name: "50대", data: [19] },
-                { name: "60대 이상", data: [19] },
-              ]}
+              totalAge={
+                data.totalPeopleAgeRangeCount
+                  ? [
+                      {
+                        name: "10대",
+                        data: [data.totalPeopleAgeRangeCount[0]],
+                      },
+                      {
+                        name: "20대",
+                        data: [data.totalPeopleAgeRangeCount[1]],
+                      },
+                      {
+                        name: "30대",
+                        data: [data.totalPeopleAgeRangeCount[2]],
+                      },
+                      {
+                        name: "40대",
+                        data: [data.totalPeopleAgeRangeCount[3]],
+                      },
+                      {
+                        name: "50대",
+                        data: [data.totalPeopleAgeRangeCount[4]],
+                      },
+                      {
+                        name: "60대 이상",
+                        data: [
+                          data.totalPeopleAgeRangeCount[5] +
+                            data.totalPeopleAgeRangeCount[6] +
+                            data.totalPeopleAgeRangeCount[7] +
+                            data.totalPeopleAgeRangeCount[8],
+                        ],
+                      },
+                    ]
+                  : []
+              }
             />
           </div>
         </div>
