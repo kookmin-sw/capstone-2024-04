@@ -77,8 +77,6 @@ const InsightDetail = ({ detailInfo }: any) => {
 
     newAgeRanges[index] = status;
     setAgeRanges(newAgeRanges);
-
-    console.log(ageRanges);
   };
 
   const loadDashboardData = async () => {
@@ -174,6 +172,17 @@ const InsightDetail = ({ detailInfo }: any) => {
                 type="button"
                 className="mt-[72px] bg-main text-white py-3 px-10 rounded"
                 onClick={async () => {
+                  if (!male && !female) {
+                    toast.error("타겟층의 성별을 적어도 하나 선택해야 합니다.");
+                    return false;
+                  }
+                  if (ageRangesCount === 0) {
+                    toast.error(
+                      "타겟층의 나이대를 적어도 하나 선택해야 합니다."
+                    );
+                    return false;
+                  }
+
                   if (detailInfo) {
                     const result = await getFilteredDashboardWithAgeAndGender({
                       dashboardId: detailInfo?.dashboardId,
@@ -250,18 +259,24 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 border-[1px] row-span-4 col-span-2 rounded">
             <h3 className="text-base font-medium">타겟층의 광고 관심도</h3>
             <p className="text-[40px]">
-              {`${filteredData ? filteredData.attentionRatio.toFixed(1) : 0}%`}
+              {`${
+                filteredData
+                  ? (filteredData.attentionRatio * 100).toFixed(1)
+                  : 0
+              }%`}
             </p>
             <TargetInterestChart
-              series={
-                filteredData
-                  ? [
-                      filteredData?.interestPeopleCnt,
-                      filteredData?.totalPepleCount -
-                        filteredData?.interestPeopleCnt,
-                    ]
-                  : []
-              }
+              series={[
+                filteredData && filteredData.interestPeopleCnt
+                  ? filteredData.interestPeopleCnt
+                  : 0,
+                (filteredData && filteredData.totalPepleCount
+                  ? filteredData.totalPepleCount
+                  : 0) -
+                  (filteredData && filteredData.interestPeopleCnt
+                    ? filteredData.interestPeopleCnt
+                    : 0),
+              ]}
             />
           </div>
         </div>
