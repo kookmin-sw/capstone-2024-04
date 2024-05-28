@@ -88,7 +88,7 @@ const DashBoardDetail = ({
         date: selectedDate,
       });
       if (result.status === 200) {
-        setDate(result.data.data);
+        setData(result.data.data);
       }
     }
   };
