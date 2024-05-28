@@ -261,6 +261,8 @@ const DashBoardDetail = ({
                 { name: "20대", data: [13] },
                 { name: "30대", data: [1] },
                 { name: "40대", data: [19] },
+                { name: "50대", data: [19] },
+                { name: "60대 이상", data: [19] },
               ]}
             />
           </div>
