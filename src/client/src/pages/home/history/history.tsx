@@ -148,7 +148,7 @@ const HistoryScreen = ({
               target.src = defaultImageRectangle;
             }}
           />
-          <Subtitle1 text="광고 등록일" color="text-black" />
+          <Subtitle1 text="광고 집행일" color="text-black" />
           <DatePicker.RangePicker
             style={{ pointerEvents: "none" }}
             defaultValue={[

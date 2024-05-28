@@ -4,9 +4,12 @@ import { TotalBar } from "../dashboard/totalBar";
 import { InterestPeopleChart } from "../dashboard/pie";
 import { Modal } from "antd";
 import { toast } from "react-hot-toast";
-import { getFilteredDashboardWithAgeAndGender } from "../../../api/client/dashboard";
-import { useState } from "react";
-import { DashboardDataInfo } from "../../../interfaces/interface";
+import {
+  getAdUnitDashboard,
+  getFilteredDashboardWithAgeAndGender,
+} from "../../../api/client/dashboard";
+import { useEffect, useState } from "react";
+import { DashboardDataInfo, MediaInfo } from "../../../interfaces/interface";
 
 interface UpdateAgeRangesWithIndexProps {
   index: number;
@@ -15,18 +18,47 @@ interface UpdateAgeRangesWithIndexProps {
 
 interface FilteredInfo {
   totalPepleCount: number;
-  avgStaringTime: number;
+  avgStaringTime: number | string; // NaN 처리를 위하여 string 타입 임시 허용
   attentionRatio: number;
   interestPeopleCnt: number;
 }
 
+interface GenerateTargetStringProps {
+  female: boolean;
+  male: boolean;
+  ageRanges: boolean[];
+}
+
 const InsightDetail = ({ detailInfo }: any) => {
+  const [data, setData] = useState<DashboardDataInfo | null>(null);
   const [ageRanges, setAgeRanges] = useState<boolean[]>(Array(6).fill(false));
   const [ageRangesCount, setAgeRangesCount] = useState<number>(0);
   const [openModal, setOpenModal] = useState(false);
   const [male, setMale] = useState<boolean>(false);
   const [female, setFemale] = useState<boolean>(false);
   const [filteredData, setFilteredData] = useState<FilteredInfo | null>(null);
+  const [targetString, setTargetString] = useState<string>("");
+
+  const generateTargetString = ({
+    female,
+    male,
+    ageRanges,
+  }: GenerateTargetStringProps) => {
+    let result: string[] = [];
+
+    ageRanges.forEach((flag, index) => {
+      if (flag) {
+        if (male) {
+          result.push(index !== 5 ? `${index + 1}0대 남자` : "60대 이상 남자");
+        }
+        if (female) {
+          result.push(index !== 5 ? `${index + 1}0대 여자` : "60대 이상 여자");
+        }
+      }
+    });
+
+    setTargetString(result.join(", "));
+  };
 
   const updateAgeRangesWithIndex = ({
     index,
@@ -45,31 +77,22 @@ const InsightDetail = ({ detailInfo }: any) => {
 
     newAgeRanges[index] = status;
     setAgeRanges(newAgeRanges);
-
-    console.log(ageRanges);
   };
 
-  const dummy: DashboardDataInfo = {
-    mediaAppsCnt: 25,
-    hourlyInterestedCount: [
-      20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6, 20,
-      31, 50, 20, 30, 6,
-    ],
-    hourlyPassedCount: [
-      15, 28, 45, 20, 25, 7, 19, 30, 48, 18, 27, 5, 20, 31, 50, 20, 30, 6, 20,
-      31, 50, 20, 30, 6,
-    ],
-    hourlyAvgStaringTime: [
-      2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3,
-      9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2,
-    ],
-    totalPeopleCount: 254,
-    avgStaringTime: 3.1,
-    avgAge: 27.2,
-    maleInterestCnt: 150,
-    femaleInterestCnt: 104,
-    maleCnt: 200,
+  const loadDashboardData = async () => {
+    const dashboardId = (detailInfo as MediaInfo).dashboardId;
+    const result = await getAdUnitDashboard({ dashboardId });
+
+    if (result.status === 200) {
+      setData(result.data.data as DashboardDataInfo);
+    }
   };
+
+  useEffect(() => {
+    if (detailInfo) {
+      loadDashboardData();
+    }
+  }, []);
 
   return (
     <div className="flex flex-col h-full min-w-[920px] w-full py-[30px] overflow-y-scroll">
@@ -109,7 +132,7 @@ const InsightDetail = ({ detailInfo }: any) => {
               <div
                 onClick={() => setMale(!male)}
                 className={`text-center border-[1px]
-              male ? "border-main text-main" : ""
+              ${male ? "border-main text-main" : ""}
               col-span-1 rounded py-4 px-7`}
               >
                 남자
@@ -149,6 +172,17 @@ const InsightDetail = ({ detailInfo }: any) => {
                 type="button"
                 className="mt-[72px] bg-main text-white py-3 px-10 rounded"
                 onClick={async () => {
+                  if (!male && !female) {
+                    toast.error("타겟층의 성별을 적어도 하나 선택해야 합니다.");
+                    return false;
+                  }
+                  if (ageRangesCount === 0) {
+                    toast.error(
+                      "타겟층의 나이대를 적어도 하나 선택해야 합니다."
+                    );
+                    return false;
+                  }
+
                   if (detailInfo) {
                     const result = await getFilteredDashboardWithAgeAndGender({
                       dashboardId: detailInfo?.dashboardId,
@@ -158,7 +192,9 @@ const InsightDetail = ({ detailInfo }: any) => {
                     });
 
                     if (result.status === 200) {
+                      generateTargetString({ female, male, ageRanges });
                       setFilteredData(result.data.data);
+                      setOpenModal(false);
                     }
                   }
                 }}
@@ -172,11 +208,15 @@ const InsightDetail = ({ detailInfo }: any) => {
       <h2 className="text-xl font-medium px-[30px] pt-4 pb-2">
         광고 타겟층 분석
       </h2>
-      <div className="relative px-[30px] py-4">
-        <div className="flex">
-          <p className="text-base">해당 광고의 타겟층은 </p>
-          <p className="text-base text-main font-semibold">
-            10대 남자 10대 여자
+      {}
+      <div className="relative px-[30px] py-2">
+        <div className="flex py-2">
+          <p className="text-base">해당 광고의 타겟층은</p>
+          <p
+            className="ml-2 mr-1 text-base text-main font-semibold cursor-pointer underline underline-offset-4"
+            onClick={() => setOpenModal(true)}
+          >
+            {targetString}
           </p>
           <p className="text-base">입니다.</p>
         </div>
@@ -184,7 +224,9 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 gap-3 border-[1px] row-span-2 col-span-2 rounded">
             <h3 className="text-base font-medium">전체 타겟층의 수</h3>
             <p className="text-[40px] font-light">
-              {`${filteredData ? filteredData.totalPepleCount : 0}명`}
+              {`${
+                filteredData?.totalPepleCount ? filteredData.totalPepleCount : 0
+              }명`}
             </p>
             <p className="text-[#6b6b6b] text-xs">
               해당 광고 앞을 지나간 사람이 광고 타겟층인 경우
@@ -202,7 +244,13 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 gap-3 border-[1px] row-span-2 col-span-1 rounded">
             <h3 className="text-base font-medium">타겟층의 시선 고정 시간</h3>
             <p className="text-[40px] font-light">
-              {`${filteredData ? filteredData.avgStaringTime : 0}초`}
+              {`${
+                filteredData &&
+                filteredData.avgStaringTime &&
+                filteredData.avgStaringTime !== "NaN"
+                  ? filteredData.avgStaringTime
+                  : 0
+              }초`}
             </p>
             <p className="text-[#6b6b6b] text-xs">
               평균적으로 광고에 시선을 고정한 시간
@@ -211,18 +259,24 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 border-[1px] row-span-4 col-span-2 rounded">
             <h3 className="text-base font-medium">타겟층의 광고 관심도</h3>
             <p className="text-[40px]">
-              {`${filteredData ? filteredData.attentionRatio : 0}%`}
+              {`${
+                filteredData
+                  ? (filteredData.attentionRatio * 100).toFixed(1)
+                  : 0
+              }%`}
             </p>
             <TargetInterestChart
-              series={
-                filteredData
-                  ? [
-                      filteredData?.interestPeopleCnt,
-                      filteredData?.totalPepleCount -
-                        filteredData?.interestPeopleCnt,
-                    ]
-                  : [10, 30]
-              }
+              series={[
+                filteredData && filteredData.interestPeopleCnt
+                  ? filteredData.interestPeopleCnt
+                  : 0,
+                (filteredData && filteredData.totalPepleCount
+                  ? filteredData.totalPepleCount
+                  : 0) -
+                  (filteredData && filteredData.interestPeopleCnt
+                    ? filteredData.interestPeopleCnt
+                    : 0),
+              ]}
             />
           </div>
         </div>
@@ -259,8 +313,8 @@ const InsightDetail = ({ detailInfo }: any) => {
             <div className="flex h-full justify-center items-center">
               <InterestPeopleChart
                 interestPeopleCount={[
-                  dummy.maleInterestCnt,
-                  dummy.femaleInterestCnt,
+                  data && data.maleInterestCnt ? data.maleInterestCnt : 0,
+                  data && data.femaleInterestCnt ? data.femaleInterestCnt : 0,
                 ]}
               />
             </div>
@@ -271,12 +325,41 @@ const InsightDetail = ({ detailInfo }: any) => {
               광고에 관심을 보인 사람의 나이대를 분석했어요.
             </p>
             <TotalBar
-              totalAge={[
-                { name: "10대", data: [10] },
-                { name: "20대", data: [13] },
-                { name: "30대", data: [1] },
-                { name: "40대", data: [19] },
-              ]}
+              totalAge={
+                data && data.totalPeopleAgeRangeCount !== null
+                  ? [
+                      {
+                        name: "10대",
+                        data: [data.totalPeopleAgeRangeCount[0]],
+                      },
+                      {
+                        name: "20대",
+                        data: [data.totalPeopleAgeRangeCount[1]],
+                      },
+                      {
+                        name: "30대",
+                        data: [data.totalPeopleAgeRangeCount[2]],
+                      },
+                      {
+                        name: "40대",
+                        data: [data.totalPeopleAgeRangeCount[3]],
+                      },
+                      {
+                        name: "50대",
+                        data: [data.totalPeopleAgeRangeCount[4]],
+                      },
+                      {
+                        name: "60대 이상",
+                        data: [
+                          data.totalPeopleAgeRangeCount[5] +
+                            data.totalPeopleAgeRangeCount[6] +
+                            data.totalPeopleAgeRangeCount[7] +
+                            data.totalPeopleAgeRangeCount[8],
+                        ],
+                      },
+                    ]
+                  : []
+              }
             />
           </div>
         </div>
@@ -284,33 +367,43 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">총 유동인구수</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {dummy.totalPeopleCount.toLocaleString("ko-KR")}명
+              {data && data.totalPeopleCount
+                ? data.totalPeopleCount.toLocaleString("ko-KR")
+                : 0}
+              명
             </p>
           </div>
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">관심 인구수</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {(dummy.maleInterestCnt + dummy.femaleInterestCnt).toLocaleString(
-                "ko-KR"
-              )}
+              {(
+                (data && data.maleInterestCnt ? data.maleInterestCnt : 0) +
+                (data && data.femaleInterestCnt ? data.femaleInterestCnt : 0)
+              ).toLocaleString("ko-KR")}
               명
             </p>
           </div>
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">광고 관심도</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {(
-                ((dummy.maleInterestCnt + dummy.femaleInterestCnt) /
-                  dummy.totalPeopleCount) *
-                100
-              ).toFixed(1)}
+              {!data || !data.totalPeopleCount || data.totalPeopleCount === 0
+                ? 0
+                : (
+                    (((data.maleInterestCnt ? data.maleInterestCnt : 0) +
+                      (data.femaleInterestCnt ? data.femaleInterestCnt : 0)) /
+                      data.totalPeopleCount) *
+                    100
+                  ).toFixed(1)}
               %
             </p>
           </div>
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">시선 고정시간</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {dummy.avgStaringTime}초
+              {data?.avgStaringTime !== 0
+                ? data?.avgStaringTime?.toFixed(1)
+                : 0}
+              초
             </p>
           </div>
         </div>

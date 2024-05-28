@@ -49,16 +49,20 @@ const DashBoardDetail = ({
   const loadDashboardList = async () => {
     const result = await getDashboardListByAdUnit({ dashboardId: dashboardId });
     if (result.status === 200) {
-      const newOptions = result.data.data.map(
-        (dashboard: DashboardSelectInfo) => ({
+      const today = new Date();
+      const newOptions = result.data.data
+        .filter(
+          (dashboard: DashboardSelectInfo) =>
+            new Date(dashboard.startDate) <= today
+        )
+        .map((dashboard: DashboardSelectInfo) => ({
           label: `${dashboard.address} (${dashboard.startDate}~${dashboard.endDate})`,
           value: dashboard.mediaApplicationId,
           locationId: dashboard.locationId,
           description: dashboard.description,
           startDate: dashboard.startDate,
           endDate: dashboard.endDate,
-        })
-      );
+        }));
       setOptions(newOptions);
     }
   };
@@ -84,7 +88,7 @@ const DashBoardDetail = ({
         date: selectedDate,
       });
       if (result.status === 200) {
-        setDate(result.data.data);
+        setData(result.data.data);
       }
     }
   };
@@ -99,28 +103,6 @@ const DashBoardDetail = ({
     setSelectedDate(null);
     loadDashboardWithLocation();
   }, [locationId]);
-
-  const dummy: DashboardDataInfo = {
-    mediaAppsCnt: 25,
-    hourlyInterestedCount: [
-      20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6, 20, 31, 50, 20, 30, 6, 20,
-      31, 50, 20, 30, 6,
-    ],
-    hourlyPassedCount: [
-      15, 28, 45, 20, 25, 7, 19, 30, 48, 18, 27, 5, 20, 31, 50, 20, 30, 6, 20,
-      31, 50, 20, 30, 6,
-    ],
-    hourlyAvgStaringTime: [
-      2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3,
-      9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2,
-    ],
-    totalPeopleCount: 254,
-    avgStaringTime: 3.1,
-    avgAge: 27.2,
-    maleInterestCnt: 150,
-    femaleInterestCnt: 104,
-    maleCnt: 200,
-  };
 
   return (
     <div className="min-w-[920px] w-full h-full overflow-y-scroll flex flex-col">
@@ -163,7 +145,8 @@ const DashBoardDetail = ({
         <p className="text-base">광고 관심도 분석 결과</p>
         <DatePicker
           minDate={dayjs(date[0])}
-          maxDate={dayjs(date[1])}
+          maxDate={dayjs(date[1]) < dayjs() ? dayjs(date[1]) : dayjs()}
+          disabled={date.length === 0}
           onChange={(_, dateString) => {
             setSelectedDate(dateString as string);
           }}
@@ -174,33 +157,40 @@ const DashBoardDetail = ({
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">총 유동인구수</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {dummy.totalPeopleCount.toLocaleString("ko-KR")}명
+              {data.totalPeopleCount
+                ? data.totalPeopleCount.toLocaleString("ko-KR")
+                : 0}
+              명
             </p>
           </div>
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">관심 인구수</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {(dummy.maleInterestCnt + dummy.femaleInterestCnt).toLocaleString(
-                "ko-KR"
-              )}
+              {(
+                (data.maleInterestCnt ? data.maleInterestCnt : 0) +
+                (data.femaleInterestCnt ? data.femaleInterestCnt : 0)
+              ).toLocaleString("ko-KR")}
               명
             </p>
           </div>
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">광고 관심도</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {(
-                ((dummy.maleInterestCnt + dummy.femaleInterestCnt) /
-                  dummy.totalPeopleCount) *
-                100
-              ).toFixed(1)}
+              {data.totalPeopleCount === null || data.totalPeopleCount === 0
+                ? "0.0"
+                : (
+                    (((data.maleInterestCnt ? data.maleInterestCnt : 0) +
+                      (data.femaleInterestCnt ? data.femaleInterestCnt : 0)) /
+                      data.totalPeopleCount) *
+                    100
+                  ).toFixed(1)}
               %
             </p>
           </div>
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">시선 고정시간</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {dummy.avgStaringTime}초
+              {data.avgStaringTime}초
             </p>
           </div>
         </div>
@@ -213,8 +203,8 @@ const DashBoardDetail = ({
             <div className="flex h-full justify-center items-center">
               <InterestPeopleChart
                 interestPeopleCount={[
-                  dummy.maleInterestCnt,
-                  dummy.femaleInterestCnt,
+                  data.maleInterestCnt,
+                  data.femaleInterestCnt,
                 ]}
               />
             </div>
@@ -225,22 +215,82 @@ const DashBoardDetail = ({
               광고에 관심을 보인 사람의 나이대를 분석했어요.
             </p>
             <InterestBar
-              interestAge={[
-                { name: "10대", data: [10] },
-                { name: "20대", data: [13] },
-              ]}
+              interestAge={
+                data.interestedPeopleAgeRangeCount !== null
+                  ? [
+                      {
+                        name: "10대",
+                        data: [data.interestedPeopleAgeRangeCount[0]],
+                      },
+                      {
+                        name: "20대",
+                        data: [data.interestedPeopleAgeRangeCount[1]],
+                      },
+                      {
+                        name: "30대",
+                        data: [data.interestedPeopleAgeRangeCount[2]],
+                      },
+                      {
+                        name: "40대",
+                        data: [data.interestedPeopleAgeRangeCount[3]],
+                      },
+                      {
+                        name: "50대",
+                        data: [data.interestedPeopleAgeRangeCount[4]],
+                      },
+                      {
+                        name: "60대 이상",
+                        data: [
+                          data.interestedPeopleAgeRangeCount[5] +
+                            data.interestedPeopleAgeRangeCount[6] +
+                            data.interestedPeopleAgeRangeCount[7] +
+                            data.interestedPeopleAgeRangeCount[8],
+                        ],
+                      },
+                    ]
+                  : []
+              }
             />
             <p className="text-base font-medium">전체 유동인구 나이대</p>
             <p className="text-sm text-[#6b6b6b]">
               광고 디스플레이 앞을 지나간 모든 사람의 나이대는 다음과 같아요.
             </p>
             <TotalBar
-              totalAge={[
-                { name: "10대", data: [10] },
-                { name: "20대", data: [13] },
-                { name: "30대", data: [1] },
-                { name: "40대", data: [19] },
-              ]}
+              totalAge={
+                data.totalPeopleAgeRangeCount
+                  ? [
+                      {
+                        name: "10대",
+                        data: [data.totalPeopleAgeRangeCount[0]],
+                      },
+                      {
+                        name: "20대",
+                        data: [data.totalPeopleAgeRangeCount[1]],
+                      },
+                      {
+                        name: "30대",
+                        data: [data.totalPeopleAgeRangeCount[2]],
+                      },
+                      {
+                        name: "40대",
+                        data: [data.totalPeopleAgeRangeCount[3]],
+                      },
+                      {
+                        name: "50대",
+                        data: [data.totalPeopleAgeRangeCount[4]],
+                      },
+                      {
+                        name: "60대 이상",
+                        data: [
+                          data.totalPeopleAgeRangeCount[5] +
+                            data.totalPeopleAgeRangeCount[6] +
+                            data.totalPeopleAgeRangeCount[7] +
+                            data.totalPeopleAgeRangeCount[8],
+                        ],
+                      },
+                    ]
+                  : []
+              }
             />
           </div>
         </div>
@@ -253,10 +303,16 @@ const DashBoardDetail = ({
             얼마나 많았는지를 알려주는 지표예요.
           </p>
           <MixedChart
-            total={[6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}
-            interest={[
-              6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-            ]}
+            total={data.hourlyPassedCount ? data.hourlyPassedCount : []}
+            interest={
+              data.hourlyPassedCount !== null &&
+              data.hourlyInterestedCount !== null
+                ? data.hourlyPassedCount.map((passed, index) => {
+                    const interested = data.hourlyInterestedCount![index];
+                    return passed === 0 ? 0 : ((interested / passed) * 100) | 0; // float가 아닌 int 형태
+                  })
+                : []
+            }
           />
         </div>
       </div>

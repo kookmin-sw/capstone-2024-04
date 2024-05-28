@@ -23,7 +23,7 @@ export const TotalBar = ({ totalAge }: any) => {
         },
       },
       legend: {
-        show: false,
+        show: true,
       },
       colors: [
         "#ff6929",

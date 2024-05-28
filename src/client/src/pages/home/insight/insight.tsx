@@ -37,7 +37,7 @@ const Insight = ({ mode, setMode, detailProps }: any) => {
       />
     </div>
   ) : (
-    <InsightDetail detailInfo={detailInfo || detailProps} />
+    <InsightDetail detailInfo={(detailInfo || detailProps) as MediaInfo} />
   );
 };
 

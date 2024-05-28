@@ -6,7 +6,7 @@ export const FootTrafficGenderChart = () => {
 
   return React.createElement(Chart, {
     type: "pie",
-    series: [928, 674],
+    series: [912038, 1252800],
     height: "100%",
     labels: {
       show: false,

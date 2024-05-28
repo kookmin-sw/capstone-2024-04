@@ -17,7 +17,7 @@ const FootTrafficInfo = () => {
         <div className="flex flex-col border-[1px] border-black/6 p-7 justify-between items-end rounded-md">
           <div className="w-full">
             <h2 className="text-base font-medium">하루 평균 유동인구수</h2>
-            <p className="text-3xl font-medium mt-3">4,500</p>
+            <p className="text-3xl font-medium mt-3">2,164,838</p>
           </div>
           <img width={156} src={footTraffic} />
         </div>
