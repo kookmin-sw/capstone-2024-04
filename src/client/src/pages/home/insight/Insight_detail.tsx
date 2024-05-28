@@ -18,7 +18,7 @@ interface UpdateAgeRangesWithIndexProps {
 
 interface FilteredInfo {
   totalPepleCount: number;
-  avgStaringTime: number;
+  avgStaringTime: number | string; // NaN 처리를 위하여 string 타입 임시 허용
   attentionRatio: number;
   interestPeopleCnt: number;
 }
@@ -236,7 +236,9 @@ const InsightDetail = ({ detailInfo }: any) => {
             <h3 className="text-base font-medium">타겟층의 시선 고정 시간</h3>
             <p className="text-[40px] font-light">
               {`${
-                filteredData && filteredData.avgStaringTime
+                filteredData &&
+                filteredData.avgStaringTime &&
+                filteredData.avgStaringTime !== "NaN"
                   ? filteredData.avgStaringTime
                   : 0
               }초`}
@@ -354,7 +356,10 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">시선 고정시간</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {data?.avgStaringTime !== 0 ? data?.avgStaringTime : 0}초
+              {data?.avgStaringTime !== 0
+                ? data?.avgStaringTime?.toFixed(1)
+                : 0}
+              초
             </p>
           </div>
         </div>
