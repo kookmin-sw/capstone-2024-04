@@ -45,7 +45,7 @@ git clone https://github.com/kookmin-sw/capstone-2024-04.git
 <div markdown="1">
 
     cd src/client/ 
-    yarn
+    yarn install
     yarn run dev
 
 </div>
