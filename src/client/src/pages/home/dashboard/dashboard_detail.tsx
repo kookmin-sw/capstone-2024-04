@@ -157,25 +157,30 @@ const DashBoardDetail = ({
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">총 유동인구수</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {data.totalPeopleCount.toLocaleString("ko-KR")}명
+              {data.totalPeopleCount
+                ? data.totalPeopleCount.toLocaleString("ko-KR")
+                : 0}
+              명
             </p>
           </div>
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">관심 인구수</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {(data.maleInterestCnt + data.femaleInterestCnt).toLocaleString(
-                "ko-KR"
-              )}
+              {(
+                (data.maleInterestCnt ? data.maleInterestCnt : 0) +
+                (data.femaleInterestCnt ? data.femaleInterestCnt : 0)
+              ).toLocaleString("ko-KR")}
               명
             </p>
           </div>
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">광고 관심도</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {data.totalPeopleCount === 0
+              {data.totalPeopleCount === null || data.totalPeopleCount === 0
                 ? "0.0"
                 : (
-                    ((data.maleInterestCnt + data.femaleInterestCnt) /
+                    (((data.maleInterestCnt ? data.maleInterestCnt : 0) +
+                      (data.femaleInterestCnt ? data.femaleInterestCnt : 0)) /
                       data.totalPeopleCount) *
                     100
                   ).toFixed(1)}
@@ -210,37 +215,41 @@ const DashBoardDetail = ({
               광고에 관심을 보인 사람의 나이대를 분석했어요.
             </p>
             <InterestBar
-              interestAge={[
-                {
-                  name: "10대",
-                  data: [data.interestedPeopleAgeRangeCount[0]],
-                },
-                {
-                  name: "20대",
-                  data: [data.interestedPeopleAgeRangeCount[1]],
-                },
-                {
-                  name: "30대",
-                  data: [data.interestedPeopleAgeRangeCount[2]],
-                },
-                {
-                  name: "40대",
-                  data: [data.interestedPeopleAgeRangeCount[3]],
-                },
-                {
-                  name: "50대",
-                  data: [data.interestedPeopleAgeRangeCount[4]],
-                },
-                {
-                  name: "60대 이상",
-                  data: [
-                    data.interestedPeopleAgeRangeCount[5] +
-                      data.interestedPeopleAgeRangeCount[6] +
-                      data.interestedPeopleAgeRangeCount[7] +
-                      data.interestedPeopleAgeRangeCount[8],
-                  ],
-                },
-              ]}
+              interestAge={
+                data.interestedPeopleAgeRangeCount !== null
+                  ? [
+                      {
+                        name: "10대",
+                        data: [data.interestedPeopleAgeRangeCount[0]],
+                      },
+                      {
+                        name: "20대",
+                        data: [data.interestedPeopleAgeRangeCount[1]],
+                      },
+                      {
+                        name: "30대",
+                        data: [data.interestedPeopleAgeRangeCount[2]],
+                      },
+                      {
+                        name: "40대",
+                        data: [data.interestedPeopleAgeRangeCount[3]],
+                      },
+                      {
+                        name: "50대",
+                        data: [data.interestedPeopleAgeRangeCount[4]],
+                      },
+                      {
+                        name: "60대 이상",
+                        data: [
+                          data.interestedPeopleAgeRangeCount[5] +
+                            data.interestedPeopleAgeRangeCount[6] +
+                            data.interestedPeopleAgeRangeCount[7] +
+                            data.interestedPeopleAgeRangeCount[8],
+                        ],
+                      },
+                    ]
+                  : []
+              }
             />
             <p className="text-base font-medium">전체 유동인구 나이대</p>
             <p className="text-sm text-[#6b6b6b]">
@@ -265,11 +274,16 @@ const DashBoardDetail = ({
             얼마나 많았는지를 알려주는 지표예요.
           </p>
           <MixedChart
-            total={data.hourlyPassedCount}
-            interest={data.hourlyPassedCount.map((passed, index) => {
-              const interested = data.hourlyInterestedCount[index];
-              return passed === 0 ? 0 : ((interested / passed) * 100) | 0; // float가 아닌 int 형태
-            })}
+            total={data.hourlyPassedCount ? data.hourlyPassedCount : []}
+            interest={
+              data.hourlyPassedCount !== null &&
+              data.hourlyInterestedCount !== null
+                ? data.hourlyPassedCount.map((passed, index) => {
+                    const interested = data.hourlyInterestedCount![index];
+                    return passed === 0 ? 0 : ((interested / passed) * 100) | 0; // float가 아닌 int 형태
+                  })
+                : []
+            }
           />
         </div>
       </div>

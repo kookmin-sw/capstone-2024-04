@@ -70,17 +70,17 @@ export interface datePerDay {
 }
 
 export interface DashboardDataInfo {
-    mediaAppsCnt: number; // 해당 광고에 집계된, 집행된 광고의 날짜수
-    interestedPeopleAgeRangeCount: number[];
-    hourlyInterestedCount: number[]; // 시간당 관심을 표현한 사람 수(0시 ~ 23시)
-    hourlyPassedCount: number[]; // 시간당 포착된 사람 수 (0시 ~ 23시)
-    hourlyAvgStaringTime: number[]; // 시간당 평균 응시 횟수 (0시 ~ 23시)
-    totalPeopleCount: number; // 전체 포착된 사람 수 
-    avgStaringTime: number; // 해당 광고 평균 시청 시간
-    avgAge: number; // 해당 광고 평균 시청 나이 
-    maleInterestCnt: number; // 관심을 표현한 남자 인원 수
-    femaleInterestCnt: number; // 관심을 표현한 여자의 인원수
-    maleCnt: number; // 집계된 남자의 인원 수
+    mediaAppsCnt: number | null; // 해당 광고에 집계된, 집행된 광고의 날짜수
+    interestedPeopleAgeRangeCount: number[] | null;
+    hourlyInterestedCount: number[] | null; // 시간당 관심을 표현한 사람 수(0시 ~ 23시)
+    hourlyPassedCount: number[] | null; // 시간당 포착된 사람 수 (0시 ~ 23시)
+    hourlyAvgStaringTime: number[] | null; // 시간당 평균 응시 횟수 (0시 ~ 23시)
+    totalPeopleCount: number | null; // 전체 포착된 사람 수 
+    avgStaringTime: number | null; // 해당 광고 평균 시청 시간
+    avgAge: number | null; // 해당 광고 평균 시청 나이 
+    maleInterestCnt: number | null; // 관심을 표현한 남자 인원 수
+    femaleInterestCnt: number | null; // 관심을 표현한 여자의 인원수
+    maleCnt: number | null; // 집계된 남자의 인원 수
 }
 
 export interface LocationDataInfo{
