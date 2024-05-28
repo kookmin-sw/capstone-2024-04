@@ -20,6 +20,12 @@ interface FilteredInfo {
   interestPeopleCnt: number;
 }
 
+interface GenerateTargetStringProps {
+  female: boolean;
+  male: boolean;
+  ageRanges: boolean[];
+}
+
 const InsightDetail = ({ detailInfo }: any) => {
   const [ageRanges, setAgeRanges] = useState<boolean[]>(Array(6).fill(false));
   const [ageRangesCount, setAgeRangesCount] = useState<number>(0);
@@ -27,6 +33,28 @@ const InsightDetail = ({ detailInfo }: any) => {
   const [male, setMale] = useState<boolean>(false);
   const [female, setFemale] = useState<boolean>(false);
   const [filteredData, setFilteredData] = useState<FilteredInfo | null>(null);
+  const [targetString, setTargetString] = useState<string>("");
+
+  const generateTargetString = ({
+    female,
+    male,
+    ageRanges,
+  }: GenerateTargetStringProps) => {
+    let result: string[] = [];
+
+    ageRanges.forEach((flag, index) => {
+      if (flag) {
+        if (male) {
+          result.push(index !== 5 ? `${index + 1}0대 남자` : "60대 이상 남자");
+        }
+        if (female) {
+          result.push(index !== 5 ? `${index + 1}0대 여자` : "60대 이상 여자");
+        }
+      }
+    });
+
+    setTargetString(result.join(", "));
+  };
 
   const updateAgeRangesWithIndex = ({
     index,
@@ -159,6 +187,7 @@ const InsightDetail = ({ detailInfo }: any) => {
                     });
 
                     if (result.status === 200) {
+                      generateTargetString({ female, male, ageRanges });
                       setFilteredData(result.data.data);
                       setOpenModal(false);
                     }
@@ -175,14 +204,14 @@ const InsightDetail = ({ detailInfo }: any) => {
         광고 타겟층 분석
       </h2>
       {}
-      <div className="relative px-[30px] py-4">
-        <div className="flex">
+      <div className="relative px-[30px]">
+        <div className="flex py-4">
           <p className="text-base">해당 광고의 타겟층은</p>
           <p
-            className="text-base text-main font-semibold cursor-pointer"
+            className="ml-2 mr-1 text-base text-main font-semibold cursor-pointer underline underline-offset-4"
             onClick={() => setOpenModal(true)}
           >
-            10대 남자, 10대 여자
+            {targetString}
           </p>
           <p className="text-base">입니다.</p>
         </div>
