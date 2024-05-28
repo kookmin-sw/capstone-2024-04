@@ -63,6 +63,7 @@ const InsightDetail = ({ detailInfo }: any) => {
       2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2, 2.7, 3.6, 3.3,
       9.2, 1.1, 1.2, 2.7, 3.6, 3.3, 9.2, 1.1, 1.2,
     ],
+    interestedPeopleAgeRangeCount: [],
     totalPeopleCount: 254,
     avgStaringTime: 3.1,
     avgAge: 27.2,
@@ -173,6 +174,7 @@ const InsightDetail = ({ detailInfo }: any) => {
       <h2 className="text-xl font-medium px-[30px] pt-4 pb-2">
         광고 타겟층 분석
       </h2>
+      {}
       <div className="relative px-[30px] py-4">
         <div className="flex">
           <p className="text-base">해당 광고의 타겟층은</p>
@@ -188,7 +190,9 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 gap-3 border-[1px] row-span-2 col-span-2 rounded">
             <h3 className="text-base font-medium">전체 타겟층의 수</h3>
             <p className="text-[40px] font-light">
-              {`${filteredData ? filteredData.totalPepleCount || 78 : 0}명`}
+              {`${
+                filteredData?.totalPepleCount ? filteredData.totalPepleCount : 0
+              }명`}
             </p>
             <p className="text-[#6b6b6b] text-xs">
               해당 광고 앞을 지나간 사람이 광고 타겟층인 경우
@@ -197,7 +201,7 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 gap-3 border-[1px] row-span-2 col-span-1 rounded">
             <h3 className="text-base font-medium">관심을 가진 타겟층의 수</h3>
             <p className="text-[40px] font-light">
-              {`${filteredData ? filteredData.interestPeopleCnt || 56 : 0}명`}
+              {`${filteredData ? filteredData.interestPeopleCnt : 0}명`}
             </p>
             <p className="text-[#6b6b6b] text-xs">
               해당 광고를 본 사람이 광고 타겟층인 경우
@@ -206,7 +210,7 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 gap-3 border-[1px] row-span-2 col-span-1 rounded">
             <h3 className="text-base font-medium">타겟층의 시선 고정 시간</h3>
             <p className="text-[40px] font-light">
-              {`${filteredData ? filteredData.avgStaringTime || 2.3 : 0}초`}
+              {`${filteredData ? filteredData.avgStaringTime : 0}초`}
             </p>
             <p className="text-[#6b6b6b] text-xs">
               평균적으로 광고에 시선을 고정한 시간
@@ -215,21 +219,17 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col p-6 border-[1px] row-span-4 col-span-2 rounded">
             <h3 className="text-base font-medium">타겟층의 광고 관심도</h3>
             <p className="text-[40px]">
-              {`${
-                filteredData
-                  ? filteredData.attentionRatio || ((56 / 78) * 100).toFixed(1)
-                  : 0
-              }%`}
+              {`${filteredData ? filteredData.attentionRatio.toFixed(1) : 0}%`}
             </p>
             <TargetInterestChart
               series={
                 filteredData
-                  ? [56, 78] || [
+                  ? [
                       filteredData?.interestPeopleCnt,
                       filteredData?.totalPepleCount -
                         filteredData?.interestPeopleCnt,
                     ]
-                  : [10, 30]
+                  : []
               }
             />
           </div>
@@ -292,26 +292,33 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">총 유동인구수</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {dummy.totalPeopleCount.toLocaleString("ko-KR")}명
+              {dummy.totalPeopleCount
+                ? dummy.totalPeopleCount.toLocaleString("ko-KR")
+                : 0}
+              명
             </p>
           </div>
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">관심 인구수</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {(dummy.maleInterestCnt + dummy.femaleInterestCnt).toLocaleString(
-                "ko-KR"
-              )}
+              {(
+                (dummy.maleInterestCnt ? dummy.maleInterestCnt : 0) +
+                (dummy.femaleInterestCnt ? dummy.femaleInterestCnt : 0)
+              ).toLocaleString("ko-KR")}
               명
             </p>
           </div>
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">광고 관심도</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {(
-                ((dummy.maleInterestCnt + dummy.femaleInterestCnt) /
-                  dummy.totalPeopleCount) *
-                100
-              ).toFixed(1)}
+              {dummy.totalPeopleCount === null || dummy.totalPeopleCount === 0
+                ? 0
+                : (
+                    (((dummy.maleInterestCnt ? dummy.maleInterestCnt : 0) +
+                      (dummy.femaleInterestCnt ? dummy.femaleInterestCnt : 0)) /
+                      dummy.totalPeopleCount) *
+                    100
+                  ).toFixed(1)}
               %
             </p>
           </div>
