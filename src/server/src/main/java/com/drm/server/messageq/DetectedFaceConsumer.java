@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import javax.swing.text.html.parser.Entity;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,7 @@ public class DetectedFaceConsumer {
         String qurey = kSqlDBHandler.getFilteredData(Long.valueOf((Integer) map.get("cameraId")),rowDetectedFace.getArriveAt().toString(),rowDetectedFace.getLeaveAt().toString());
         List<PlayListLog> playListLog = kSqlDBHandler.queryKsqlDb(qurey);
 
+        List<DetectedFace> detectedFaceList = new ArrayList<>();
         // 한 사람의 등장 - 퇴장 사이에 여러개의 광고가 노출되었을 경우(Playlist에서 송출되는 광고)
         for(PlayListLog playListLogData : playListLog ){
             MediaApplication mediaApplication = playListService.getMediaApplicationFromPlaylistId(playListLogData.getPlaylistId());
@@ -74,6 +76,7 @@ public class DetectedFaceConsumer {
             DetectedFace detectedFace = DetectedFace.toEntity(map, playListLogData.getStartTime(), playListLogData.getEndTime());
             detectedFace.updateMediaApplication(mediaApplication);
             DetectedFace savedDetectedFace = detectedFaceRepository.save(detectedFace);
+            detectedFaceList.add(savedDetectedFace);
         }
 
 //         Mediaapplication를 찾아서 기존 detectedFace 넣기,
