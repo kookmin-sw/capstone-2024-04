@@ -92,7 +92,7 @@ const HistoryScreen = ({
       if (result.status === 200) {
         setHistoryData(
           result.data.data.map((app: TotalApplicationInfo) => ({
-            key: app.application.applicationId,
+            key: app.media.mediaId,
             mediaId: app.media.mediaId,
             mediaLink: app.media.mediaLink,
             title: app.media.title,
