@@ -36,6 +36,7 @@ const DashBoard = ({ mode, setMode, detailProps }: any) => {
     null
   );
   const [dashboardTitle, setDashboardTitle] = useState<string>("");
+  const [dashboardThumnail, setDashboardThumnail] = useState<string>("");
   const [currDashboardId, setCurrDashboardId] = useState<number | null>(null);
 
   const loadDetailData = async ({ dashboardId }: GetAdUnitDashboardProps) => {
@@ -131,6 +132,7 @@ const DashBoard = ({ mode, setMode, detailProps }: any) => {
         onRow={(record) => ({
           onClick: () => {
             setDashboardTitle(record.title);
+            setDashboardThumnail(record.mediaLink);
             loadDetailData({ dashboardId: record.mediaId });
           },
         })}
@@ -139,8 +141,9 @@ const DashBoard = ({ mode, setMode, detailProps }: any) => {
   ) : (
     <DashBoardDetail
       dashboardTitle={dashboardTitle || detailProps.dashboardTitle}
-      dashboardData={selectedData! || detailProps.dashboardData}
-      dashboardId={currDashboardId! || detailProps.dashboardId}
+      dashboardData={selectedData || detailProps.dashboardData}
+      dashboardId={currDashboardId || detailProps.dashboardId}
+      dashboardThumnail={dashboardThumnail || detailProps.dashboardThumnail}
     />
   );
 };
