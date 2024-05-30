@@ -118,24 +118,9 @@ const InsightDetail = ({
             className="border-[1px] border-main rounded-[3px] text-main text-sm px-4 py-3"
             type="button"
             onClick={() => {
-              // const result = await getAdUnitDashboard({ dashboardId: 1 });
-
-              // if (result.status === 200) {
-              //   shortCutToDashboard.setDetailProps({
-              //     dashboardTitle: detailInfo.title,
-              //     dashboardData: result.data.data as DashboardDataInfo,
-              //     dashboardId: detailInfo.mediaId,
-              //     dashboardThumbnail: detailInfo.mediaLink,
-              //     mediaId: detailInfo.mediaId,
-              //     shortCutToInsight: {
-              //       setMenu: shortCutToDashboard.setMenu,
-              //       setDetailProps:
-
-              //   });
               shortCutToDashboard.setMode(DashBoardMode.LIST);
               shortCutToDashboard.setMenu(0);
               shortCutToDashboard.resetMode();
-              // }
             }}
           >
             대시보드 목록 바로가기
