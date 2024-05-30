@@ -20,7 +20,7 @@ interface UpdateAgeRangesWithIndexProps {
 
 interface FilteredInfo {
   totalPeopleCount: number;
-  avgStaringTime: number | string; // NaN 처리를 위하여 string 타입 임시 허용
+  avgStaringTime: number; // NaN 처리를 위하여 string 타입 임시 허용
   attentionRatio: number;
   interestPeopleCnt: number;
 }
@@ -279,7 +279,7 @@ const InsightDetail = ({
               {`${
                 filteredData &&
                 filteredData.avgStaringTime &&
-                filteredData.avgStaringTime !== "NaN"
+                !isNaN(filteredData.avgStaringTime)
                   ? filteredData.avgStaringTime
                   : 0
               }초`}
@@ -292,7 +292,10 @@ const InsightDetail = ({
             <h3 className="text-base font-medium">타겟층의 광고 관심도</h3>
             <p className="text-[40px]">
               {`${
-                filteredData
+                filteredData &&
+                !isNaN(
+                  filteredData.interestPeopleCnt / filteredData.totalPeopleCount
+                )
                   ? (
                       (filteredData.interestPeopleCnt /
                         filteredData.totalPeopleCount) *
@@ -422,7 +425,14 @@ const InsightDetail = ({
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">광고 관심도</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {!data || !data.totalPeopleCount || data.totalPeopleCount === 0
+              {!data ||
+              !data.totalPeopleCount ||
+              data.totalPeopleCount === 0 ||
+              isNaN(
+                ((data.maleInterestCnt ? data.maleInterestCnt : 0) +
+                  (data.femaleInterestCnt ? data.femaleInterestCnt : 0)) /
+                  data.totalPeopleCount
+              )
                 ? 0
                 : (
                     (((data.maleInterestCnt ? data.maleInterestCnt : 0) +
