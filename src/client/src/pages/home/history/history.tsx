@@ -188,7 +188,7 @@ const HistoryScreen = ({
                     return;
                   }
                   const result = await getAdUnitDashboard({
-                    dashboardId: selectedMedia.application.applicationId!,
+                    dashboardId: selectedMedia.media.mediaId,
                   });
                   if (result.status === 200) {
                     setDashboardDetailProps({
