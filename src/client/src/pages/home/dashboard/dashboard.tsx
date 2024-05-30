@@ -105,7 +105,7 @@ const DashBoard = ({ mode, setMode, detailProps }: any) => {
 
       setApplies(
         totalApplications.map((application) => ({
-          key: application.media.mediaId,
+          key: application.application.applicationId,
           mediaId: application.media.mediaId,
           mediaLink: application.media.mediaLink,
           title: application.media.title,
@@ -131,7 +131,7 @@ const DashBoard = ({ mode, setMode, detailProps }: any) => {
         onRow={(record) => ({
           onClick: () => {
             setDashboardTitle(record.title);
-            loadDetailData({ dashboardId: record.key });
+            loadDetailData({ dashboardId: record.mediaId });
           },
         })}
       />
