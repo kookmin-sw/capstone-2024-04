@@ -6,6 +6,7 @@ import com.drm.server.handler.LongConverter;
 import com.drm.server.domain.mediaApplication.MediaApplication;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Slf4j
 public class DailyMediaBoard extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -106,7 +108,9 @@ public class DailyMediaBoard extends BaseTimeEntity {
     // fps > 1 인 상황에 대응하기 위해 CaptureCount * (1/fps) 를 곱해주는 것으로 수정
     // ex: fps = 25 인 경우 -> CaptureCount 10 일시 -> 10 * (1/25) = 0.4초 응시
     public void updateAvgStaringTime(int faceCaptureCount, int fps) {
-        float faceCaptureSec = faceCaptureCount * (1/fps);
+        // 1 need to be float casting !
+        float splitedSec = (float)1 /fps;
+        float faceCaptureSec = (float)faceCaptureCount * splitedSec;
         this.avgStaringTime = ((this.getAvgStaringTime() * (this.maleInterestCnt + this.femaleInterestCnt))+faceCaptureSec) / ((this.maleInterestCnt + this.femaleInterestCnt)+ 1);
     }
 
