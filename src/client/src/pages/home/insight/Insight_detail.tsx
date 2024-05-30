@@ -17,7 +17,7 @@ interface UpdateAgeRangesWithIndexProps {
 }
 
 interface FilteredInfo {
-  totalPepleCount: number;
+  totalPeopleCount: number;
   avgStaringTime: number | string; // NaN 처리를 위하여 string 타입 임시 허용
   attentionRatio: number;
   interestPeopleCnt: number;
@@ -225,7 +225,7 @@ const InsightDetail = ({ detailInfo }: any) => {
             <h3 className="text-base font-medium">전체 타겟층의 수</h3>
             <p className="text-[40px] font-light">
               {`${
-                filteredData?.totalPepleCount ? filteredData.totalPepleCount : 0
+                filteredData?.totalPeopleCount ? filteredData.totalPeopleCount : 0
               }명`}
             </p>
             <p className="text-[#6b6b6b] text-xs">
@@ -270,8 +270,8 @@ const InsightDetail = ({ detailInfo }: any) => {
                 filteredData && filteredData.interestPeopleCnt
                   ? filteredData.interestPeopleCnt
                   : 0,
-                (filteredData && filteredData.totalPepleCount
-                  ? filteredData.totalPepleCount
+                (filteredData && filteredData.totalPeopleCount
+                  ? filteredData.totalPeopleCount
                   : 0) -
                   (filteredData && filteredData.interestPeopleCnt
                     ? filteredData.interestPeopleCnt
