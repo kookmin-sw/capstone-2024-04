@@ -177,6 +177,12 @@ const HistoryScreen = ({
             <button
               className="flex gap-3 w-full justify-center items-center py-3 rounded-[3px] bg-main"
               onClick={async () => {
+                if (dayjs() < dayjs(selectedMedia?.application.startDate)) {
+                  toast.error(
+                    "해당 광고는 집행 예정으로 대시보드가 생성되지 않았습니다."
+                  );
+                  return;
+                }
                 const result = await getAdUnitDashboard({
                   dashboardId: selectedMedia?.application.applicationId!,
                 });
@@ -189,6 +195,8 @@ const HistoryScreen = ({
                   setDashboardMode(DashBoardMode.DETAIL);
                   setMenuIndex(0);
                   setOpenModal(false);
+                } else {
+                  toast.error("현재 대시보드에 접근할 수 없습니다.");
                 }
               }}
             >
