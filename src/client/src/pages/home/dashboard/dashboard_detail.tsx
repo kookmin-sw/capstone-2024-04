@@ -142,7 +142,7 @@ const DashBoardDetail = ({
           </button>
         </div>
         <img
-          className="border-[1px] rounded h-full aspect-video"
+          className="border-[1px] rounded h-32 aspect-video"
           alt="광고 썸네일"
           onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
             const target = e.target as HTMLImageElement;
