@@ -225,7 +225,9 @@ const InsightDetail = ({ detailInfo }: any) => {
             <h3 className="text-base font-medium">전체 타겟층의 수</h3>
             <p className="text-[40px] font-light">
               {`${
-                filteredData?.totalPeopleCount ? filteredData.totalPeopleCount : 0
+                filteredData?.totalPeopleCount
+                  ? filteredData.totalPeopleCount
+                  : 0
               }명`}
             </p>
             <p className="text-[#6b6b6b] text-xs">
@@ -261,7 +263,11 @@ const InsightDetail = ({ detailInfo }: any) => {
             <p className="text-[40px]">
               {`${
                 filteredData
-                  ? (filteredData.attentionRatio * 100).toFixed(1)
+                  ? (
+                      (filteredData.interestPeopleCnt /
+                        filteredData.totalPeopleCount) *
+                      100
+                    ).toFixed(1)
                   : 0
               }%`}
             </p>
