@@ -22,7 +22,6 @@ const Insight = ({ mode, setMode, detailProps }: any) => {
     const response = await getMedia({ filter: "ACCEPT" });
 
     if (response.status === 200) {
-      console.log(response);
       setMedias(response.data.data);
     }
   };

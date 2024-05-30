@@ -24,7 +24,6 @@ const SignUpPage = ({ goToSignIn }: SignUpPageProps) => {
     };
 
     const result = await signup(body);
-    console.log(result);
 
     if (result.status === 400) {
       if (result.data.divisionCode === "G014") {

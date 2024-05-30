@@ -70,7 +70,6 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
       await verifyPassword(password);
       setPwErr(""); // 비밀번호가 일치하는 경우
     } catch (err: any) {
-      console.log(err.message); // 에러 메시지 출력
       setPwErr("비밀번호가 일치하지 않습니다.");
     }
   };
@@ -79,10 +78,8 @@ const SettingScreen = ({ userInfo, setUserInfo }: SettingScreenProps) => {
     const file = e.target.files?.[0];
     const formData = new FormData();
     formData.append("file", file);
-    console.log(file);
     if (file) {
       const result = await patchProfile(formData);
-      console.log(result);
 
       if (result.data.status === 200 || result.data.status === 201) {
         const cookies = new Cookies();

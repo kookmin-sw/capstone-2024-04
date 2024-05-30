@@ -45,8 +45,6 @@ const DashBoardDetail = ({
   );
   const [locationId, setLocationId] = useState<number | null>(null);
 
-  console.log(data);
-
   const loadDashboardList = async () => {
     const result = await getDashboardListByAdUnit({ dashboardId: dashboardId });
     if (result.status === 200) {
@@ -104,7 +102,6 @@ const DashBoardDetail = ({
   };
 
   useEffect(() => {
-    console.log("대시보드 초기 데이터 수신");
     setData(dashboardData);
     loadDashboardList();
   }, [dashboardData, dashboardId]);

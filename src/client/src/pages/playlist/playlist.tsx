@@ -25,7 +25,6 @@ const PlayListScreen = () => {
     try {
       const result = await getDailyPlayList({ locationId });
       if (result.status === 200) {
-        console.log(result.data.data);
         setVideoList(result.data.data);
         setIsLoad(true);
       }
