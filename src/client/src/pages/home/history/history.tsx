@@ -194,7 +194,7 @@ const HistoryScreen = ({
                     setDashboardDetailProps({
                       dashboardTitle: selectedMedia.media.title,
                       dashboardData: result.data.data as DashboardDataInfo,
-                      dashboardId: selectedMedia.application.applicationId,
+                      dashboardId: selectedMedia.media.mediaId,
                     });
                     setDashboardMode(DashBoardMode.DETAIL);
                     setMenuIndex(0);
