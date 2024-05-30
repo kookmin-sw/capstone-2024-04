@@ -38,9 +38,7 @@ export interface ShortCutToDashboard {
   setMenu: React.Dispatch<React.SetStateAction<number>>;
   setMode: React.Dispatch<React.SetStateAction<DashBoardMode>>;
   resetMode: any;
-  setDetailProps: React.Dispatch<
-    React.SetStateAction<UserInfo | undefined | null>
-  >;
+  setDetailProps: React.Dispatch<DashboardDetailProps>;
 }
 
 const HomePage = () => {

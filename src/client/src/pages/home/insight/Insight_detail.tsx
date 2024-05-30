@@ -10,6 +10,8 @@ import {
 } from "../../../api/client/dashboard";
 import { useEffect, useState } from "react";
 import { DashboardDataInfo, MediaInfo } from "../../../interfaces/interface";
+import { ShortCutToDashboard } from "../home";
+import { DashBoardMode } from "../dashboard/dashboard";
 
 interface UpdateAgeRangesWithIndexProps {
   index: number;
@@ -29,7 +31,15 @@ interface GenerateTargetStringProps {
   ageRanges: boolean[];
 }
 
-const InsightDetail = ({ detailInfo }: any) => {
+interface InsightDetailProps {
+  detailInfo: MediaInfo;
+  shortCutToDashboard: ShortCutToDashboard;
+}
+
+const InsightDetail = ({
+  detailInfo,
+  shortCutToDashboard,
+}: InsightDetailProps) => {
   const [data, setData] = useState<DashboardDataInfo | null>(null);
   const [ageRanges, setAgeRanges] = useState<boolean[]>(Array(6).fill(false));
   const [ageRangesCount, setAgeRangesCount] = useState<number>(0);
@@ -107,8 +117,28 @@ const InsightDetail = ({ detailInfo }: any) => {
           <button
             className="border-[1px] border-main rounded-[3px] text-main text-sm px-4 py-3"
             type="button"
+            onClick={() => {
+              // const result = await getAdUnitDashboard({ dashboardId: 1 });
+
+              // if (result.status === 200) {
+              //   shortCutToDashboard.setDetailProps({
+              //     dashboardTitle: detailInfo.title,
+              //     dashboardData: result.data.data as DashboardDataInfo,
+              //     dashboardId: detailInfo.mediaId,
+              //     dashboardThumbnail: detailInfo.mediaLink,
+              //     mediaId: detailInfo.mediaId,
+              //     shortCutToInsight: {
+              //       setMenu: shortCutToDashboard.setMenu,
+              //       setDetailProps:
+
+              //   });
+              shortCutToDashboard.setMode(DashBoardMode.LIST);
+              shortCutToDashboard.setMenu(0);
+              shortCutToDashboard.resetMode();
+              // }
+            }}
           >
-            대시보드 바로가기
+            대시보드 목록 바로가기
           </button>
         </div>
         <img
