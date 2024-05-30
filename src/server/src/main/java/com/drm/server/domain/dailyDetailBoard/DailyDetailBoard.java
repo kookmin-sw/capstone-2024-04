@@ -61,12 +61,12 @@ public class DailyDetailBoard extends BaseTimeEntity {
 // fps > 1 인 상황에 대응하기 위해 CaptureCount * (1/fps) 를 곱해주는 것으로 수정
 // ex: fps = 25 인 경우 -> CaptureCount 10 일시 -> 10 * (1/25) = 0.4초 응시
     public void updateHourlyAvgStaringTime(int hour, float staringTime, int fps) {
-        float staringCalculatedTime = staringTime * (1/fps);
+        float staringCalculatedTime = staringTime * ((float)1/fps);
         this.hourlyAvgStaringTime.set(hour, ((this.hourlyAvgStaringTime.get(hour) *  this.getHourlyInterestedCount().get(hour) + staringCalculatedTime)
                 / (this.getHourlyInterestedCount().get(hour) + 1)  ));
     }
     public void updateAvgStaringTime(int faceCaptureCount, int fps) {
-        float faceCaptureSec = faceCaptureCount * (1/fps);
+        float faceCaptureSec = faceCaptureCount * ((float)1/fps);
         this.avgStaringTime = ((this.getAvgStaringTime() * (this.totalPeopleCount)+faceCaptureSec) / ((this.totalPeopleCount)+ 1));
     }
 
