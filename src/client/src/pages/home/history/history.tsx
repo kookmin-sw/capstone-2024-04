@@ -129,96 +129,103 @@ const HistoryScreen = ({
           })}
         />
       </div>
-      <Modal
-        open={openModal}
-        footer={false}
-        onCancel={() => setOpenModal(false)}
-      >
-        <div className="w-full p-12 flex flex-col">
-          <Subtitle1 text="광고 타이틀" color="text-black" />
-          <h3 className="px-2 py-3 border-2 mt-[10px] mb-4 border-[#d9d9d9] rounded-[2px]">
-            {selectedMedia?.media.title}
-          </h3>
-          <img
-            className="w-full aspect-video object-cover rounded-[5px] mb-4"
-            src={selectedMedia?.media.mediaLink}
-            alt="광고 썸네일"
-            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-              const target = e.target as HTMLImageElement;
-              target.src = defaultImageRectangle;
-            }}
-          />
-          <Subtitle1 text="광고 집행일" color="text-black" />
-          <DatePicker.RangePicker
-            style={{ pointerEvents: "none" }}
-            defaultValue={[
-              dayjs(selectedMedia?.application.startDate, dateFormat),
-              dayjs(selectedMedia?.application.endDate, dateFormat),
-            ]}
-            className="mt-[10px] mb-4"
-          />
-          <Subtitle1 text="디스플레이" color="text-black" />
-          <Select
-            style={{ pointerEvents: "none" }}
-            defaultValue={selectedMedia?.application.location.address}
-            className="mt-[10px] mb-4"
-          />
-          <Subtitle1 text="광고 상태" color="text-black" />
-          <div className="mb-5 mt-2">
-            <StatusBadge
-              status={selectedMedia?.application.status || "ACCEPT"}
-              date={[
-                selectedMedia?.application.startDate || "",
-                selectedMedia?.application.endDate || "",
-              ]}
+      {selectedMedia ? (
+        <Modal
+          open={openModal}
+          footer={false}
+          onCancel={() => {
+            setOpenModal(false);
+            setSelectedMedia(null);
+          }}
+        >
+          <div className="w-full p-12 flex flex-col">
+            <Subtitle1 text="광고 타이틀" color="text-black" />
+            <h3 className="px-2 py-3 border-2 mt-[10px] mb-4 border-[#d9d9d9] rounded-[2px]">
+              {selectedMedia.media.title}
+            </h3>
+            <img
+              className="w-full aspect-video object-cover rounded-[5px] mb-4"
+              src={selectedMedia.media.mediaLink}
+              alt="광고 썸네일"
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                const target = e.target as HTMLImageElement;
+                target.src = defaultImageRectangle;
+              }}
             />
-          </div>
-          <div className="flex gap-2">
-            <button
-              className="flex gap-3 w-full justify-center items-center py-3 rounded-[3px] bg-main"
-              onClick={async () => {
-                if (dayjs() < dayjs(selectedMedia?.application.startDate)) {
-                  toast.error(
-                    "해당 광고는 집행 예정으로 대시보드가 생성되지 않았습니다."
-                  );
-                  return;
-                }
-                const result = await getAdUnitDashboard({
-                  dashboardId: selectedMedia?.application.applicationId!,
-                });
-                if (result.status === 200) {
-                  setDashboardDetailProps({
-                    dashboardTitle: selectedMedia?.media.title,
-                    dashboardData: result.data.data as DashboardDataInfo,
-                    dashboardId: selectedMedia?.application.applicationId,
+            <Subtitle1 text="광고 집행일" color="text-black" />
+            <DatePicker.RangePicker
+              style={{ pointerEvents: "none" }}
+              defaultValue={[
+                dayjs(selectedMedia.application.startDate, dateFormat),
+                dayjs(selectedMedia.application.endDate, dateFormat),
+              ]}
+              className="mt-[10px] mb-4"
+            />
+            <Subtitle1 text="디스플레이" color="text-black" />
+            <Select
+              style={{ pointerEvents: "none" }}
+              defaultValue={selectedMedia.application.location.address}
+              className="mt-[10px] mb-4"
+            />
+            <Subtitle1 text="광고 상태" color="text-black" />
+            <div className="mb-5 mt-2">
+              <StatusBadge
+                status={selectedMedia!.application.status}
+                date={[
+                  selectedMedia.application.startDate,
+                  selectedMedia.application.endDate,
+                ]}
+              />
+            </div>
+            <div className="flex gap-2">
+              <button
+                className="flex gap-3 w-full justify-center items-center py-3 rounded-[3px] bg-main"
+                onClick={async () => {
+                  if (dayjs() < dayjs(selectedMedia.application.startDate)) {
+                    toast.error(
+                      "해당 광고는 집행 예정으로 대시보드가 생성되지 않았습니다."
+                    );
+                    return;
+                  }
+                  const result = await getAdUnitDashboard({
+                    dashboardId: selectedMedia.application.applicationId!,
                   });
-                  setDashboardMode(DashBoardMode.DETAIL);
-                  setMenuIndex(0);
+                  if (result.status === 200) {
+                    setDashboardDetailProps({
+                      dashboardTitle: selectedMedia.media.title,
+                      dashboardData: result.data.data as DashboardDataInfo,
+                      dashboardId: selectedMedia.application.applicationId,
+                    });
+                    setDashboardMode(DashBoardMode.DETAIL);
+                    setMenuIndex(0);
+                    setOpenModal(false);
+                  } else {
+                    toast.error("현재 대시보드에 접근할 수 없습니다.");
+                  }
+                }}
+              >
+                <img src={dashboardIconWhite} />
+                <p className="text-white">대시보드</p>
+              </button>
+              <button
+                className="flex gap-3 w-full justify-center border-[1px] items-center border-main py-3 rounded-[3px]"
+                onClick={() => {
+                  console.log("인사이트 버튼 클릭");
+                  setInsightDetailProps(selectedMedia.media);
+                  setInsightMode(InsightMode.DETAIL);
+                  setMenuIndex(1);
                   setOpenModal(false);
-                } else {
-                  toast.error("현재 대시보드에 접근할 수 없습니다.");
-                }
-              }}
-            >
-              <img src={dashboardIconWhite} />
-              <p className="text-white">대시보드</p>
-            </button>
-            <button
-              className="flex gap-3 w-full justify-center border-[1px] items-center border-main py-3 rounded-[3px]"
-              onClick={() => {
-                console.log("인사이트 버튼 클릭");
-                setInsightDetailProps(selectedMedia?.media);
-                setInsightMode(InsightMode.DETAIL);
-                setMenuIndex(1);
-                setOpenModal(false);
-              }}
-            >
-              <img src={chartIconMain} />
-              <p className="text-main">인사이트</p>
-            </button>
+                }}
+              >
+                <img src={chartIconMain} />
+                <p className="text-main">인사이트</p>
+              </button>
+            </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
