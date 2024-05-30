@@ -8,7 +8,8 @@ import defaultImageVideo from "../../../assets/images/default_video.svg";
 import { useEffect, useState } from "react";
 import {
   createDailyDashboard,
-  createLocationDashboard,
+  // createLocationDashboard,
+  getAdUnitDashboard,
   getDashboardListByAdUnit,
 } from "../../../api/client/dashboard";
 import { SelectProps } from "antd/lib";
@@ -67,9 +68,18 @@ const DashBoardDetail = ({
     }
   };
 
-  const loadDashboardWithLocation = async () => {
-    if (locationId) {
-      const result = await createLocationDashboard({ locationId: locationId });
+  // const loadDashboardWithLocation = async () => {
+  //   if (locationId) {
+  //     const result = await createLocationDashboard({ locationId: locationId });
+  //     if (result.status === 200) {
+  //       setData(result.data.data);
+  //     }
+  //   }
+  // };
+
+  const loadDashboard = async () => {
+    if (dashboardId) {
+      const result = await getAdUnitDashboard({ dashboardId: dashboardId });
       if (result.status === 200) {
         setData(result.data.data);
       }
@@ -101,7 +111,8 @@ const DashBoardDetail = ({
 
   useEffect(() => {
     setSelectedDate(null);
-    loadDashboardWithLocation();
+    // loadDashboardWithLocation();
+    loadDashboard();
   }, [locationId]);
 
   return (
