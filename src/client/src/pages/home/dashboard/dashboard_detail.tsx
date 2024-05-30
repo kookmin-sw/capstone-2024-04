@@ -19,7 +19,7 @@ export interface DashboardDetailProps {
   dashboardData: DashboardDataInfo;
   dashboardTitle: string;
   dashboardId: number;
-  dashboardThumnail: string;
+  dashboardThumbnail: string;
 }
 
 export interface DashboardSelectInfo {
@@ -35,7 +35,7 @@ const DashBoardDetail = ({
   dashboardTitle,
   dashboardData,
   dashboardId,
-  dashboardThumnail,
+  dashboardThumbnail,
 }: DashboardDetailProps) => {
   const [data, setData] = useState<DashboardDataInfo>(dashboardData);
   const [date, setDate] = useState<string[]>([]); // 신청 단위의 시작 일자, 종료 일자가 담긴 리스트
@@ -148,7 +148,7 @@ const DashBoardDetail = ({
             const target = e.target as HTMLImageElement;
             target.src = defaultImageVideo;
           }}
-          src={dashboardThumnail}
+          src={dashboardThumbnail}
         />
       </div>
       <div className="flex justify-between mt-10 mb-3">

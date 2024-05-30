@@ -112,7 +112,7 @@ const InsightDetail = ({ detailInfo }: any) => {
           </button>
         </div>
         <img
-          src=""
+          src={detailInfo.mediaLink}
           className="h-32 aspect-video"
           alt="광고 썸네일"
           onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
