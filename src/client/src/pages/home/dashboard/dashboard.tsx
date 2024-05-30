@@ -105,7 +105,7 @@ const DashBoard = ({ mode, setMode, detailProps }: any) => {
 
       setApplies(
         totalApplications.map((application) => ({
-          key: application.application.applicationId,
+          key: application.media.mediaId,
           mediaId: application.media.mediaId,
           mediaLink: application.media.mediaLink,
           title: application.media.title,
