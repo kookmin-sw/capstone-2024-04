@@ -27,6 +27,22 @@ import defaultImageRectangle from "../../assets/images/default_rectangle.svg";
 import FootTrafficInfo from "./foot-traffic-info/foot_traffic_info";
 import { DashboardDetailProps } from "./dashboard/dashboard_detail";
 
+export interface ShortCutToInsight {
+  setMenu: React.Dispatch<React.SetStateAction<number>>;
+  setMode: React.Dispatch<React.SetStateAction<InsightMode>>;
+  resetMode: any;
+  setDetailProps: React.Dispatch<React.SetStateAction<MediaInfo | null>>;
+}
+
+export interface ShortCutToDashboard {
+  setMenu: React.Dispatch<React.SetStateAction<number>>;
+  setMode: React.Dispatch<React.SetStateAction<DashBoardMode>>;
+  resetMode: any;
+  setDetailProps: React.Dispatch<
+    React.SetStateAction<UserInfo | undefined | null>
+  >;
+}
+
 const HomePage = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -67,6 +83,14 @@ const HomePage = () => {
         <DashBoard
           mode={dashboardMode}
           setMode={setDashboardMode}
+          shortCutToInsight={
+            {
+              setMenu: setCurrMenuIdx,
+              setMode: setInsightMode,
+              resetMode: () => setDashboardMode(DashBoardMode.LIST),
+              setDetailProps: setInsightDetailProps,
+            } as ShortCutToInsight
+          }
           detailProps={dashboardDetailProps}
         />
       ),
@@ -81,6 +105,14 @@ const HomePage = () => {
         <Insight
           mode={insightMode}
           setMode={setInsightMode}
+          shortCutToDashboard={
+            {
+              setMenu: setCurrMenuIdx,
+              setMode: setDashboardMode,
+              resetMode: () => setInsightMode(InsightMode.LIST),
+              setDetailProps: setDashboardDetailProps,
+            } as ShortCutToDashboard
+          }
           detailProps={insightDetailProps}
         />
       ),

@@ -30,11 +30,12 @@ export interface TableItem {
   status: string;
 }
 
-const DashBoard = ({ mode, setMode, detailProps }: any) => {
+const DashBoard = ({ mode, setMode, detailProps, shortCutToInsight }: any) => {
   const [applies, setApplies] = useState<TableItem[]>([]);
   const [selectedData, setSelectedData] = useState<DashboardDataInfo | null>(
     null
   );
+  const [mediaId, setMediaId] = useState<number | null>(null);
   const [dashboardTitle, setDashboardTitle] = useState<string>("");
   const [dashboardThumbnail, setDashboardThumbnail] = useState<string>("");
   const [currDashboardId, setCurrDashboardId] = useState<number | null>(null);
@@ -133,6 +134,7 @@ const DashBoard = ({ mode, setMode, detailProps }: any) => {
           onClick: () => {
             setDashboardTitle(record.title);
             setDashboardThumbnail(record.mediaLink);
+            setMediaId(record.mediaId);
             loadDetailData({ dashboardId: record.mediaId });
           },
         })}
@@ -140,6 +142,8 @@ const DashBoard = ({ mode, setMode, detailProps }: any) => {
     </div>
   ) : (
     <DashBoardDetail
+      mediaId={mediaId!}
+      shortCutToInsight={shortCutToInsight}
       dashboardTitle={dashboardTitle || detailProps.dashboardTitle}
       dashboardData={selectedData || detailProps.dashboardData}
       dashboardId={currDashboardId || detailProps.dashboardId}
