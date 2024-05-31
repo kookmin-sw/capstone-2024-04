@@ -80,7 +80,8 @@ public class DashboardResponse {
 
         }
         private float calculateStaringTime(float staringTime, Long inputInterestCnt){
-            return (this.avgStaringTime * (this.InterestPeopleCnt - inputInterestCnt) + staringTime) / this.InterestPeopleCnt;
+//            return (this.avgStaringTime * (this.InterestPeopleCnt - inputInterestCnt) + staringTime) / this.InterestPeopleCnt;
+            return (this.avgStaringTime * (this.InterestPeopleCnt - inputInterestCnt) + staringTime * (float)inputInterestCnt) / this.InterestPeopleCnt;
         }
         private float calculateAttentionRatio(){
             if(totalPeopleCount == 0) {
