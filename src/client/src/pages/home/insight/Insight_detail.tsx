@@ -264,11 +264,8 @@ const InsightDetail = ({
               {`${
                 filteredData &&
                 filteredData.avgStaringTime &&
-                !isNaN(filteredData.avgStaringTime) &&
-                data?.avgStaringTime
-                  ? (
-                      data?.avgStaringTime - filteredData.avgStaringTime
-                    ).toFixed(4)
+                !isNaN(filteredData.avgStaringTime)
+                  ? filteredData.avgStaringTime.toFixed(4)
                   : 0
               }초`}
             </p>
