@@ -10,7 +10,7 @@ export enum InsightMode {
   DETAIL,
 }
 
-const Insight = ({ mode, setMode, detailProps }: any) => {
+const Insight = ({ mode, setMode, detailProps, shortCutToDashboard }: any) => {
   const [medias, setMedias] = useState<MediaInfo[]>([]);
   const [detailInfo, setDetailInfo] = useState<MediaInfo | null>(null);
 
@@ -22,7 +22,6 @@ const Insight = ({ mode, setMode, detailProps }: any) => {
     const response = await getMedia({ filter: "ACCEPT" });
 
     if (response.status === 200) {
-      console.log(response);
       setMedias(response.data.data);
     }
   };
@@ -37,7 +36,10 @@ const Insight = ({ mode, setMode, detailProps }: any) => {
       />
     </div>
   ) : (
-    <InsightDetail detailInfo={(detailInfo || detailProps) as MediaInfo} />
+    <InsightDetail
+      shortCutToDashboard={shortCutToDashboard}
+      detailInfo={(detailInfo || detailProps) as MediaInfo}
+    />
   );
 };
 

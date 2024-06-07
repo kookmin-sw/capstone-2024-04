@@ -8,17 +8,21 @@ import defaultImageVideo from "../../../assets/images/default_video.svg";
 import { useEffect, useState } from "react";
 import {
   createDailyDashboard,
-  // createLocationDashboard,
   getAdUnitDashboard,
   getDashboardListByAdUnit,
 } from "../../../api/client/dashboard";
 import { SelectProps } from "antd/lib";
 import dayjs from "dayjs";
+import { ShortCutToInsight } from "../home";
+import { InsightMode } from "../insight/insight";
 
 export interface DashboardDetailProps {
   dashboardData: DashboardDataInfo;
   dashboardTitle: string;
   dashboardId: number;
+  dashboardThumbnail: string;
+  mediaId: number;
+  shortCutToInsight: ShortCutToInsight;
 }
 
 export interface DashboardSelectInfo {
@@ -31,9 +35,12 @@ export interface DashboardSelectInfo {
 }
 
 const DashBoardDetail = ({
+  mediaId,
   dashboardTitle,
   dashboardData,
   dashboardId,
+  dashboardThumbnail,
+  shortCutToInsight,
 }: DashboardDetailProps) => {
   const [data, setData] = useState<DashboardDataInfo>(dashboardData);
   const [date, setDate] = useState<string[]>([]); // 신청 단위의 시작 일자, 종료 일자가 담긴 리스트
@@ -44,8 +51,6 @@ const DashBoardDetail = ({
     null
   );
   const [locationId, setLocationId] = useState<number | null>(null);
-
-  console.log(data);
 
   const loadDashboardList = async () => {
     const result = await getDashboardListByAdUnit({ dashboardId: dashboardId });
@@ -67,15 +72,6 @@ const DashBoardDetail = ({
       setOptions(newOptions);
     }
   };
-
-  // const loadDashboardWithLocation = async () => {
-  //   if (locationId) {
-  //     const result = await createLocationDashboard({ locationId: locationId });
-  //     if (result.status === 200) {
-  //       setData(result.data.data);
-  //     }
-  //   }
-  // };
 
   const loadDashboard = async () => {
     if (dashboardId) {
@@ -104,14 +100,12 @@ const DashBoardDetail = ({
   };
 
   useEffect(() => {
-    console.log("대시보드 초기 데이터 수신");
     setData(dashboardData);
     loadDashboardList();
   }, [dashboardData, dashboardId]);
 
   useEffect(() => {
     setSelectedDate(null);
-    // loadDashboardWithLocation();
     loadDashboard();
   }, [locationId]);
 
@@ -138,18 +132,30 @@ const DashBoardDetail = ({
           <button
             className="w-min text-nowrap p-4 border-[1px] border-main rounded-[3px] bg-white text-main"
             type="button"
+            onClick={() => {
+              shortCutToInsight.setDetailProps({
+                mediaId: mediaId,
+                mediaLink: dashboardThumbnail,
+                title: dashboardTitle,
+                description: description || "",
+                dashboardId: dashboardId,
+              });
+              shortCutToInsight.setMode(InsightMode.DETAIL);
+              shortCutToInsight.setMenu(1);
+              shortCutToInsight.resetMode();
+            }}
           >
             인사이트 바로가기
           </button>
         </div>
         <img
-          className="border-[1px] rounded h-full aspect-video"
+          className="border-[1px] rounded h-32 aspect-video"
           alt="광고 썸네일"
           onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
             const target = e.target as HTMLImageElement;
             target.src = defaultImageVideo;
           }}
-          src=""
+          src={dashboardThumbnail}
         />
       </div>
       <div className="flex justify-between mt-10 mb-3">

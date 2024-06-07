@@ -10,6 +10,8 @@ import {
 } from "../../../api/client/dashboard";
 import { useEffect, useState } from "react";
 import { DashboardDataInfo, MediaInfo } from "../../../interfaces/interface";
+import { ShortCutToDashboard } from "../home";
+import { DashBoardMode } from "../dashboard/dashboard";
 
 interface UpdateAgeRangesWithIndexProps {
   index: number;
@@ -17,8 +19,8 @@ interface UpdateAgeRangesWithIndexProps {
 }
 
 interface FilteredInfo {
-  totalPepleCount: number;
-  avgStaringTime: number | string; // NaN 처리를 위하여 string 타입 임시 허용
+  totalPeopleCount: number;
+  avgStaringTime: number; // NaN 처리를 위하여 string 타입 임시 허용
   attentionRatio: number;
   interestPeopleCnt: number;
 }
@@ -29,7 +31,15 @@ interface GenerateTargetStringProps {
   ageRanges: boolean[];
 }
 
-const InsightDetail = ({ detailInfo }: any) => {
+interface InsightDetailProps {
+  detailInfo: MediaInfo;
+  shortCutToDashboard: ShortCutToDashboard;
+}
+
+const InsightDetail = ({
+  detailInfo,
+  shortCutToDashboard,
+}: InsightDetailProps) => {
   const [data, setData] = useState<DashboardDataInfo | null>(null);
   const [ageRanges, setAgeRanges] = useState<boolean[]>(Array(6).fill(false));
   const [ageRangesCount, setAgeRangesCount] = useState<number>(0);
@@ -107,12 +117,17 @@ const InsightDetail = ({ detailInfo }: any) => {
           <button
             className="border-[1px] border-main rounded-[3px] text-main text-sm px-4 py-3"
             type="button"
+            onClick={() => {
+              shortCutToDashboard.setMode(DashBoardMode.LIST);
+              shortCutToDashboard.setMenu(0);
+              shortCutToDashboard.resetMode();
+            }}
           >
-            대시보드 바로가기
+            대시보드 목록 바로가기
           </button>
         </div>
         <img
-          src=""
+          src={detailInfo.mediaLink}
           className="h-32 aspect-video"
           alt="광고 썸네일"
           onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -225,7 +240,9 @@ const InsightDetail = ({ detailInfo }: any) => {
             <h3 className="text-base font-medium">전체 타겟층의 수</h3>
             <p className="text-[40px] font-light">
               {`${
-                filteredData?.totalPepleCount ? filteredData.totalPepleCount : 0
+                filteredData?.totalPeopleCount
+                  ? filteredData.totalPeopleCount
+                  : 0
               }명`}
             </p>
             <p className="text-[#6b6b6b] text-xs">
@@ -247,8 +264,8 @@ const InsightDetail = ({ detailInfo }: any) => {
               {`${
                 filteredData &&
                 filteredData.avgStaringTime &&
-                filteredData.avgStaringTime !== "NaN"
-                  ? filteredData.avgStaringTime
+                !isNaN(filteredData.avgStaringTime)
+                  ? filteredData.avgStaringTime.toFixed(4)
                   : 0
               }초`}
             </p>
@@ -260,8 +277,15 @@ const InsightDetail = ({ detailInfo }: any) => {
             <h3 className="text-base font-medium">타겟층의 광고 관심도</h3>
             <p className="text-[40px]">
               {`${
-                filteredData
-                  ? (filteredData.attentionRatio * 100).toFixed(1)
+                filteredData &&
+                !isNaN(
+                  filteredData.interestPeopleCnt / filteredData.totalPeopleCount
+                )
+                  ? (
+                      (filteredData.interestPeopleCnt /
+                        filteredData.totalPeopleCount) *
+                      100
+                    ).toFixed(1)
                   : 0
               }%`}
             </p>
@@ -270,8 +294,8 @@ const InsightDetail = ({ detailInfo }: any) => {
                 filteredData && filteredData.interestPeopleCnt
                   ? filteredData.interestPeopleCnt
                   : 0,
-                (filteredData && filteredData.totalPepleCount
-                  ? filteredData.totalPepleCount
+                (filteredData && filteredData.totalPeopleCount
+                  ? filteredData.totalPeopleCount
                   : 0) -
                   (filteredData && filteredData.interestPeopleCnt
                     ? filteredData.interestPeopleCnt
@@ -386,7 +410,14 @@ const InsightDetail = ({ detailInfo }: any) => {
           <div className="flex flex-col px-7 py-5 border-[1px] border-black/0.06 rounded">
             <p className="text-base font-medium">광고 관심도</p>
             <p className="my-4 text-center font-light text-[26px]">
-              {!data || !data.totalPeopleCount || data.totalPeopleCount === 0
+              {!data ||
+              !data.totalPeopleCount ||
+              data.totalPeopleCount === 0 ||
+              isNaN(
+                ((data.maleInterestCnt ? data.maleInterestCnt : 0) +
+                  (data.femaleInterestCnt ? data.femaleInterestCnt : 0)) /
+                  data.totalPeopleCount
+              )
                 ? 0
                 : (
                     (((data.maleInterestCnt ? data.maleInterestCnt : 0) +

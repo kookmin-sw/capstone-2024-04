@@ -39,9 +39,5 @@ export const tokenRefresh = async ({accessToken, refreshToken}: any) => {
     cookies.set('accessToken', newAccessToken);
     cookies.set('refreshToken', newRefreshToken);
 
-    // 토큰 갱신 테스트용 코드
-    console.log(accessToken, '->', newAccessToken);
-    console.log(refreshToken, '->', newRefreshToken);
-
     return [newAccessToken, newRefreshToken];
 }

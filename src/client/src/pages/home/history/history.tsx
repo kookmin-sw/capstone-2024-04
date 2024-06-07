@@ -87,7 +87,6 @@ const HistoryScreen = ({
   const loadHistory = async () => {
     try {
       const result = await getApplies();
-      console.log(result.data.data);
 
       if (result.status === 200) {
         setHistoryData(
@@ -195,6 +194,7 @@ const HistoryScreen = ({
                       dashboardTitle: selectedMedia.media.title,
                       dashboardData: result.data.data as DashboardDataInfo,
                       dashboardId: selectedMedia.media.mediaId,
+                      dashboardThumbnail: selectedMedia.media.mediaLink,
                     });
                     setDashboardMode(DashBoardMode.DETAIL);
                     setMenuIndex(0);
@@ -210,7 +210,6 @@ const HistoryScreen = ({
               <button
                 className="flex gap-3 w-full justify-center border-[1px] items-center border-main py-3 rounded-[3px]"
                 onClick={() => {
-                  console.log("인사이트 버튼 클릭");
                   setInsightDetailProps(selectedMedia.media);
                   setInsightMode(InsightMode.DETAIL);
                   setMenuIndex(1);

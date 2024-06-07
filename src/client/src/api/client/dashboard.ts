@@ -32,7 +32,7 @@ export interface GetFilteredDashboardWithAgeAndGenderProps {
 
 // 나이 + 성별 단위로 필터링된 세부 대시보드
 export const getFilteredDashboardWithAgeAndGender = async ({dashboardId, male, female, ageRanges}: GetFilteredDashboardWithAgeAndGenderProps) => {
-    const response = await privateApi.post(`/api/v1/dashboard/${dashboardId}/detail`, {male: male, femal: female, ageRanges: ageRanges}).catch((err) => {return err.response});
+    const response = await privateApi.post(`/api/v1/dashboard/${dashboardId}/detail`, {male: male, female: female, ageRanges: ageRanges}).catch((err) => {return err.response});
     return response;
 }
 

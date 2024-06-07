@@ -168,7 +168,6 @@ const PostMediaScreen = () => {
 
   const loadHistory = async () => {
     const result = await getMedia();
-    console.log(result);
     if (result.status === 200) {
       setHistories(result.data.data);
     }
