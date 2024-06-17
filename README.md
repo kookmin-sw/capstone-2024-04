@@ -1,5 +1,6 @@
 # 📚 Do you Read me? (DRM)
 
+<img width="818" alt="Screenshot 2024-06-17 at 12 09 56 AM" src="https://github.com/kookmin-sw/capstone-2024-04/assets/81795729/1fb05b82-33dc-4f73-871e-9ac7ba2e5dd3">
 
 <img src="src/model/img/output_video2.gif" alt="gif1" width="700" />
 
